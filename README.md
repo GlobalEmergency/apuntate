@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Service management platform for emergency organizations. Allows participants to view available services, check resource needs, and quickly register for positions within their emergency grouping.
+Management platform for civil protection groups and emergency volunteer organizations. Managers create services (events, operations, drills) and define staffing needs — either as open slots with qualification requirements or as vehicle/unit-based crew compositions. Members receive notifications, sign up for available positions, and the system tracks participation and statistics.
+
+Built to scale into a full operational management suite: material inventory, vehicle maintenance, training management, and anything an emergency organization needs.
 
 ## Tech Stack
 

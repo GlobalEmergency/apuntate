@@ -2,12 +2,42 @@
 
 This document describes the architectural decisions and patterns used in the Apuntate monorepo.
 
-## Overview
+## Product Vision
 
-Apuntate is a service management platform for emergency organizations. It consists of two applications:
+Apuntate is a management platform for civil protection groups, emergency volunteer organizations, and similar entities. The core flow is:
 
-- **Backend** (`apps/back/`): Symfony 7 REST API providing data and authentication.
-- **Frontend** (`apps/front/`): Angular 15 SPA consuming the API.
+1. An **organization** (e.g., a municipal civil protection unit) has registered **members**
+2. A **manager** creates a **Service** (e.g., "cover a children's race on Saturday")
+3. The service defines **needs** — either open slots or vehicle/unit-based compositions
+4. **Members** receive notifications and **sign up** for available positions
+5. The system tracks participation and provides statistics
+
+### Two models for defining needs
+
+- **Open slots with requirements**: "I need 2 volunteers with driving license + 10 general volunteers"
+- **Unit-based composition**: "Deploy 2 ambulances (3 crew each, 2 must be technicians) + 1 logistics vehicle (4 crew, 2 logistics specialists)"
+
+### Domain language
+
+| Term | Meaning |
+|------|---------|
+| Organization | A civil protection group, volunteer association, or emergency entity |
+| Member/User | A person belonging to an organization |
+| Service | An event/operation that needs coverage |
+| Gap | A slot/vacancy to fill — a person needed |
+| Unit | A vehicle or operational team with defined composition |
+| Component | A role type within a unit (driver, technician, logistics) |
+| Requirement | A qualification/certification (driving license, first aid) |
+| Speciality | A professional specialization |
+
+### Future scope
+
+The platform will grow to cover any need of an emergency organization: material inventory, vehicle maintenance/mileage tracking, training management, certification tracking, reporting, and multi-organization support.
+
+## Technical Overview
+
+- **Backend** (`apps/back/`): Symfony 7.4 REST API, PHP 8.4, PostgreSQL
+- **Frontend** (`apps/front/`): Angular 15 SPA, Angular Material
 
 Both applications follow Domain-Driven Design principles, SOLID, and Clean Code practices.
 
