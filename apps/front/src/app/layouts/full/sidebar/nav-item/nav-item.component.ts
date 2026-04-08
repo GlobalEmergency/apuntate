@@ -5,9 +5,10 @@ import { NavService } from '../../../../../services/nav.service';
 import {AuthenticationService} from "../../../../../services/authentication.service";
 
 @Component({
-  selector: 'app-nav-item',
-  templateUrl: './nav-item.component.html',
-  styleUrls: [],
+    selector: 'app-nav-item',
+    templateUrl: './nav-item.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AppNavItemComponent implements OnChanges {
   @Input() item: NavItem;

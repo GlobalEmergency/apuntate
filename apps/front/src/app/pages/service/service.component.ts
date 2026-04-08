@@ -5,9 +5,10 @@ import { ApiService } from '../../../services/api.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
-  selector: 'app-service',
-  templateUrl: './service.component.html',
-  styleUrls: ['./service.component.scss'],
+    selector: 'app-service',
+    templateUrl: './service.component.html',
+    styleUrls: ['./service.component.scss'],
+    standalone: false
 })
 export class ServiceComponent {
   service: Service | null = null;

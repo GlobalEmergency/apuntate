@@ -13,9 +13,10 @@ import {AlertsDialogComponent} from "../../../components/alerts/AlertsDialogComp
 
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class HeaderComponent {
   @Input() showToggle = true;

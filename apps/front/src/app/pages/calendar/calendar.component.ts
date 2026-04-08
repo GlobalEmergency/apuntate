@@ -8,6 +8,7 @@ import {FullCalendarComponent} from "@fullcalendar/angular";
     selector: 'app-dashboard',
     templateUrl: './calendar.component.html',
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CalendarComponent{
   // @ViewChild('calendar') calendarComponent: FullCalendarComponent;

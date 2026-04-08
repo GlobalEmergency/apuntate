@@ -34,7 +34,7 @@ export interface ServiceForm{
   dateStart: FormControl<Date>;
   dateEnd: FormControl<Date>;
   datePlace: FormControl<Date>;
-  status: FormControl<ServiceStatus>;
+  status: FormControl<string>;
   units: FormControl<Gap[]>;
   gaps: FormControl<Gap[]>;
   category: FormControl<ServiceCategory>;
@@ -49,7 +49,7 @@ export class Service {
   readonly dateStart: Date;
   readonly dateEnd: Date;
   readonly datePlace: Date;
-  readonly status: ServiceStatus
+  readonly status: string
   readonly units: Gap[];
   readonly gaps: Gap[];
   readonly category: ServiceCategory;

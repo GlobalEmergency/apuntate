@@ -6,9 +6,10 @@ import { Service } from '../../../domain/Service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DashboardComponent {
   services: Service[] = [];

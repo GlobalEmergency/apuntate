@@ -1,7 +1,7 @@
 import {InjectionToken, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,44 +27,38 @@ import { JwtInterceptor } from '../interceptor/jwt.interceptor';
 import {ServicesInterface} from "../domain/ServicesInterface";
 import {ApiService} from "../services/api.service";
 import {ServiceComponent} from "./pages/service/service.component";
-import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
+import {MatChipsModule} from "@angular/material/chips";
 import {ServicestableComponent} from "./components/servicestable/servicestable.component";
 import {MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
 import {CommonModule} from "@angular/common";
 // import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    FullComponent,
-    BlankComponent,
-    SidebarComponent,
-    HeaderComponent,
-    BrandingComponent,
-    AppNavItemComponent,
-    ServiceComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    TablerIconsModule.pick(TablerIcons),
-    MatLegacyChipsModule,
-    MatTableModule,
-    MatIconModule,
-    CommonModule
-  ],
-  exports: [TablerIconsModule],
-  bootstrap: [AppComponent],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-  ],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        FullComponent,
+        BlankComponent,
+        SidebarComponent,
+        HeaderComponent,
+        BrandingComponent,
+        AppNavItemComponent,
+        ServiceComponent,
+    ],
+    exports: [TablerIconsModule],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        TablerIconsModule.pick(TablerIcons),
+        MatChipsModule,
+        MatTableModule,
+        MatIconModule,
+        CommonModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
   constructor() {
   }

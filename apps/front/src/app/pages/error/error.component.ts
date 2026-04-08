@@ -1,8 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 
 @Component({
-  selector: 'app-error',
-  template: '<h1>Error</h1>',
+    selector: 'app-error',
+    template: '<h1>Error</h1>',
+    standalone: false
 })
 export class ErrorComponent {
 
