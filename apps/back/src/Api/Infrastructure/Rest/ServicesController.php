@@ -7,6 +7,7 @@ namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 use Carbon\Carbon;
 use GlobalEmergency\Apuntate\Application\Services\CancelService;
 use GlobalEmergency\Apuntate\Application\Services\CreateService;
+use GlobalEmergency\Apuntate\Application\Services\PublishService;
 use GlobalEmergency\Apuntate\Application\Services\UpdateService;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
 use GlobalEmergency\Apuntate\Services\CalendarTransform;
@@ -119,6 +120,21 @@ final class ServicesController extends AbstractController
             [],
             true,
         );
+    }
+
+    #[Route('/{serviceId}/publish', name: 'publish', methods: ['POST'])]
+    public function publish(string $serviceId, PublishService $publishService): JsonResponse
+    {
+        try {
+            $service = $publishService->execute($serviceId);
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([
+            'id' => $service->getId()->toRfc4122(),
+            'status' => $service->getStatus()->value,
+        ]);
     }
 
     #[Route('/{serviceId}', name: 'cancel', methods: ['DELETE'])]

@@ -108,6 +108,24 @@ export class ServiceComponent {
     return this.gaps.filter((g) => g.user !== null).length;
   }
 
+  publish() {
+    if (!this.service) return;
+    this.loading = true;
+    this.message = null;
+
+    this.apiService.publishService(this.service.id).subscribe({
+      next: () => {
+        this.message = { text: 'Servicio publicado. Se ha notificado a todos los miembros.', type: 'success' };
+        this.loading = false;
+        this.ngOnInit();
+      },
+      error: (err) => {
+        this.message = { text: err.error?.error || 'Error al publicar el servicio.', type: 'error' };
+        this.loading = false;
+      },
+    });
+  }
+
   edit() {
     if (!this.service) return;
     this.router.navigate(['/service', this.service.id, 'edit']);

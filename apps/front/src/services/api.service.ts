@@ -72,6 +72,10 @@ export class ApiService implements ServicesInterface, AlertRepositoryInterface{
     return this.http.delete<void>(`${this.url}/services/${serviceId}`);
   }
 
+  publishService(serviceId: string): Observable<any> {
+    return this.http.post<any>(`${this.url}/services/${serviceId}/publish`, {});
+  }
+
   getServiceGaps(serviceId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.url}/services/${serviceId}/gaps`);
   }

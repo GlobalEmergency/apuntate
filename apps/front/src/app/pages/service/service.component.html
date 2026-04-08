@@ -31,6 +31,11 @@
         </div>
 
         <div *ngIf="isAdmin()" class="m-t-16" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button mat-flat-button color="primary" (click)="publish()"
+                  *ngIf="service.status === 'draft'"
+                  [disabled]="loading">
+            <mat-icon>publish</mat-icon> Publicar servicio
+          </button>
           <button mat-stroked-button color="primary" (click)="edit()">
             <mat-icon>edit</mat-icon> Editar
           </button>
