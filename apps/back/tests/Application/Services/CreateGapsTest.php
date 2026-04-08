@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Tests\Application\Services;
 
+use GlobalEmergency\Apuntate\Application\Services\CreateGaps;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Repository\ServiceRepository;
 use GlobalEmergency\Apuntate\Repository\UnitRepository;

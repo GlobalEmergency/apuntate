@@ -1,5 +1,3 @@
-version: '3.6'
-
 services:
   php-fpm:
     user: root
@@ -14,4 +12,4 @@ services:
       PHP_IDE_CONFIG: "serverName=apuntate,apuntate_test"
   pgsql:
     ports:
-      - "5432:5432"
+      - "5434:5432"
