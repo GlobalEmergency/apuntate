@@ -49,6 +49,7 @@ class Service
 
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->units = new ArrayCollection();
         $this->gaps = new ArrayCollection();
     }

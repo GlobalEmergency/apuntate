@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -12,39 +14,46 @@ use GlobalEmergency\Apuntate\Entity\Gap;
  * @method Gap[]    findAll()
  * @method Gap[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class GapRepository extends ServiceEntityRepository
+class GapRepository extends ServiceEntityRepository implements GapRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Gap::class);
     }
 
-    // /**
-    //  * @return Gap[] Returns an array of Gap objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findById(string $id): ?Gap
     {
-        return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Gap
+    public function save(Gap $gap): void
+    {
+        $this->getEntityManager()->persist($gap);
+        $this->getEntityManager()->flush();
+    }
+
+    public function findAvailableByService(string $serviceId): array
     {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('g.service = :serviceId')
+            ->andWhere('g.user IS NULL')
+            ->setParameter('serviceId', $serviceId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function findByService(string $serviceId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.service = :serviceId')
+            ->setParameter('serviceId', $serviceId)
+            ->leftJoin('g.user', 'u')
+            ->addSelect('u')
+            ->leftJoin('g.unitComponent', 'uc')
+            ->addSelect('uc')
+            ->leftJoin('uc.component', 'c')
+            ->addSelect('c')
+            ->getQuery()
+            ->getResult();
+    }
 }

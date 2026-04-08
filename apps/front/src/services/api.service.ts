@@ -63,4 +63,17 @@ export class ApiService implements ServicesInterface, AlertRepositoryInterface{
   addService(service: Service): Observable<void> {
     return this.http.post<void>(`${this.url}/services`, service);
   }
+
+  getServiceGaps(serviceId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/services/${serviceId}/gaps`);
+  }
+
+  signupForService(serviceId: string, gapId?: string): Observable<any> {
+    const body = gapId ? { gap_id: gapId } : {};
+    return this.http.post(`${this.url}/services/${serviceId}/signup`, body);
+  }
+
+  withdrawFromService(serviceId: string, gapId: string): Observable<any> {
+    return this.http.post(`${this.url}/services/${serviceId}/withdraw`, { gap_id: gapId });
+  }
 }
