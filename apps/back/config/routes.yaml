@@ -16,3 +16,13 @@ gesdinet_jwt_refresh_token:
 
 api_infra_routes:
   resource: ../src/Api/Infrastructure/Symfony/routes.yaml
+
+app_swagger_ui:
+  path: /api/doc
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
+app_swagger_json:
+  path: /api/doc.json
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger_json }
