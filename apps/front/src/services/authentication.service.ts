@@ -45,18 +45,16 @@ export class AuthenticationService {
 
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post<{ token: string; refresh_token: string }>(`${this.url}/auth/login`, credentials).pipe(
-      switchMap((tokens: { token: string; refresh_token: string }) => {
-        return this.storeAccessToken(tokens.token, tokens.refresh_token)
-      }),
+      tap((tokens) => this.storeAccessToken(tokens.token, tokens.refresh_token)),
     );
   }
 
-  storeAccessToken(token: string, refreshToken: string) {
+  private storeAccessToken(token: string, refreshToken: string): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     this.currentAccessToken = token;
+    this.payload = jwtDecode(token);
     this.isAuthenticated.next(true);
-    return token;
   }
 
   logout() {
