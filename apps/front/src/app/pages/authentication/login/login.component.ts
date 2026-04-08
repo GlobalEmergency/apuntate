@@ -11,7 +11,7 @@ import { AlertService } from 'src/services/alert.service';
 })
 export class LoginPage implements OnInit {
   credentials: FormGroup = new FormGroup({
-    username: this.fb.control('', [Validators.required, Validators.minLength(3)]),
+    email: this.fb.control('', [Validators.required, Validators.email]),
     password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
   });
 
@@ -32,7 +32,8 @@ export class LoginPage implements OnInit {
     // const loading = await this.loadingController.create();
     // await loading.present();
 
-    this.authService.login(this.credentials.value).subscribe(
+    const loginData = { username: this.credentials.value.email, password: this.credentials.value.password };
+    this.authService.login(loginData).subscribe(
       async (res: any) => {
         // await loading.dismiss();
         this.router.navigateByUrl('/', { replaceUrl: true });
@@ -53,8 +54,8 @@ export class LoginPage implements OnInit {
   }
 
   // Easy access for form fields
-  get username() {
-    return this.credentials.get('username');
+  get email() {
+    return this.credentials.get('email');
   }
 
   get password() {

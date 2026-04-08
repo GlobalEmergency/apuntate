@@ -1,3 +1,5 @@
+api_register:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\RegisterController
 api_health:
   resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\HealthController
 api_services:

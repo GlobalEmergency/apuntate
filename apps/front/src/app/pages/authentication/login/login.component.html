@@ -5,8 +5,8 @@
         <mat-card-content class="p-32">
           <div class="text-center">
             <!-- <a [routerLink]="['/dashboard']"> -->
-            <img src="https://globalemergency.online/wp-content/uploads/2021/12/apuntate.png" class="align-middle m-2"
-              alt="logo" />
+            <img src="assets/images/logos/apuntate.png" class="align-middle m-2"
+              alt="logo" style="max-width: 100%; height: auto;" />
             <!-- </a> -->
           </div>
 
@@ -34,10 +34,10 @@
           <form class="m-t-30" (ngSubmit)="login()" [formGroup]="credentials">
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="email" placeholder="Email" formControlName="username">
-              <mat-error *ngIf="(username?.dirty || username?.touched) && username?.errors">
-                <span *ngIf="username?.errors?.['required']">Email is required</span>
-                <span *ngIf="username?.errors?.['email']">Email is invalid</span>
+              <input matInput type="email" placeholder="Email" formControlName="email">
+              <mat-error *ngIf="(email?.dirty || email?.touched) && email?.errors">
+                <span *ngIf="email?.errors?.['required']">Email is required</span>
+                <span *ngIf="email?.errors?.['email']">Email is invalid</span>
               </mat-error>
             </mat-form-field>
             <!-- password -->
@@ -60,7 +60,7 @@
             <!-- input -->
           </form>
           <span class="d-block f-w-500 text-center m-t-24">Aún sin cuenta?
-            <a [routerLink]="['/authentication/register']" class="text-decoration-none text-primary f-w-500 f-s-14">
+            <a [routerLink]="['/register']" class="text-decoration-none text-primary f-w-500 f-s-14">
               Regístrate</a>
           </span>
         </mat-card-content>
