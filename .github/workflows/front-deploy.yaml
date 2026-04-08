@@ -50,7 +50,7 @@ jobs:
           API_URL: ${{ vars.API_URL }}
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.2
+        uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
           role-to-assume: arn:aws:iam::960349283643:role/gha-${{ env.APP_NAME }}-${{ env.APP_ENV }}
           role-session-name: ECR-login
