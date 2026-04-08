@@ -69,22 +69,12 @@ export class AuthenticationService {
   getNewAccessToken() {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (refreshToken && refreshToken !== 'undefined') {
-      console.log('refresh', refreshToken);
       return this.http.post(`${this.url}/auth/refresh`, { refresh_token: refreshToken }).pipe(
-        catchError(err => {
-          console.log('refresh error', err);
+        catchError(() => {
           this.logout();
           return of(null);
         }),
-      //   Verify if body code !== 401
-        tap(value => {
-          console.log("Response",value);
-          // if (value.code === 401) {
-          //   this.logout();
-          // }
-        })
-      )
-        ;
+      );
     } else {
       this.logout();
       return null;

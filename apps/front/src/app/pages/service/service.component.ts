@@ -28,7 +28,11 @@ export class ServiceComponent {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
+    this.loadService(id);
+  }
 
+  private loadService(id: string) {
+    this.loading = true;
     this.apiService.getService(id).subscribe({
       next: (service) => {
         this.service = service;
@@ -118,7 +122,7 @@ export class ServiceComponent {
       next: () => {
         this.message = { text: 'Servicio publicado. Se ha notificado a todos los miembros.', type: 'success' };
         this.loading = false;
-        this.ngOnInit();
+        this.loadService(this.service!.id);
       },
       error: (err) => {
         this.message = { text: err.error?.error || 'Error al publicar el servicio.', type: 'error' };
@@ -145,7 +149,7 @@ export class ServiceComponent {
         this.message = { text: 'Servicio cancelado.', type: 'success' };
         this.loading = false;
         this.confirmingCancel = false;
-        this.ngOnInit();
+        this.loadService(this.service!.id);
       },
       error: (err) => {
         this.message = { text: err.error?.error || 'Error al cancelar el servicio.', type: 'error' };

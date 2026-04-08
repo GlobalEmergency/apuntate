@@ -1,40 +1,26 @@
-import {inject, NgModule} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  CanMatchFn,
-  Route, Router,
-  RouterModule, RouterStateSnapshot,
-  Routes,
-  UrlSegment
-} from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { CanActivateFn, Router, RouterModule, Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 import { AuthenticationService } from '../services/authentication.service';
-import {ErrorComponent} from "./pages/error/error.component";
-import {NotfoundComponent} from "./pages/error/notfound.component";
-const userLogged: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
-  var ret = inject(AuthenticationService).checkAuthentication();
-  if(ret) return true;
-  inject(Router).navigate(['/login']);
-  return false;
+import { NotfoundComponent } from './pages/error/notfound.component';
+
+const userLogged: CanActivateFn = () => {
+  const isAuth = inject(AuthenticationService).checkAuthentication();
+  if (isAuth) return true;
+  return inject(Router).createUrlTree(['/login']);
 };
-const userLogoff: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
-  var ret = inject(AuthenticationService).checkAuthentication();
-  if(ret) inject(Router).navigate(['/']);
-  return !ret;
+
+const userLogoff: CanActivateFn = () => {
+  const isAuth = inject(AuthenticationService).checkAuthentication();
+  if (isAuth) return inject(Router).createUrlTree(['/dashboard']);
+  return true;
 };
-const userAdmin: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
-  return inject(AuthenticationService).checkAuthentication('ROLE_ADMIN');
+
+const userAdmin: CanActivateFn = () => {
+  const isAdmin = inject(AuthenticationService).checkAuthentication('ROLE_ADMIN');
+  if (isAdmin) return true;
+  return inject(Router).createUrlTree(['/dashboard']);
 };
 
 const routes: Routes = [
@@ -62,26 +48,12 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./pages/pages.module').then((m) => m.PagesModule),
       },
-
-    //   // {
-    //   //   path: 'ui-components',
-    //   //   loadChildren: () =>
-    //   //     import('./pages/ui-components/ui-components.module').then(
-    //   //       (m) => m.UicomponentsModule
-    //   //     ),
-    //   // },
-    //   // {
-    //   //   path: 'extra',
-    //   //   loadChildren: () =>
-    //   //     import('./pages/extra/extra.module').then((m) => m.ExtraModule),
-    //   // },
     ],
   },
   {
     path: '',
     component: BlankComponent,
     canActivateChild: [userLogoff],
-    // canActivateChild: [!userLogged],
     children: [
       {
         path: '',
@@ -89,24 +61,17 @@ const routes: Routes = [
           import('./pages/authentication/authentication.module').then(
             (m) => m.AuthenticationModule,
           ),
-        // canLoad: [IntroGuard, AutoLoginGuard]
       },
     ],
   },
   {
     path: '**',
-    // redirectTo: '/notfound',
     component: NotfoundComponent,
-  },
-  {
-    path: 'notfound',
-    component: ErrorComponent,
   },
 ];
 
-
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
