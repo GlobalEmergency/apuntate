@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../../services/authentication.service';
-import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -10,11 +9,11 @@ import { AlertService } from '../../../../services/alert.service';
 })
 export class RegisterComponent {
   loading = false;
+  message: { text: string; type: 'success' | 'error' } | null = null;
 
   constructor(
     private router: Router,
     @Inject(AuthenticationService) private authService: AuthenticationService,
-    private alertService: AlertService,
   ) {}
 
   form = new FormGroup({
@@ -34,21 +33,22 @@ export class RegisterComponent {
     }
 
     this.loading = true;
+    this.message = null;
 
     this.authService.register(this.form.value).subscribe({
       next: () => {
         this.loading = false;
-        this.alertService.openSnackBar('Cuenta creada correctamente. Inicia sesión.', 'OK');
-        this.router.navigate(['/login']);
+        this.message = { text: 'Cuenta creada correctamente. Redirigiendo al login...', type: 'success' };
+        setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (error) => {
         this.loading = false;
         if (error.status === 409) {
-          this.alertService.openSnackBar('Ya existe una cuenta con este email.', 'Cerrar');
+          this.message = { text: 'Ya existe una cuenta con este email.', type: 'error' };
         } else if (error.status === 400) {
-          this.alertService.openSnackBar('Revisa los campos del formulario.', 'Cerrar');
+          this.message = { text: 'Revisa los campos del formulario.', type: 'error' };
         } else {
-          this.alertService.openSnackBar('Error al registrar. Inténtalo de nuevo.', 'Cerrar');
+          this.message = { text: 'Error al registrar. Inténtalo de nuevo.', type: 'error' };
         }
       },
     });

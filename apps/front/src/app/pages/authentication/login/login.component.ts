@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Inject } from '@angular/core';
 import { AuthenticationService } from '../../../../services/authentication.service';
-import { AlertService } from 'src/services/alert.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
+  loading = false;
+  message: { text: string; type: 'success' | 'error' } | null = null;
+
   credentials: FormGroup = new FormGroup({
     email: this.fb.control('', [Validators.required, Validators.email]),
     password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
@@ -19,41 +21,33 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     @Inject(AuthenticationService) private authService: AuthenticationService,
     private router: Router,
-    private alertService: AlertService
-  ) {
-    console.log('LoginPage.constructor()');
-  }
+  ) {}
 
-  ngOnInit(): void {
-    // throw new Error('Method not implemented.');
-  }
+  login() {
+    if (!this.credentials.valid) {
+      return;
+    }
 
-  async login() {
-    // const loading = await this.loadingController.create();
-    // await loading.present();
+    this.loading = true;
+    this.message = null;
 
     const loginData = { username: this.credentials.value.email, password: this.credentials.value.password };
-    this.authService.login(loginData).subscribe(
-      async (res: any) => {
-        // await loading.dismiss();
+    this.authService.login(loginData).subscribe({
+      next: () => {
+        this.loading = false;
         this.router.navigateByUrl('/', { replaceUrl: true });
       },
-      async (res: any) => {
-        // await loading.dismiss();
-        // const alert = await this.alertController.create({
-        //   header: 'Login failed',
-        //   message: res.error.error,
-        //   buttons: ['OK'],
-        // });
-
-        // await alert.present();
-        this.alertService.openSnackBar('Login failed.');
-        console.warn('Login failed', res.error.error)
-      }
-    );
+      error: (error) => {
+        this.loading = false;
+        if (error.status === 401) {
+          this.message = { text: 'Email o contraseña incorrectos.', type: 'error' };
+        } else {
+          this.message = { text: 'Error al iniciar sesión. Inténtalo de nuevo.', type: 'error' };
+        }
+      },
+    });
   }
 
-  // Easy access for form fields
   get email() {
     return this.credentials.get('email');
   }
