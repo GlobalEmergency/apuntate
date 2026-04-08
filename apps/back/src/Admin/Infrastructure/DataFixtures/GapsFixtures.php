@@ -10,7 +10,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class GapsFixtures extends Fixture
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder
+        private UserPasswordHasherInterface $passwordEncoder,
     ) {
     }
     private ObjectManager $manager;

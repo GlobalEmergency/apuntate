@@ -160,7 +160,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
-        return;
     }
 
     public function getUsername()

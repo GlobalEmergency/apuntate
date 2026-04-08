@@ -18,7 +18,7 @@ class UserCrudController extends AbstractCrudController
     private ?string $password;
 
     public function __construct(
-        UserPasswordHasherInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordEncoder,
     ) {
         $this->passwordEncoder = $passwordEncoder;
         //        $this->security = $security;
