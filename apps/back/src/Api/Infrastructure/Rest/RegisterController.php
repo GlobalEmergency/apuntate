@@ -15,7 +15,8 @@ class RegisterController extends AbstractController
 {
     public function __construct(
         private RegisterOrganization $registerOrganization,
-    ) {}
+    ) {
+    }
 
     #[Route('/api/auth/register', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
@@ -26,7 +27,7 @@ class RegisterController extends AbstractController
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
 
-        if ($name === '' || $email === '' || $password === '') {
+        if ('' === $name || '' === $email || '' === $password) {
             return new JsonResponse(
                 ['error' => 'Name, email and password are required.'],
                 Response::HTTP_BAD_REQUEST

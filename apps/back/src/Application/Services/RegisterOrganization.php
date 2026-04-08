@@ -13,12 +13,13 @@ final class RegisterOrganization
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
-    ) {}
+    ) {
+    }
 
     public function execute(string $name, string $email, string $plainPassword): User
     {
         $existingUser = $this->userRepository->findByEmail($email);
-        if ($existingUser !== null) {
+        if (null !== $existingUser) {
             throw new \DomainException('A user with this email already exists.');
         }
 
