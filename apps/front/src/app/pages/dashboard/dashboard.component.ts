@@ -1,8 +1,9 @@
-import {Component, ViewEncapsulation, ViewChild, Injectable, Inject} from '@angular/core';
-import {ApiService} from "../../../services/api.service";
-import {ServicesInterface} from "../../../domain/ServicesInterface";
-import {Service} from "../../../domain/Service";
-import {Router} from "@angular/router";
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { ApiService } from '../../../services/api.service';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { ServicesInterface } from '../../../domain/ServicesInterface';
+import { Service } from '../../../domain/Service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,17 +11,22 @@ import {Router} from "@angular/router";
   encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent {
-  displayedColumnsTable: string[] = ['id', 'title', 'users'];
-
-  services: Service[];
+  services: Service[] = [];
+  userName = '';
 
   constructor(
     @Inject(ApiService) private serviceRepository: ServicesInterface,
+    private authService: AuthenticationService,
     private router: Router,
   ) {
-    this.serviceRepository.getNextEvents().subscribe(data => {
-      this.services = data
-    })
+    const payload = this.authService.payload;
+    if (payload?.username) {
+      this.userName = payload.username;
+    }
+
+    this.serviceRepository.getNextEvents().subscribe((data) => {
+      this.services = data;
+    });
   }
 
   showService(service: Service) {

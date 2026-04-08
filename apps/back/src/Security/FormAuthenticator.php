@@ -39,7 +39,6 @@ class FormAuthenticator extends AbstractLoginFormAuthenticator
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-                $request->request->get('organization', null),
             ]
         );
     }
@@ -50,9 +49,7 @@ class FormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
         return new RedirectResponse($this->urlGenerator->generate('admin'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
