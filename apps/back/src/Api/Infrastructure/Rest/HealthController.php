@@ -9,8 +9,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HealthController
 {
+    #[Route('/', methods: ['GET'])]
+    public function index(): JsonResponse
+    {
+        return new JsonResponse([
+            'name' => 'Apuntate API',
+            'status' => 'ok',
+            'docs' => '/api',
+        ]);
+    }
+
     #[Route('/health', methods: ['GET'])]
-    public function __invoke(): JsonResponse
+    public function health(): JsonResponse
     {
         return new JsonResponse(['status' => 'ok']);
     }
