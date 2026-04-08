@@ -167,7 +167,7 @@ class Service
         return $this->dateEnd;
     }
 
-    public function setDateEnd(\DateTime $dateEnd): self
+    public function setDateEnd(\DateTimeInterface $dateEnd): self
     {
         if (!$dateEnd instanceof Carbon) {
             $this->dateEnd = Carbon::instance($dateEnd);
@@ -186,7 +186,7 @@ class Service
     /**
      * @param mixed $datePlace
      */
-    public function setDatePlace(\DateTime $datePlace): self
+    public function setDatePlace(\DateTimeInterface $datePlace): self
     {
         if (!$datePlace instanceof Carbon) {
             $this->datePlace = Carbon::instance($datePlace);
@@ -207,9 +207,21 @@ class Service
         return ServiceStatus::tryFrom($this->status);
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(ServiceStatus|string $status): self
     {
-        $this->status = $status;
+        $this->status = $status instanceof ServiceStatus ? $status->value : $status;
+
+        return $this;
+    }
+
+    public function setStatusFromString(string $status): self
+    {
+        $parsed = ServiceStatus::tryFrom($status);
+        if (null === $parsed) {
+            throw new \InvalidArgumentException(sprintf('Invalid service status: %s', $status));
+        }
+
+        $this->status = $parsed->value;
 
         return $this;
     }

@@ -30,10 +30,27 @@
           </div>
         </div>
 
-        <div *ngIf="isAdmin()" class="m-t-16" style="display: flex; gap: 8px;">
+        <div *ngIf="isAdmin()" class="m-t-16" style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button mat-stroked-button color="primary" (click)="edit()">
             <mat-icon>edit</mat-icon> Editar
           </button>
+          <button mat-stroked-button color="warn" (click)="cancelService()"
+                  *ngIf="service.status !== 'cancelled' && service.status !== 'finished'">
+            <mat-icon>cancel</mat-icon> Cancelar servicio
+          </button>
+        </div>
+
+        <!-- Cancel confirmation -->
+        <div *ngIf="confirmingCancel" class="m-t-16 p-16"
+             style="background: #fff3e0; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <span style="color: #e65100;">
+            <mat-icon style="vertical-align: middle;">warning</mat-icon>
+            ¿Seguro que quieres cancelar este servicio?
+          </span>
+          <div style="display: flex; gap: 8px;">
+            <button mat-flat-button color="warn" (click)="confirmCancel()">Sí, cancelar</button>
+            <button mat-stroked-button (click)="dismissCancel()">No</button>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>

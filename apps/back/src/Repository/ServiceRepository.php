@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Carbon\Carbon;
@@ -13,49 +15,48 @@ use GlobalEmergency\Apuntate\Entity\Service;
  * @method Service[]    findAll()
  * @method Service[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ServiceRepository extends ServiceEntityRepository
+class ServiceRepository extends ServiceEntityRepository implements ServiceRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Service::class);
     }
 
-    /**
-     * @return Service[] Returns an array of Service objects
-     */
-    public function findBetweenDates(\DateTime $dateStart, \DateTime $dateEnd): array
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.dateStart BETWEEN :start AND :end')
-            ->setParameter('start', $dateStart->format('Y-m-d H:i'))
-            ->setParameter('end', $dateEnd->format('Y-m-d H:i'))
-            ->orderBy('s.dateStart', 'ASC')
-//            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findNexts(?\DateTime $date = null)
-    {
-        if (is_null($date)) {
-            $date = Carbon::now();
-        } elseif ($date instanceof \DateTime) {
-            $date = Carbon::instance($date);
-        }
-
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.dateStart > :date')
-            ->setParameter('date', $date)
-            ->orderBy('s.dateStart', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
     public function save(Service $service): void
     {
         $this->getEntityManager()->persist($service);
         $this->getEntityManager()->flush();
+    }
+
+    public function delete(Service $service): void
+    {
+        $this->getEntityManager()->remove($service);
+        $this->getEntityManager()->flush();
+    }
+
+    public function findById(string $id): ?Service
+    {
+        return $this->find($id);
+    }
+
+    public function findUpcoming(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateStart > :now')
+            ->setParameter('now', Carbon::now())
+            ->orderBy('s.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBetweenDates(\DateTimeInterface $start, \DateTimeInterface $end): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateStart BETWEEN :start AND :end')
+            ->setParameter('start', $start->format('Y-m-d H:i'))
+            ->setParameter('end', $end->format('Y-m-d H:i'))
+            ->orderBy('s.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

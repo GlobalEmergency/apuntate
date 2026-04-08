@@ -5,51 +5,131 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
 use Carbon\Carbon;
-use GlobalEmergency\Apuntate\Entity\Service;
-use GlobalEmergency\Apuntate\Repository\ServiceRepository;
+use GlobalEmergency\Apuntate\Application\Services\CancelService;
+use GlobalEmergency\Apuntate\Application\Services\CreateService;
+use GlobalEmergency\Apuntate\Application\Services\UpdateService;
+use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
 use GlobalEmergency\Apuntate\Services\CalendarTransform;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/services', name: 'api_services_')]
 final class ServicesController extends AbstractController
 {
-    #[Route('/nexts', name: 'nexts', methods: ['GET'])]
-    public function nexts(Request $request, ServiceRepository $serviceRepository, SerializerInterface $serializer)
-    {
-        $services = $serviceRepository->findNexts();
+    public function __construct(
+        private ServiceRepositoryInterface $serviceRepository,
+        private SerializerInterface $serializer,
+    ) {
+    }
 
-        return new JsonResponse($serializer->serialize($services, 'json'), 200, [], true);
+    #[Route('/nexts', name: 'nexts', methods: ['GET'])]
+    public function nexts(): JsonResponse
+    {
+        $services = $this->serviceRepository->findUpcoming();
+
+        return new JsonResponse(
+            $this->serializer->serialize($services, 'json'),
+            Response::HTTP_OK,
+            [],
+            true,
+        );
     }
 
     #[Route('/calendar', name: 'calendar', methods: ['GET'])]
-    public function getCalendar(Request $request, ServiceRepository $serviceRepository)
+    public function calendar(Request $request): JsonResponse
     {
-        $dateStart = Carbon::parseFromLocale($request->get('s', Carbon::now()->startOfMonth()->format('d-m-Y')))->startOfDay();
-        $dateEnd = Carbon::parseFromLocale($request->get('e', Carbon::now()->endOfMonth()->format('d-m-Y')))->endOfDay();
-        $services = $serviceRepository->findBetweenDates($dateStart, $dateEnd);
+        $dateStart = Carbon::parseFromLocale(
+            $request->get('s', Carbon::now()->startOfMonth()->format('d-m-Y'))
+        )->startOfDay();
+        $dateEnd = Carbon::parseFromLocale(
+            $request->get('e', Carbon::now()->endOfMonth()->format('d-m-Y'))
+        )->endOfDay();
+
+        $services = $this->serviceRepository->findBetweenDates($dateStart, $dateEnd);
 
         return new JsonResponse(CalendarTransform::transformServices($services));
     }
 
-    #[Route('', name: 'post', methods: ['POST'])]
-    public function newService(Request $request, ServiceRepository $serviceRepository, SerializerInterface $serializer)
+    #[Route('', name: 'create', methods: ['POST'])]
+    public function create(Request $request, CreateService $createService): JsonResponse
     {
-        $service = $serializer->deserialize($request->getContent(), Service::class, 'json');
-        $serviceRepository->save($service);
+        $data = json_decode($request->getContent(), true) ?? [];
 
-        return new JsonResponse(null, 201);
+        try {
+            $service = $createService->execute(
+                name: $data['name'] ?? '',
+                dateStart: new \DateTimeImmutable($data['dateStart'] ?? 'now'),
+                dateEnd: new \DateTimeImmutable($data['dateEnd'] ?? 'now'),
+                datePlace: new \DateTimeImmutable($data['datePlace'] ?? 'now'),
+                description: $data['description'] ?? null,
+            );
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse(
+            ['id' => $service->getId()->toRfc4122(), 'name' => $service->getName()],
+            Response::HTTP_CREATED,
+        );
     }
 
-    #[Route('/{service}', name: 'get', methods: ['GET'])]
-    public function getService(Request $request, ServiceRepository $serviceRepository, Uuid $service, SerializerInterface $serializer)
+    #[Route('/{serviceId}', name: 'get', methods: ['GET'])]
+    public function get(string $serviceId): JsonResponse
     {
-        $service = $serviceRepository->find($service);
+        $service = $this->serviceRepository->findById($serviceId);
 
-        return new JsonResponse($serializer->serialize($service, 'json'), 200, [], true);
+        if (null === $service) {
+            return new JsonResponse(['error' => 'Service not found.'], Response::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize($service, 'json'),
+            Response::HTTP_OK,
+            [],
+            true,
+        );
+    }
+
+    #[Route('/{serviceId}', name: 'update', methods: ['PUT'])]
+    public function update(string $serviceId, Request $request, UpdateService $updateService): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        try {
+            $service = $updateService->execute(
+                serviceId: $serviceId,
+                name: $data['name'] ?? null,
+                description: $data['description'] ?? null,
+                dateStart: isset($data['dateStart']) ? new \DateTimeImmutable($data['dateStart']) : null,
+                dateEnd: isset($data['dateEnd']) ? new \DateTimeImmutable($data['dateEnd']) : null,
+                datePlace: isset($data['datePlace']) ? new \DateTimeImmutable($data['datePlace']) : null,
+                status: $data['status'] ?? null,
+            );
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize($service, 'json'),
+            Response::HTTP_OK,
+            [],
+            true,
+        );
+    }
+
+    #[Route('/{serviceId}', name: 'cancel', methods: ['DELETE'])]
+    public function cancel(string $serviceId, CancelService $cancelService): JsonResponse
+    {
+        try {
+            $cancelService->execute($serviceId);
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

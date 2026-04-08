@@ -15,6 +15,7 @@ export class ServiceComponent {
   loading = true;
   signupLoading: string | null = null;
   message: { text: string; type: 'success' | 'error' } | null = null;
+  confirmingCancel = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -109,6 +110,33 @@ export class ServiceComponent {
 
   edit() {
     if (!this.service) return;
-    this.router.navigate(['/admin/service/', this.service.id]);
+    this.router.navigate(['/service', this.service.id, 'edit']);
+  }
+
+  cancelService() {
+    if (!this.service || this.confirmingCancel) return;
+    this.confirmingCancel = true;
+  }
+
+  confirmCancel() {
+    if (!this.service) return;
+    this.loading = true;
+    this.apiService.cancelService(this.service.id).subscribe({
+      next: () => {
+        this.message = { text: 'Servicio cancelado.', type: 'success' };
+        this.loading = false;
+        this.confirmingCancel = false;
+        this.ngOnInit();
+      },
+      error: (err) => {
+        this.message = { text: err.error?.error || 'Error al cancelar el servicio.', type: 'error' };
+        this.loading = false;
+        this.confirmingCancel = false;
+      },
+    });
+  }
+
+  dismissCancel() {
+    this.confirmingCancel = false;
   }
 }
