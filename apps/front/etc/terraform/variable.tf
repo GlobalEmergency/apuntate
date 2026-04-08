@@ -22,7 +22,7 @@ variable "environment" {
 }
 
 variable "github_repository_name" {
-  default     = "GlobalEmergency/apuntate-front"
+  default     = "GlobalEmergency/apuntate"
   description = "Github repository name."
   type        = string
 }
