@@ -118,7 +118,7 @@ jobs:
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ vars.SERVER_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_USER: ${{ vars.SSH_USER }}
           TARGET: /var/www/vhosts/globalemergency.online/apuntate-back.globalemergency.online
           SOURCE: apps/back/deploy/
           ARGS: -rlDz --delete --exclude=.env.local --exclude=var --exclude=config/jwt
@@ -142,7 +142,7 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ vars.SERVER_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ vars.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
