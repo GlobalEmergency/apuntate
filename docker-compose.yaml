@@ -4,7 +4,7 @@ services:
   php-fpm:
     image: apuntate-php-fpm
     build:
-      context: ../../
+      context: ./apps/back
       dockerfile: etc/docker/php-fpm/dev/Dockerfile
     container_name: apuntate-php-fpm
     depends_on:
@@ -14,7 +14,7 @@ services:
   pgsql:
     image: apuntate-pgsql
     build:
-      context: ./postgres
+      context: ./apps/back/etc/docker/postgres
     container_name: apuntate-pgsql
     environment:
       POSTGRES_PASSWORD: pass

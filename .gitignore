@@ -1,0 +1,51 @@
+# === IDEs and editors ===
+.idea/
+.vscode/
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.history/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === Backend (Symfony/PHP) ===
+apps/back/.env.local
+apps/back/.env.local.php
+apps/back/.env.*.local
+apps/back/config/secrets/prod/prod.decrypt.private.php
+apps/back/public/bundles/
+apps/back/var/
+apps/back/vendor/
+apps/back/config/jwt/*.pem
+apps/back/.php-cs-fixer.cache
+apps/back/.phpunit.result.cache
+apps/back/phpunit.xml
+apps/back/phpstan.neon
+
+# === Frontend (Angular) ===
+apps/front/dist/
+apps/front/tmp/
+apps/front/out-tsc/
+apps/front/bazel-out/
+apps/front/node_modules/
+apps/front/npm-debug.log
+apps/front/yarn-error.log
+apps/front/.angular/cache
+apps/front/.sass-cache/
+apps/front/connect.lock
+apps/front/coverage/
+apps/front/libpeerconnection.log
+apps/front/testem.log
+apps/front/typings/
+apps/front/template/
+apps/front/www/
+
+# === Terraform ===
+.terraform/
+*.tfstate
+*.tfstate.backup

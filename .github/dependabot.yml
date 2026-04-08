@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Backend - PHP
+  - package-ecosystem: "composer"
+    directory: "/apps/back"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Backend - Docker
+  - package-ecosystem: "docker"
+    directory: "/apps/back/etc/docker"
+    schedule:
+      interval: "weekly"
+
+  # Frontend - npm
+  - package-ecosystem: "npm"
+    directory: "/apps/front"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Frontend - Terraform
+  - package-ecosystem: "terraform"
+    directory: "/apps/front/etc/terraform"
+    schedule:
+      interval: "weekly"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

@@ -7,7 +7,7 @@ services:
       - ~/.aws:/var/www/.aws
       - ~/.composer:/var/www/.composer
       - ~/.ssh:/var/www/.ssh
-      - ../../:/var/www/html/:delegated
+      - ./apps/back:/var/www/html/:delegated
     ports:
       - "8081:80"
     environment:

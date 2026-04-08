@@ -1,14 +1,19 @@
-name: Lint and Test
+name: "Frontend: Lint and Test"
 
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'apps/front/**'
+      - '.github/workflows/front-lint.yml'
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: apps/front
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

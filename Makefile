@@ -1,83 +1,112 @@
 PROJECT_NAME := apuntate
 
-.PHONY: install
-install: build composer
-	$(MAKE) db-update
-	$(MAKE) db-update env=test
-	$(MAKE) tests
-
-.PHONY: build
-build:
-	@docker build -t $(PROJECT_NAME)-php-fpm -f etc/docker/php-fpm/dev/Dockerfile .
-	@docker build -t $(PROJECT_NAME)-pgsql -f etc/docker/postgres/Dockerfile etc/docker/postgres
-
-.PHONY: build-prod
-build-prod:
-	@docker build -t $(PROJECT_NAME)-php-fpm -f etc/docker/php-fpm/prod/Dockerfile .
+# ==========================================
+# Full stack
+# ==========================================
 
 .PHONY: up
 up:
-	docker-compose -f etc/docker/docker-compose.yaml -f etc/docker/docker-compose.dev.yaml -p $(PROJECT_NAME) up -d
-#	make composer
-
-.PHONY: up-gha
-up-gha:
-	@docker-compose -f etc/docker/docker-compose.yaml -p $(PROJECT_NAME) up -d
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -p $(PROJECT_NAME) up -d
 
 .PHONY: down
 down:
-	@docker-compose -f etc/docker/docker-compose.yaml -f etc/docker/docker-compose.dev.yaml -p $(PROJECT_NAME) down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -p $(PROJECT_NAME) down
 
-.PHONY: sh
-sh:
+.PHONY: build
+build: back-build
+
+.PHONY: install
+install: build up back-composer
+	$(MAKE) back-db-update
+	$(MAKE) back-db-update env=test
+	$(MAKE) back-tests
+
+# ==========================================
+# Backend
+# ==========================================
+
+.PHONY: back-build
+back-build:
+	@docker build -t $(PROJECT_NAME)-php-fpm -f apps/back/etc/docker/php-fpm/dev/Dockerfile apps/back
+	@docker build -t $(PROJECT_NAME)-pgsql -f apps/back/etc/docker/postgres/Dockerfile apps/back/etc/docker/postgres
+
+.PHONY: back-build-prod
+back-build-prod:
+	@docker build -t $(PROJECT_NAME)-php-fpm -f apps/back/etc/docker/php-fpm/prod/Dockerfile apps/back
+
+.PHONY: back-sh
+back-sh:
 	@docker exec -u www-data -it $(PROJECT_NAME)-php-fpm bash
 
-.PHONY: composer
-composer:
+.PHONY: back-composer
+back-composer:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm composer install --no-interaction
 
-.PHONY: db-update
 ifdef env
 ENV=--env=$(env)
 endif
-db-update: ## Recreate database schema
+
+.PHONY: back-db-update
+back-db-update:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:database:drop --if-exists --force $(ENV)
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:database:create $(ENV)
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:query:sql 'CREATE SCHEMA $(PROJECT_NAME)' $(ENV)
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:query:sql 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"' $(ENV)
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:migrations:migrate --no-interaction $(ENV)
 
-.PHONY: migrate
-migrate:
+.PHONY: back-migrate
+back-migrate:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:migrations:migrate --no-interaction
 
-.PHONY: migrations-diff
-migrations-diff:
+.PHONY: back-migrations-diff
+back-migrations-diff:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php ./bin/console doctrine:migrations:diff --no-interaction
 
-.PHONY: phpcs-fixer
-phpcs-fixer:
+.PHONY: back-phpcs-fixer
+back-phpcs-fixer:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php -dxdebug.mode=off vendor/bin/php-cs-fixer fix
 
-.PHONY: phpcs-validate
-phpcs-validate:
+.PHONY: back-phpcs-validate
+back-phpcs-validate:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php -dxdebug.mode=off vendor/bin/php-cs-fixer fix --dry-run --diff --stop-on-violation
 
-.PHONY: phpstan
-phpstan:
+.PHONY: back-phpstan
+back-phpstan:
 	@docker exec -u www-data --tty $(PROJECT_NAME)-php-fpm php vendor/bin/phpstan analyse -c phpstan.neon -l 2 src tests --no-interaction --xdebug
 
-.PHONY: tests
 ifdef suite
 TESTS_SUITE=--testsuite $(suite)
 endif
 
-.PHONY: tests
-tests:
-#	@make db-update env=test
+.PHONY: back-tests
+back-tests:
 	@docker exec -u www-data --tty -e APP_ENV=test $(PROJECT_NAME)-php-fpm php -dxdebug.mode=coverage vendor/bin/phpunit $(TESTS_SUITE)
-.PHONY: coverage
 
-coverage:
-	@make db-update env=test
+.PHONY: back-coverage
+back-coverage:
+	@$(MAKE) back-db-update env=test
 	@docker exec -u www-data --tty -e APP_ENV=test $(PROJECT_NAME)-php-fpm php -dxdebug.mode=coverage vendor/bin/phpunit
+
+# ==========================================
+# Frontend
+# ==========================================
+
+.PHONY: front-install
+front-install:
+	cd apps/front && npm ci
+
+.PHONY: front-start
+front-start:
+	cd apps/front && npm start
+
+.PHONY: front-build
+front-build:
+	cd apps/front && npm run build
+
+.PHONY: front-lint
+front-lint:
+	cd apps/front && npm run lint
+
+.PHONY: front-tests
+front-tests:
+	cd apps/front && npm run tests
