@@ -9,17 +9,17 @@ use GlobalEmergency\Apuntate\Entity\Component;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Entity\UnitComponent;
-use GlobalEmergency\Apuntate\Repository\UnitRepository;
+use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
 class CreateGapsTest extends TestCase
 {
     private CreateGaps $createGaps;
-    private UnitRepository $unitRepository;
+    private UnitRepositoryInterface $unitRepository;
 
     protected function setUp(): void
     {
-        $this->unitRepository = $this->createMock(UnitRepository::class);
+        $this->unitRepository = $this->createMock(UnitRepositoryInterface::class);
         $this->createGaps = new CreateGaps($this->unitRepository);
     }
 
@@ -37,7 +37,7 @@ class CreateGapsTest extends TestCase
         $unitComponent->setQuantity(2);
         $unit->addUnitComponent($unitComponent);
 
-        $this->unitRepository->method('find')->willReturn($unit);
+        $this->unitRepository->method('findById')->willReturn($unit);
 
         $service = new Service();
         $result = $this->createGaps->execute($service, [$unit->getId()->toRfc4122() => 2]);
@@ -47,7 +47,7 @@ class CreateGapsTest extends TestCase
 
     public function testSkipsUnknownUnit(): void
     {
-        $this->unitRepository->method('find')->willReturn(null);
+        $this->unitRepository->method('findById')->willReturn(null);
 
         $service = new Service();
         $result = $this->createGaps->execute($service, ['unknown-id' => 3]);

@@ -35,7 +35,7 @@ class SignupForServiceTest extends TestCase
         $service = new Service();
         $gap->setService($service);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
 
         $result = $this->useCase->execute($user, 'service-id', $gap->getId()->toRfc4122());
@@ -70,7 +70,7 @@ class SignupForServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUser($existingUser);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $newUser = new User();
         $newUser->setName('New');
@@ -112,7 +112,7 @@ class SignupForServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUnitComponent($unitComponent);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $user = new User();
         $user->setName('John');
@@ -140,7 +140,7 @@ class SignupForServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUnitComponent($unitComponent);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
 
         $user = new User();

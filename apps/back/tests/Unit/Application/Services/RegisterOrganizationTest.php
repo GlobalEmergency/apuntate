@@ -6,7 +6,7 @@ namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 
 use GlobalEmergency\Apuntate\Application\Services\RegisterOrganization;
 use GlobalEmergency\Apuntate\Entity\User;
-use GlobalEmergency\Apuntate\Repository\OrganizationRepository;
+use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -15,14 +15,14 @@ class RegisterOrganizationTest extends TestCase
 {
     private UserRepositoryInterface $userRepository;
     private UserPasswordHasherInterface $passwordHasher;
-    private OrganizationRepository $organizationRepository;
+    private OrganizationRepositoryInterface $organizationRepository;
     private RegisterOrganization $useCase;
 
     protected function setUp(): void
     {
         $this->userRepository = $this->createMock(UserRepositoryInterface::class);
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-        $this->organizationRepository = $this->createMock(OrganizationRepository::class);
+        $this->organizationRepository = $this->createMock(OrganizationRepositoryInterface::class);
         $this->useCase = new RegisterOrganization(
             $this->userRepository,
             $this->passwordHasher,

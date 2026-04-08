@@ -9,15 +9,25 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class FlattenExceptionNormalizer implements NormalizerInterface
 {
+    public function __construct(
+        private string $appEnv = 'prod',
+    ) {
+    }
+
     public function normalize($object, ?string $format = null, array $context = []): float|array|\ArrayObject|bool|int|string|null
     {
-        return [
+        $data = [
             'status' => $object->getStatusCode(),
             'message' => $object->getMessage(),
-            'class' => $object->getClass(),
-            'file' => $object->getFile(),
-            'line' => $object->getLine(),
         ];
+
+        if ('dev' === $this->appEnv || 'test' === $this->appEnv) {
+            $data['class'] = $object->getClass();
+            $data['file'] = $object->getFile();
+            $data['line'] = $object->getLine();
+        }
+
+        return $data;
     }
 
     public function supportsNormalization($data, ?string $format = null, array $context = []): bool
@@ -28,7 +38,7 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
     public function getSupportedTypes(?string $format): array
     {
         return [
-            FlattenException::class,
+            FlattenException::class => true,
         ];
     }
 }

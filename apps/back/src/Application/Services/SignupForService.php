@@ -26,7 +26,7 @@ final class SignupForService
 
     private function signupForSpecificGap(User $user, string $gapId): Gap
     {
-        $gap = $this->gapRepository->findById($gapId);
+        $gap = $this->gapRepository->findByIdForUpdate($gapId);
 
         if (null === $gap) {
             throw new \DomainException('Gap not found.');

@@ -159,7 +159,7 @@ class Unit
         return $this;
     }
 
-    public function componentsMax()
+    public function componentsMax(): int
     {
         $max = 0;
         foreach ($this->getUnitComponents() as $unitComponent) {

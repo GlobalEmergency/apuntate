@@ -22,6 +22,15 @@ class AlertRepository extends ServiceEntityRepository implements AlertRepository
         $this->getEntityManager()->flush();
     }
 
+    public function saveAll(array $alerts): void
+    {
+        $em = $this->getEntityManager();
+        foreach ($alerts as $alert) {
+            $em->persist($alert);
+        }
+        $em->flush();
+    }
+
     public function findById(string $id): ?Alert
     {
         return $this->find($id);

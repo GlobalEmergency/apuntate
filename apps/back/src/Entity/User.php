@@ -155,21 +155,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function getSalt()
-    {
-        // TODO: Implement getSalt() method.
-        return null;
-    }
-
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
-    }
-
-    public function getUsername()
-    {
-        // TODO: Implement getUsername() method.
-        return $this->getEmail();
     }
 
     /**

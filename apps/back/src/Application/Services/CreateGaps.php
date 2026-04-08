@@ -6,19 +6,19 @@ namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\Service;
-use GlobalEmergency\Apuntate\Repository\UnitRepository;
+use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
 
 final class CreateGaps
 {
     public function __construct(
-        private UnitRepository $unitRepository,
+        private UnitRepositoryInterface $unitRepository,
     ) {
     }
 
     public function execute(Service $service, array $holes): Service
     {
         foreach ($holes as $unitId => $amount) {
-            $unit = $this->unitRepository->find($unitId);
+            $unit = $this->unitRepository->findById($unitId);
             if (null === $unit) {
                 continue;
             }

@@ -25,7 +25,7 @@ class Service
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private string $description;
+    private ?string $description = null;
 
     #[ORM\Column(type: 'carbon')]
     private \DateTimeInterface $dateStart;
@@ -105,9 +105,7 @@ class Service
 
     public function setDateStart(\DateTimeInterface $dateStart): self
     {
-        if (!$dateStart instanceof Carbon) {
-            $this->dateStart = Carbon::instance($dateStart);
-        }
+        $this->dateStart = $dateStart instanceof Carbon ? $dateStart : Carbon::instance($dateStart);
 
         return $this;
     }
@@ -173,11 +171,7 @@ class Service
 
     public function setDateEnd(\DateTimeInterface $dateEnd): self
     {
-        if (!$dateEnd instanceof Carbon) {
-            $this->dateEnd = Carbon::instance($dateEnd);
-        } else {
-            $this->dateEnd = $dateEnd;
-        }
+        $this->dateEnd = $dateEnd instanceof Carbon ? $dateEnd : Carbon::instance($dateEnd);
 
         return $this;
     }
@@ -192,11 +186,7 @@ class Service
      */
     public function setDatePlace(\DateTimeInterface $datePlace): self
     {
-        if (!$datePlace instanceof Carbon) {
-            $this->datePlace = Carbon::instance($datePlace);
-        } else {
-            $this->datePlace = $datePlace;
-        }
+        $this->datePlace = $datePlace instanceof Carbon ? $datePlace : Carbon::instance($datePlace);
 
         return $this;
     }
@@ -206,9 +196,9 @@ class Service
         return $this->name;
     }
 
-    public function getStatus(): ?ServiceStatus
+    public function getStatus(): ServiceStatus
     {
-        return ServiceStatus::tryFrom($this->status);
+        return ServiceStatus::from($this->status);
     }
 
     public function setStatus(ServiceStatus|string $status): self

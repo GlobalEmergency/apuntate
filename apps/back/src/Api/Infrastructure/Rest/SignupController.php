@@ -41,7 +41,7 @@ class SignupController extends AbstractController
             'id' => $gap->getId()->toRfc4122(),
             'service_id' => $gap->getService()->getId()->toRfc4122(),
             'user' => $user->getName(),
-        ], Response::HTTP_OK);
+        ], Response::HTTP_CREATED);
     }
 
     #[Route('/api/services/{serviceId}/withdraw', methods: ['POST'])]

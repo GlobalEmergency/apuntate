@@ -20,23 +20,24 @@ class NotifyNewService
     public function execute(Service $service): int
     {
         $users = $this->userRepository->findAll();
-        $count = 0;
+        $alerts = [];
 
         foreach ($users as $user) {
             $alert = new Alert();
             $alert->setTitle('Nuevo servicio: '.$service->getName());
             $alert->setResume(sprintf(
-                'Se ha publicado el servicio "%s" para el %s. ¡Apúntate!',
+                'Se ha publicado el servicio "%s" para el %s.',
                 $service->getName(),
-                $service->getDateStart()?->format('d/m/Y H:i') ?? 'fecha por confirmar',
+                $service->getDateStart()->format('d/m/Y H:i'),
             ));
             $alert->setType('new_service');
             $alert->setRecipient($user);
             $alert->setService($service);
-            $this->alertRepository->save($alert);
-            ++$count;
+            $alerts[] = $alert;
         }
 
-        return $count;
+        $this->alertRepository->saveAll($alerts);
+
+        return \count($alerts);
     }
 }

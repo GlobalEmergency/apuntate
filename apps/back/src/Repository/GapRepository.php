@@ -27,6 +27,16 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
         return $this->find($id);
     }
 
+    public function findByIdForUpdate(string $id): ?Gap
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)
+            ->getOneOrNullResult();
+    }
+
     public function save(Gap $gap): void
     {
         $this->getEntityManager()->persist($gap);
