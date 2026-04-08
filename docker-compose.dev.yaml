@@ -13,7 +13,7 @@ services:
 
   frontend:
     ports:
-      - "4200:4200"
+      - "4210:4200"
 
   pgsql:
     ports:
