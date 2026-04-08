@@ -1,43 +1,55 @@
-# APÚNTATE - Global Emergency
+# Apuntate — Backend
 
-## Resumen
-Apúntate es una aplicación enfocada en la gestión de los diferentes servicios disponibles dentro de una agrupación.
+Symfony 7 REST API for the Apuntate platform.
 
-Permite a los participantes conocer las necesidades que tiene el servicio y las diferentes posiciones necesarias, así como apuntarse de manera rápida y fácil.
+> For project overview, architecture, and contributing guidelines see the [root README](../../README.md).
 
-La información detallada, así como comentarios de los usuarios se puede encontrar en https://globalemergency.online/proyectos/apuntate/ 
+## Stack
 
-### Objetivos
+- PHP 8.2+, Symfony 7.0
+- Doctrine ORM 3 with PostgreSQL 16
+- JWT authentication (lexik/jwt-authentication-bundle)
+- EasyAdmin for admin panel
 
-- Facilitar a los diferentes componentes de las agrupaciones, la gestión de los servicios que se ofrecen, así como la gestión de las necesidades.
-- Ayudar a los diferentes gestores con las necesidades actuales, futuras así como los recursos disponibles.
+## Development
 
-## Colaboración
+All commands are run from the **monorepo root** via Make:
 
-Cualquier aportación es bienvenida, por lo que te animamos a ayudarnos a evolucionar el proyecto.
-Puedes simplemente dejarnos tus comentarios en la web del proyecto, abrir un issue, o simplemente subir tu PR justificando tu cambio o evolución y estaremos agradecidos de mencionar tus aportaciones.
+```bash
+make up                  # Start Docker services
+make back-composer       # Install dependencies
+make back-tests          # Run tests
+make back-phpcs-fixer    # Fix code style
+make back-phpstan        # Static analysis
+make back-sh             # Shell into container
+```
 
-### Colaboradores
-- vgpastor
-- tu?
+## JWT Setup
 
-## Stack tecnológico
-Apúntate está formada por:
-- Frontal en Angular con el objetivo de ser multidispositivo, lo que permite a los usuarios acceder desde cualquier dispositivo. El repositorio se encuentra en https://github.com/GlobalEmergency/apuntate-front
-- Backend basado en symfony con bbdd mysql y pensado para trabajar con PHP 8. El repositorio está en https://github.com/GlobalEmergency/apuntate-back.
+Generate keypairs for JWT authentication:
 
-## Instalación y puesta en marcha
-### Producción
-- Descarga la última release tanto del back como del front.
-- Copia los ficheros del repositorio back en tu servidor o en tu máquina local
--- Crea tu fichero de configuración .env.local basandote en .env y modifica los parametros que necesites. 
--- Instala las librerias uilizando `composer install`
--- Genera las nuevas claves JWT para garantizar la seguridad `php bin/console lexik:jwt:generate-keypair`
-- Modifica la url del backend en el fichero de configuración del front para que las peticiones puedan llegar correctamente en https://github.com/GlobalEmergency/apuntate-front/blob/master/src/environments/environment.ts
-- Genera los diferentes frontales que desees con Angular https://angular.io/cli/build
+```bash
+make back-sh
+php bin/console lexik:jwt:generate-keypair
+```
 
-### Desarrollo
-En el fichero INSTALL.md de cada repositorio encontrarás las instrucciones adicionales y detalladas.
+## Database
 
-## Licencia
-MIT attached in LICENSE.md
+```bash
+make back-db-update          # Recreate and migrate (dev)
+make back-db-update env=test # Recreate and migrate (test)
+make back-migrate            # Run pending migrations only
+make back-migrations-diff    # Generate migration from entity changes
+```
+
+## API Endpoints
+
+| Method | Endpoint              | Auth     | Description          |
+|--------|----------------------|----------|----------------------|
+| POST   | `/api/auth/login`    | Public   | JWT login            |
+| POST   | `/api/auth/refresh`  | Public   | Refresh token        |
+| GET    | `/api/services`      | JWT      | List services        |
+| POST   | `/api/services`      | JWT      | Create service       |
+| GET    | `/api/services/{id}` | JWT      | Service details      |
+| GET    | `/api/profiler`      | JWT      | User profile         |
+| GET    | `/api/alerts`        | JWT      | List alerts          |

@@ -1,27 +1,38 @@
-# Angular
+# Apuntate — Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+Angular 15 SPA for the Apuntate platform.
 
-## Development server
+> For project overview, architecture, and contributing guidelines see the [root README](../../README.md).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Stack
 
-## Code scaffolding
+- Angular 15.2 with Angular Material
+- TypeScript 4.8
+- SCSS styling
+- FullCalendar for calendar views
+- JWT-based authentication
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Development
 
-## Build
+All commands are run from the **monorepo root** via Make:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+make front-install   # Install npm dependencies
+make front-start     # Dev server on http://localhost:4200
+make front-build     # Production build
+make front-lint      # ESLint check
+make front-tests     # Unit tests (Karma + Jasmine)
+```
 
-## Running unit tests
+## Environment
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Environment variables are injected at build time via `setenv.ts`:
 
-## Running end-to-end tests
+| Variable  | Description               | Default                       |
+|-----------|---------------------------|-------------------------------|
+| `APP_ENV` | Environment name          | `dev`                         |
+| `API_URL` | Backend API base URL      | `http://localhost:8080/api`   |
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Deployment
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Production builds are deployed to AWS S3 + CloudFront via GitHub Actions. See `.github/workflows/front-deploy.yaml` at the monorepo root.
