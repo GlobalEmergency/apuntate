@@ -23,7 +23,7 @@ class RegisterOrganizationTest extends TestCase
         $this->useCase = new RegisterOrganization($this->userRepository, $this->passwordHasher);
     }
 
-    public function test_registers_new_user_with_admin_role(): void
+    public function testRegistersNewUserWithAdminRole(): void
     {
         $this->userRepository->method('findByEmail')->willReturn(null);
         $this->passwordHasher->method('hashPassword')->willReturn('hashed_password');
@@ -38,7 +38,7 @@ class RegisterOrganizationTest extends TestCase
         $this->assertContains('ROLE_ADMIN', $user->getRoles());
     }
 
-    public function test_rejects_duplicate_email(): void
+    public function testRejectsDuplicateEmail(): void
     {
         $existingUser = new User();
         $this->userRepository->method('findByEmail')->willReturn($existingUser);
