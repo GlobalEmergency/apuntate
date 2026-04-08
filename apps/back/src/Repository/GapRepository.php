@@ -7,6 +7,7 @@ namespace GlobalEmergency\Apuntate\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Gap;
+use GlobalEmergency\Apuntate\Entity\User;
 
 /**
  * @method Gap|null find($id, $lockMode = null, $lockVersion = null)
@@ -53,6 +54,18 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
             ->addSelect('uc')
             ->leftJoin('uc.component', 'c')
             ->addSelect('c')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCompletedByUser(User $user): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.user = :user')
+            ->setParameter('user', $user)
+            ->leftJoin('g.service', 's')
+            ->addSelect('s')
+            ->orderBy('s.dateStart', 'DESC')
             ->getQuery()
             ->getResult();
     }

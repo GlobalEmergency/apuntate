@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Repository;
 
 use GlobalEmergency\Apuntate\Entity\Gap;
+use GlobalEmergency\Apuntate\Entity\User;
 
 interface GapRepositoryInterface
 {
@@ -15,4 +16,7 @@ interface GapRepositoryInterface
     public function findAvailableByService(string $serviceId): array;
 
     public function findByService(string $serviceId): array;
+
+    /** @return Gap[] */
+    public function findCompletedByUser(User $user): array;
 }

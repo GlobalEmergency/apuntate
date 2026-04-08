@@ -25,10 +25,9 @@ export class ApiService implements ServicesInterface, AlertRepositoryInterface{
     // });
   }
 
-  getSecretData() {
-    return this.http.get(`${this.url}/profile`);
+  getProfile(): Observable<any> {
+    return this.http.get<any>(`${this.url}/profile`);
   }
-
 
   getHoles(startTime: Date, endTime: Date) {
     const start = startTime.getUTCDate() + '-' + (startTime.getUTCMonth() + 1) + '-' + startTime.getUTCFullYear();

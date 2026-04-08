@@ -13,9 +13,10 @@ import { Router } from '@angular/router';
 export class DashboardComponent {
   services: Service[] = [];
   userName = '';
+  profile: any = null;
 
   constructor(
-    @Inject(ApiService) private serviceRepository: ServicesInterface,
+    @Inject(ApiService) private apiService: ApiService,
     private authService: AuthenticationService,
     private router: Router,
   ) {
@@ -24,8 +25,15 @@ export class DashboardComponent {
       this.userName = payload.username;
     }
 
-    this.serviceRepository.getNextEvents().subscribe((data) => {
+    this.apiService.getNextEvents().subscribe((data) => {
       this.services = data;
+    });
+
+    this.apiService.getProfile().subscribe((data) => {
+      this.profile = data;
+      if (data.name) {
+        this.userName = data.name + (data.surname ? ' ' + data.surname : '');
+      }
     });
   }
 

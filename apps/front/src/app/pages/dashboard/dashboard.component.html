@@ -27,7 +27,46 @@
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <mat-card-title>Tu resumen</mat-card-title>
-        <p class="mat-body-1 text-muted m-t-16">Las estadísticas estarán disponibles próximamente.</p>
+        <div *ngIf="profile?.stats; else noStats" class="m-t-16"
+             style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <mat-icon style="color: #5d87ff; font-size: 32px; width: 32px; height: 32px;">schedule</mat-icon>
+            <div>
+              <div class="mat-headline-5 f-w-600">{{ profile.stats.totalHours }} h</div>
+              <span class="mat-body-2 text-muted">Horas de servicio</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <mat-icon style="color: #49beff; font-size: 32px; width: 32px; height: 32px;">assignment_turned_in</mat-icon>
+            <div>
+              <div class="mat-headline-5 f-w-600">{{ profile.stats.totalServices }}</div>
+              <span class="mat-body-2 text-muted">Servicios realizados</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noStats>
+          <p class="mat-body-1 text-muted m-t-16">Cargando estadísticas...</p>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="profile" class="cardWithShadow">
+      <mat-card-content class="p-24">
+        <mat-card-title>Mi perfil</mat-card-title>
+        <div class="m-t-16" style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span class="text-muted">Email</span>
+            <span>{{ profile.email }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span class="text-muted">Miembro desde</span>
+            <span>{{ profile.dateStart | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span class="text-muted">Rol</span>
+            <mat-chip *ngFor="let role of profile.roles">{{ role }}</mat-chip>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
