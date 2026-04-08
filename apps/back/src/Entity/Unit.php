@@ -34,6 +34,10 @@ class Unit
     #[ORM\OneToMany(targetEntity: UnitComponent::class, mappedBy: 'unit')]
     private $unitComponents;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'units')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Organization $organization = null;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
@@ -135,11 +139,22 @@ class Unit
     public function removeUnitComponent(UnitComponent $unitComponent): self
     {
         if ($this->unitComponents->removeElement($unitComponent)) {
-            // set the owning side to null (unless already changed)
             if ($unitComponent->getUnit() === $this) {
                 $unitComponent->setUnit(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }

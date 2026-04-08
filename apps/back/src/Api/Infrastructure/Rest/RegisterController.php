@@ -23,29 +23,41 @@ class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
+        $orgName = $data['org'] ?? '';
         $name = $data['uname'] ?? '';
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
 
-        if ('' === $name || '' === $email || '' === $password) {
+        if ('' === $orgName || '' === $name || '' === $email || '' === $password) {
             return new JsonResponse(
-                ['error' => 'Name, email and password are required.'],
-                Response::HTTP_BAD_REQUEST
+                ['error' => 'Organization, name, email and password are required.'],
+                Response::HTTP_BAD_REQUEST,
             );
         }
 
         try {
-            $user = $this->registerOrganization->execute($name, $email, $password);
+            $result = $this->registerOrganization->execute($orgName, $name, $email, $password);
         } catch (\DomainException $e) {
             return new JsonResponse(
                 ['error' => $e->getMessage()],
-                Response::HTTP_CONFLICT
+                Response::HTTP_CONFLICT,
             );
         }
 
+        $user = $result['user'];
+        $organization = $result['organization'];
+
         return new JsonResponse(
-            ['id' => (string) $user->getId(), 'email' => $user->getEmail()],
-            Response::HTTP_CREATED
+            [
+                'id' => (string) $user->getId(),
+                'email' => $user->getEmail(),
+                'organization' => [
+                    'id' => $organization->getId()->toRfc4122(),
+                    'name' => $organization->getName(),
+                    'slug' => $organization->getSlug(),
+                ],
+            ],
+            Response::HTTP_CREATED,
         );
     }
 }

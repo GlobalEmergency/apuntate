@@ -6,6 +6,7 @@ namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 
 use GlobalEmergency\Apuntate\Application\Services\RegisterOrganization;
 use GlobalEmergency\Apuntate\Entity\User;
+use GlobalEmergency\Apuntate\Repository\OrganizationRepository;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -14,28 +15,43 @@ class RegisterOrganizationTest extends TestCase
 {
     private UserRepositoryInterface $userRepository;
     private UserPasswordHasherInterface $passwordHasher;
+    private OrganizationRepository $organizationRepository;
     private RegisterOrganization $useCase;
 
     protected function setUp(): void
     {
         $this->userRepository = $this->createMock(UserRepositoryInterface::class);
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-        $this->useCase = new RegisterOrganization($this->userRepository, $this->passwordHasher);
+        $this->organizationRepository = $this->createMock(OrganizationRepository::class);
+        $this->useCase = new RegisterOrganization(
+            $this->userRepository,
+            $this->passwordHasher,
+            $this->organizationRepository,
+        );
     }
 
-    public function testRegistersNewUserWithAdminRole(): void
+    public function testRegistersNewOrganizationWithAdminUser(): void
     {
         $this->userRepository->method('findByEmail')->willReturn(null);
         $this->passwordHasher->method('hashPassword')->willReturn('hashed_password');
-
         $this->userRepository->expects($this->once())->method('save');
+        $this->organizationRepository->expects($this->once())->method('save');
 
-        $user = $this->useCase->execute('John', 'john@example.com', 'secret123');
+        $result = $this->useCase->execute('Civil Protection Madrid', 'John', 'john@example.com', 'secret123');
+
+        $this->assertArrayHasKey('user', $result);
+        $this->assertArrayHasKey('organization', $result);
+
+        $user = $result['user'];
+        $org = $result['organization'];
 
         $this->assertEquals('John', $user->getName());
         $this->assertEquals('john@example.com', $user->getEmail());
-        $this->assertEquals('hashed_password', $user->getPassword());
         $this->assertContains('ROLE_ADMIN', $user->getRoles());
+
+        $this->assertEquals('Civil Protection Madrid', $org->getName());
+        $this->assertEquals('civil-protection-madrid', $org->getSlug());
+        $this->assertCount(1, $org->getMembers());
     }
 
     public function testRejectsDuplicateEmail(): void
@@ -46,6 +62,6 @@ class RegisterOrganizationTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('A user with this email already exists.');
 
-        $this->useCase->execute('John', 'john@example.com', 'secret123');
+        $this->useCase->execute('Test Org', 'John', 'john@example.com', 'secret123');
     }
 }

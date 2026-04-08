@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Application\Services;
 
+use GlobalEmergency\Apuntate\Entity\Organization;
+use GlobalEmergency\Apuntate\Entity\OrganizationMember;
 use GlobalEmergency\Apuntate\Entity\User;
+use GlobalEmergency\Apuntate\Repository\OrganizationRepository;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -13,15 +16,20 @@ final class RegisterOrganization
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
+        private OrganizationRepository $organizationRepository,
     ) {
     }
 
-    public function execute(string $name, string $email, string $plainPassword): User
+    public function execute(string $orgName, string $name, string $email, string $plainPassword): array
     {
         $existingUser = $this->userRepository->findByEmail($email);
         if (null !== $existingUser) {
             throw new \DomainException('A user with this email already exists.');
         }
+
+        $organization = new Organization();
+        $organization->setName($orgName);
+        $organization->setSlug($orgName);
 
         $user = new User();
         $user->setName($name);
@@ -32,8 +40,18 @@ final class RegisterOrganization
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
 
-        $this->userRepository->save($user);
+        $membership = new OrganizationMember();
+        $membership->setUser($user);
+        $membership->setOrganization($organization);
+        $membership->setRole(OrganizationMember::ROLE_ADMIN);
+        $organization->addMember($membership);
 
-        return $user;
+        $this->userRepository->save($user);
+        $this->organizationRepository->save($organization);
+
+        return [
+            'user' => $user,
+            'organization' => $organization,
+        ];
     }
 }

@@ -47,6 +47,10 @@ class Service
     #[ORM\Column(type: 'string')]
     private string $status;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Organization $organization = null;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
@@ -222,6 +226,18 @@ class Service
         }
 
         $this->status = $parsed->value;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }
