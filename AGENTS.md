@@ -196,6 +196,21 @@ apps/front/src/
 └── assets/            # Static assets, SCSS
 ```
 
+### UX/UI Principles
+
+- **User feedback is mandatory**: every action must provide visible feedback (loading, success, error).
+- No silent failures — always show error messages to the user (snackbar, inline, or dialog).
+- Handle all HTTP error codes with user-facing messages (e.g., 409 = "email already in use").
+- Loading indicators (spinner or disabled button) during async operations.
+- Success confirmation after completed actions.
+
+### Responsive Design
+
+- **Mobile first**: design for mobile viewport first, then scale up.
+- Use **CSS Grid and Flexbox** for layout — never media queries for layout purposes.
+- Images must be responsive (`max-width: 100%; height: auto`).
+- Touch-friendly targets (min 44px).
+
 ### Code Style
 
 - ESLint for TypeScript linting

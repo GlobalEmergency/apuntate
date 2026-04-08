@@ -51,7 +51,10 @@
               </mat-error>
             </mat-form-field>
 
-            <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid" class="w-100">Registrarse</button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading" class="w-100">
+              <mat-spinner *ngIf="loading" diameter="20" class="d-inline-block m-r-8"></mat-spinner>
+              {{ loading ? 'Registrando...' : 'Registrarse' }}
+            </button>
           </form>
           <span class="d-block f-w-500 text-center m-t-24">¿Ya tienes cuenta?
             <a [routerLink]="['/login']" class="text-decoration-none text-primary f-w-500 f-s-14">

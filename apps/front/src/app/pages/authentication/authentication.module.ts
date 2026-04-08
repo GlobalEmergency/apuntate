@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // icons
@@ -15,7 +17,7 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 import { AuthenticationRoutes } from './authentication.routing';
 
 import { LoginPage } from './login/login.component';
-import { AppSideRegisterComponent } from './register/register.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   imports: [
@@ -26,13 +28,15 @@ import { AppSideRegisterComponent } from './register/register.component';
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
   ],
   declarations: [
     LoginPage,
-    AppSideRegisterComponent,
+    RegisterComponent,
   ],
 })
 export class AuthenticationModule { }
