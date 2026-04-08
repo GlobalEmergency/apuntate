@@ -36,6 +36,8 @@ final class SignupForService
             throw new \DomainException('This position is already taken.');
         }
 
+        $this->validateRequirements($user, $gap);
+
         $gap->setUser($user);
         $this->gapRepository->save($gap);
 
@@ -50,10 +52,68 @@ final class SignupForService
             throw new \DomainException('No available positions for this service.');
         }
 
-        $gap = $availableGaps[0];
-        $gap->setUser($user);
-        $this->gapRepository->save($gap);
+        foreach ($availableGaps as $gap) {
+            if ($this->userMeetsRequirements($user, $gap)) {
+                $gap->setUser($user);
+                $this->gapRepository->save($gap);
 
-        return $gap;
+                return $gap;
+            }
+        }
+
+        throw new \DomainException('No available positions matching your qualifications.');
+    }
+
+    private function validateRequirements(User $user, Gap $gap): void
+    {
+        $component = $gap->getUnitComponent()?->getComponent();
+        if (null === $component) {
+            return;
+        }
+
+        $componentRequirements = $component->getRequirements();
+        if ($componentRequirements->isEmpty()) {
+            return;
+        }
+
+        $userRequirementIds = $user->getRequirements()->map(
+            fn ($r) => $r->getId()->toRfc4122()
+        )->toArray();
+
+        $missing = [];
+        foreach ($componentRequirements as $req) {
+            if (!\in_array($req->getId()->toRfc4122(), $userRequirementIds, true)) {
+                $missing[] = $req->getName();
+            }
+        }
+
+        if (!empty($missing)) {
+            throw new \DomainException(sprintf('Missing required qualifications: %s.', implode(', ', $missing)));
+        }
+    }
+
+    private function userMeetsRequirements(User $user, Gap $gap): bool
+    {
+        $component = $gap->getUnitComponent()?->getComponent();
+        if (null === $component) {
+            return true;
+        }
+
+        $componentRequirements = $component->getRequirements();
+        if ($componentRequirements->isEmpty()) {
+            return true;
+        }
+
+        $userRequirementIds = $user->getRequirements()->map(
+            fn ($r) => $r->getId()->toRfc4122()
+        )->toArray();
+
+        foreach ($componentRequirements as $req) {
+            if (!\in_array($req->getId()->toRfc4122(), $userRequirementIds, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

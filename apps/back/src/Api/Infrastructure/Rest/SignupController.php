@@ -71,11 +71,20 @@ class SignupController extends AbstractController
         $gaps = $this->gapRepository->findByService($serviceId);
 
         $result = array_map(function ($gap) {
+            $component = $gap->getUnitComponent()?->getComponent();
+            $requirements = [];
+            if (null !== $component) {
+                foreach ($component->getRequirements() as $req) {
+                    $requirements[] = ['id' => $req->getId()->toRfc4122(), 'name' => $req->getName()];
+                }
+            }
+
             return [
                 'id' => $gap->getId()->toRfc4122(),
-                'component' => $gap->getUnitComponent()?->getComponent()?->getName(),
+                'component' => $component?->getName(),
                 'unit' => $gap->getUnitComponent()?->getUnit()?->getName(),
                 'quantity' => $gap->getUnitComponent()?->getQuantity(),
+                'requirements' => $requirements,
                 'user' => null !== $gap->getUser() ? [
                     'id' => $gap->getUser()->getId()->toRfc4122(),
                     'name' => $gap->getUser()->getName(),

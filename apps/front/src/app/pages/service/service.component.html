@@ -89,7 +89,10 @@
               <div>
                 <span class="mat-body-1 f-w-600">{{ gap.component || 'Voluntario' }}</span>
                 <span *ngIf="gap.unit" class="mat-body-2 text-muted m-l-8">· {{ gap.unit }}</span>
-                <div *ngIf="gap.user" class="mat-body-2" style="color: #2e7d32;">
+                <div *ngIf="gap.requirements?.length > 0" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+                  <mat-chip *ngFor="let req of gap.requirements" style="font-size: 11px;">{{ req.name }}</mat-chip>
+                </div>
+                <div *ngIf="gap.user" class="mat-body-2" style="color: #2e7d32; margin-top: 2px;">
                   {{ gap.user.name }} {{ gap.user.surname }}
                 </div>
               </div>
