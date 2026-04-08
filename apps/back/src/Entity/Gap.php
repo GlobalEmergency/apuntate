@@ -18,10 +18,10 @@ class Gap
     private \Symfony\Component\Uid\UuidV4 $id;
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'gaps')]
-    private ?Service $service;
+    private ?Service $service = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'gaps')]
-    private ?User $user;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: UnitComponent::class)]
     #[ORM\JoinColumn(nullable: false)]

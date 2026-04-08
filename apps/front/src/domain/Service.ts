@@ -1,45 +1,28 @@
-// import { Gap } from './gap';
-
-import {Gap} from "../model/gap";
-import {AbstractType} from "@angular/core";
-import {FormControl} from "@angular/forms";
+import { Gap } from './Gap';
 
 export enum ServiceStatus {
   DRAFT = 'draft',
+  CONFIRMED = 'confirmed',
+  CANCELLED = 'cancelled',
   FINISHED = 'finished',
 }
 
 export enum ServiceCategory {
-  CATEGORY1 = 'category1',
-  CATEGORY2 = 'category2',
-  CATEGORY3 = 'category3',
+  PREVENTIVE = 'preventive',
+  EMERGENCY = 'emergency',
+  TRAINING = 'training',
 }
 
 export enum ServicePriority {
-  PRIORITY1 = 'priority1',
-  PRIORITY2 = 'priority2',
-  PRIORITY3 = 'priority3',
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
 }
 
 export enum ServiceType {
-  TYPE1 = 'type1',
-  TYPE2 = 'type2',
-  TYPE3 = 'type3',
-}
-
-export interface ServiceForm{
-  id: FormControl<string>;
-  name: FormControl<string>;
-  description: FormControl<string|null>;
-  dateStart: FormControl<Date>;
-  dateEnd: FormControl<Date>;
-  datePlace: FormControl<Date>;
-  status: FormControl<ServiceStatus>;
-  units: FormControl<Gap[]>;
-  gaps: FormControl<Gap[]>;
-  category: FormControl<ServiceCategory>;
-  priority: FormControl<ServicePriority>;
-  type: FormControl<ServiceType>;
+  COVERAGE = 'coverage',
+  SUPPORT = 'support',
+  LOGISTICS = 'logistics',
 }
 
 export class Service {
@@ -49,26 +32,26 @@ export class Service {
   readonly dateStart: Date;
   readonly dateEnd: Date;
   readonly datePlace: Date;
-  readonly status: ServiceStatus
+  readonly status: string;
   readonly units: Gap[];
   readonly gaps: Gap[];
-  readonly category: ServiceCategory;
-  readonly priority: ServicePriority;
-  readonly type: ServiceType;
+  readonly category: string;
+  readonly priority: string;
+  readonly type: string;
 
   constructor(
-    id: string,
-    name: string,
-    description: string,
-    dateStart: Date,
-    dateEnd: Date,
-    datePlace: Date,
-    status: ServiceStatus,
-    units: Gap[],
-    gaps: Gap[],
-    category: ServiceCategory,
-    priority: ServicePriority,
-    type: ServiceType
+    id: string = '',
+    name: string = '',
+    description: string = '',
+    dateStart: Date = new Date(),
+    dateEnd: Date = new Date(),
+    datePlace: Date = new Date(),
+    status: string = ServiceStatus.DRAFT,
+    units: Gap[] = [],
+    gaps: Gap[] = [],
+    category: string = ServiceCategory.PREVENTIVE,
+    priority: string = ServicePriority.MEDIUM,
+    type: string = ServiceType.COVERAGE,
   ) {
     this.id = id;
     this.name = name;
@@ -84,20 +67,12 @@ export class Service {
     this.type = type;
   }
 
-  static fromForm(form: any): Service {
+  static fromForm(form: Record<string, any>): Service {
     return new Service(
-      form.id,
-      form.name,
-      form.description,
-      form.dateStart,
-      form.dateEnd,
-      form.datePlace,
-      form.status,
-      form.units,
-      form.gaps,
-      form.category,
-      form.priority,
-      form.type
+      form['id'], form['name'], form['description'],
+      form['dateStart'], form['dateEnd'], form['datePlace'],
+      form['status'], form['units'], form['gaps'],
+      form['category'], form['priority'], form['type'],
     );
   }
 }

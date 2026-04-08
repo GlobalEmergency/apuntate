@@ -1,50 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Unit;
 
-/**
- * @method Unit|null find($id, $lockMode = null, $lockVersion = null)
- * @method Unit|null findOneBy(array $criteria, array $orderBy = null)
- * @method Unit[]    findAll()
- * @method Unit[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class UnitRepository extends ServiceEntityRepository
+class UnitRepository extends ServiceEntityRepository implements UnitRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Unit::class);
     }
 
-    // /**
-    //  * @return Unit[] Returns an array of Unit objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findById(string $id): ?Unit
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Unit
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

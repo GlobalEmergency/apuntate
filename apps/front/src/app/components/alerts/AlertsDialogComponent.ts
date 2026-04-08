@@ -6,15 +6,14 @@ import {NgClass, NgForOf} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-alerts-dialog',
-  templateUrl: './alerts.component.html',
-  imports: [
-    MatCardModule,
-    NgForOf,
-    MatIconModule,
-    NgClass
-  ],
-  standalone: true
+    selector: 'app-alerts-dialog',
+    templateUrl: './alerts.component.html',
+    imports: [
+        MatCardModule,
+        NgForOf,
+        MatIconModule,
+        NgClass
+    ]
 })
 export class AlertsDialogComponent {
 

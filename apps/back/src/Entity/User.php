@@ -48,11 +48,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Gap::class, mappedBy: 'user')]
     private $gaps;
 
+    #[ORM\OneToMany(targetEntity: OrganizationMember::class, mappedBy: 'user', cascade: ['persist'])]
+    private Collection $memberships;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
         $this->requirements = new ArrayCollection();
         $this->gaps = new ArrayCollection();
+        $this->memberships = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -151,21 +155,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function getSalt()
-    {
-        // TODO: Implement getSalt() method.
-        return null;
-    }
-
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
-    }
-
-    public function getUsername()
-    {
-        // TODO: Implement getUsername() method.
-        return $this->getEmail();
     }
 
     /**
@@ -224,8 +215,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
         return $this->getEmail();
+    }
+
+    public function getMemberships(): Collection
+    {
+        return $this->memberships;
+    }
+
+    public function getOrganizations(): array
+    {
+        return $this->memberships->map(fn (OrganizationMember $m) => $m->getOrganization())->toArray();
     }
 
     #[ORM\PrePersist]

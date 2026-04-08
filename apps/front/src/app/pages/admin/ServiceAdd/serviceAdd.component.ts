@@ -20,21 +20,20 @@ import { v4 as uuidv4 } from 'uuid';
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'service-add',
-  templateUrl: './serviceAdd.component.html',
-  styleUrls: ['./serviceAdd.component.scss'],
-  imports: [
-    MatInputModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    NgIf,
-    MatOptionModule,
-    MatSelectModule,
-    NgForOf,
-    MatButtonModule,
-    KeyValuePipe
-  ],
-  standalone: true
+    selector: 'service-add',
+    templateUrl: './serviceAdd.component.html',
+    styleUrls: ['./serviceAdd.component.scss'],
+    imports: [
+        MatInputModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        NgIf,
+        MatOptionModule,
+        MatSelectModule,
+        NgForOf,
+        MatButtonModule,
+        KeyValuePipe
+    ]
 })
 export class ServiceAddComponent implements OnInit{
 

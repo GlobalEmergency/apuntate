@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {Service} from "../../../domain/Service";
 
 @Component({
-  selector: 'app-servicestable',
-  templateUrl: './servicestable.component.html',
-  styleUrls: ['./servicestable.component.scss']
+    selector: 'app-servicestable',
+    templateUrl: './servicestable.component.html',
+    styleUrls: ['./servicestable.component.scss'],
+    standalone: false
 })
 export class ServicestableComponent {
   displayedColumnsTable = ['id', 'title', 'users'];

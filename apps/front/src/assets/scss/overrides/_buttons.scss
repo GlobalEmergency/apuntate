@@ -31,10 +31,12 @@
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
-  .flex-sm-row {
-    flex-direction: row !important;
-  }
+// flex-sm-row: always row with wrap — items stack naturally on small screens
+.flex-sm-row {
+  display: flex;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .flex-column {

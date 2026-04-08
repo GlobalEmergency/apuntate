@@ -25,7 +25,7 @@ class Service
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private string $description;
+    private ?string $description = null;
 
     #[ORM\Column(type: 'carbon')]
     private \DateTimeInterface $dateStart;
@@ -47,8 +47,13 @@ class Service
     #[ORM\Column(type: 'string')]
     private string $status;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Organization $organization = null;
+
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->units = new ArrayCollection();
         $this->gaps = new ArrayCollection();
     }
@@ -100,9 +105,7 @@ class Service
 
     public function setDateStart(\DateTimeInterface $dateStart): self
     {
-        if (!$dateStart instanceof Carbon) {
-            $this->dateStart = Carbon::instance($dateStart);
-        }
+        $this->dateStart = $dateStart instanceof Carbon ? $dateStart : Carbon::instance($dateStart);
 
         return $this;
     }
@@ -166,13 +169,9 @@ class Service
         return $this->dateEnd;
     }
 
-    public function setDateEnd(\DateTime $dateEnd): self
+    public function setDateEnd(\DateTimeInterface $dateEnd): self
     {
-        if (!$dateEnd instanceof Carbon) {
-            $this->dateEnd = Carbon::instance($dateEnd);
-        } else {
-            $this->dateEnd = $dateEnd;
-        }
+        $this->dateEnd = $dateEnd instanceof Carbon ? $dateEnd : Carbon::instance($dateEnd);
 
         return $this;
     }
@@ -185,13 +184,9 @@ class Service
     /**
      * @param mixed $datePlace
      */
-    public function setDatePlace(\DateTime $datePlace): self
+    public function setDatePlace(\DateTimeInterface $datePlace): self
     {
-        if (!$datePlace instanceof Carbon) {
-            $this->datePlace = Carbon::instance($datePlace);
-        } else {
-            $this->datePlace = $datePlace;
-        }
+        $this->datePlace = $datePlace instanceof Carbon ? $datePlace : Carbon::instance($datePlace);
 
         return $this;
     }
@@ -201,14 +196,38 @@ class Service
         return $this->name;
     }
 
-    public function getStatus(): ?ServiceStatus
+    public function getStatus(): ServiceStatus
     {
-        return ServiceStatus::tryFrom($this->status);
+        return ServiceStatus::from($this->status);
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(ServiceStatus|string $status): self
     {
-        $this->status = $status;
+        $this->status = $status instanceof ServiceStatus ? $status->value : $status;
+
+        return $this;
+    }
+
+    public function setStatusFromString(string $status): self
+    {
+        $parsed = ServiceStatus::tryFrom($status);
+        if (null === $parsed) {
+            throw new \InvalidArgumentException(sprintf('Invalid service status: %s', $status));
+        }
+
+        $this->status = $parsed->value;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }

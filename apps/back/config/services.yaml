@@ -21,4 +21,6 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
     GlobalEmergency\Apuntate\Services\Normalizer\FlattenExceptionNormalizer:
+        arguments:
+            $appEnv: '%kernel.environment%'
         tags: ['serializer.normalizer']
