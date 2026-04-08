@@ -49,7 +49,7 @@ export class AuthenticationService {
     );
   }
 
-  private storeAccessToken(token: string, refreshToken: string): void {
+  storeAccessToken(token: string, refreshToken: string): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     this.currentAccessToken = token;
