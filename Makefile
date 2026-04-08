@@ -4,6 +4,12 @@ PROJECT_NAME := apuntate
 # Full stack
 # ==========================================
 
+.PHONY: check
+check: back-phpcs-validate back-tests front-lint front-tests
+
+.PHONY: fix
+fix: back-phpcs-fixer
+
 .PHONY: up
 up:
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -p $(PROJECT_NAME) up -d

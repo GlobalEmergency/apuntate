@@ -103,7 +103,7 @@ jobs:
           tools: composer:v2
 
       - name: Install production dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction
+        run: APP_ENV=prod composer install --no-dev --optimize-autoloader --no-interaction
 
       - name: Prepare deployment
         run: |
