@@ -22,11 +22,14 @@ export class AuthenticationService {
     this.loadToken();
   }
 
-  public checkAuthentication(role:string|null = null): boolean {
-    if(this.currentAccessToken !== null && role !== null){
-      return !!this.payload.roles.includes(role);
+  public checkAuthentication(role: string | null = null): boolean {
+    if (this.currentAccessToken === null || this.payload === null) {
+      return false;
     }
-    return this.currentAccessToken !== null;
+    if (role !== null) {
+      return !!this.payload.roles?.includes(role);
+    }
+    return true;
   }
 
   loadToken() {
@@ -58,16 +61,11 @@ export class AuthenticationService {
 
   logout() {
     this.currentAccessToken = null;
+    this.payload = null;
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.isAuthenticated.next(false);
-    this.router.navigateByUrl('/', { replaceUrl: true });
-
-    return this.http.post(`${this.url}/auth/logout`, {}).pipe(
-      switchMap(_ => {
-        return of(true);
-      })
-    ).subscribe();
+    this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
   getNewAccessToken() {
@@ -93,5 +91,9 @@ export class AuthenticationService {
       this.logout();
       return null;
     }
+  }
+
+  register(data: any): Observable<any> {
+    return this.http.post(`${this.url}/auth/register`, data);
   }
 }
