@@ -1,0 +1,86 @@
+<mat-spinner *ngIf="service == null"></mat-spinner>
+<div *ngIf="service != null">
+  <mat-toolbar color="primary" style="display: flex; justify-content: space-between; align-items: center;">
+    {{ service.name }}
+    <div class="status-circle" [ngClass]="service.status" matTooltip="{{service.status}}"></div>
+  </mat-toolbar>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{ service.datePlace | date: 'dd/MM/yyyy' }} - Hora Inicio: {{ service.dateStart | date: 'HH:mm' }} - Hora Final: {{ service.dateEnd | date: 'HH:mm' }}
+      </mat-card-title>
+<!--      <mat-card-subtitle>-->
+<!--        Fecha (Miércoles) 17/04/2024 - Hora Inicio: 16:00 - Hora Final: 21:00-->
+<!--      </mat-card-subtitle>-->
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="flex-container" style="margin-top:2em">
+        <div class="flex-item">
+          <span><b>Tipo/Categoría:</b><br />{{ service.status }}</span>
+        </div>
+        <div class="flex-item">
+          <span><b>Prioridad:</b><br /> Media</span>
+        </div>
+        <div class="flex-item">
+          <span><b>Zona de Servicio:</b><br /> Madrid</span>
+        </div>
+      </div>
+
+      <div class="flex-container" style="margin-top:1em">
+        <div class="flex-item">
+          <span><b>Solicitud:</b><br /> Preventivos</span>
+        </div>
+        <div class="flex-item">
+          <span><b>Jefe evento:</b><br /> Pepe pepe pepe</span>
+        </div>
+        <div class="flex-item">
+          <span><b>Jefe servicio:</b><br /> Pepe pepe pepe</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Descripción
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      {{ service.description }}
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Personal Asignado ({{service.gaps.length}} / 10)
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="personnel-grid">
+        <div class="person-card" *ngFor="let person of service.gaps">
+          <mat-chip-list>
+            <mat-chip>{{ person }}</mat-chip>
+          </mat-chip-list>
+          <img mat-card-avatar src="{{ person }}" alt="Photo of {{ person }}">
+          <h3>{{ person }}</h3>
+          <p>{{ person }}</p>
+          <div class="icons">
+  <!--            <mat-icon *ngFor="let icon of person.icons">{{ icon }}</mat-icon>-->
+          </div>
+        </div>
+        <button mat-raised-button color="primary" >Añadir Personal</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="actions">
+    <button *ngIf="isAdmin()" style="background-color: burlywood; color:black" mat-raised-button (click)="edit()">Editar</button>
+    <button *ngIf="isAdmin()" style="background-color: darkred; color:whitesmoke" mat-raised-button (click)="remove()">Eliminar</button>
+  </div>
+
+</div>
