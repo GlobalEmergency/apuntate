@@ -1,6 +1,7 @@
 # === IDEs and editors ===
 .idea/
 .vscode/
+.claude/settings.local.json
 *.sublime-workspace
 .project
 .classpath
