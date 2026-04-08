@@ -9,6 +9,19 @@ services:
       - pgsql
     working_dir: /var/www/html
     user: www-data
+
+  frontend:
+    image: node:20-alpine
+    container_name: apuntate-frontend
+    working_dir: /app
+    command: sh -c "npm ci && npx ng serve --host 0.0.0.0 --poll 2000"
+    volumes:
+      - ./apps/front:/app:delegated
+      - frontend-node-modules:/app/node_modules
+    environment:
+      - APP_ENV=dev
+      - API_URL=http://localhost:8081/api
+
   pgsql:
     image: apuntate-pgsql
     build:
@@ -22,5 +35,7 @@ services:
       - pgsql-data:/var/lib/postgresql/data
 
 volumes:
-    pgsql-data:
-      driver: local
+  pgsql-data:
+    driver: local
+  frontend-node-modules:
+    driver: local

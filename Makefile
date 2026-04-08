@@ -93,20 +93,20 @@ back-coverage:
 
 .PHONY: front-install
 front-install:
-	cd apps/front && npm ci
+	@docker exec --tty $(PROJECT_NAME)-frontend npm ci
 
-.PHONY: front-start
-front-start:
-	cd apps/front && npm start
+.PHONY: front-logs
+front-logs:
+	@docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -p $(PROJECT_NAME) logs -f frontend
 
 .PHONY: front-build
 front-build:
-	cd apps/front && npm run build
+	@docker exec --tty $(PROJECT_NAME)-frontend npx ng build --configuration production
 
 .PHONY: front-lint
 front-lint:
-	cd apps/front && npm run lint
+	@docker exec --tty $(PROJECT_NAME)-frontend npm run lint
 
 .PHONY: front-tests
 front-tests:
-	cd apps/front && npm run tests
+	@docker exec --tty $(PROJECT_NAME)-frontend npm run tests

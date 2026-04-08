@@ -10,6 +10,11 @@ services:
       - "8081:80"
     environment:
       PHP_IDE_CONFIG: "serverName=apuntate,apuntate_test"
+
+  frontend:
+    ports:
+      - "4200:4200"
+
   pgsql:
     ports:
       - "5434:5432"
