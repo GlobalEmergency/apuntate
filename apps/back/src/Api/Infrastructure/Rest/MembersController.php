@@ -9,7 +9,6 @@ use GlobalEmergency\Apuntate\Application\Services\InviteMember;
 use GlobalEmergency\Apuntate\Application\Services\ListMembers;
 use GlobalEmergency\Apuntate\Application\Services\RemoveMember;
 use GlobalEmergency\Apuntate\Entity\OrganizationMember;
-use GlobalEmergency\Apuntate\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
