@@ -5,7 +5,7 @@
   mat-list-item
   (click)="onItemSelected(item)"
   [ngClass]="{
-    'mat-toolbar mat-primary activeMenu': item.route
+    'activeMenu': item.route
       ? router.isActive(item.route, true)
       : false,
   }"
