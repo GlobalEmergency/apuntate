@@ -5,9 +5,8 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 
 @Component({
   standalone: false,
-    selector: 'app-register',
-    templateUrl: './register.component.html',
-    
+  selector: 'app-register',
+  templateUrl: './register.component.html',
 })
 export class RegisterComponent {
   loading = false;

@@ -7,17 +7,20 @@
     [loading]="loading"
     (publish)="publish()"
     (edit)="edit()"
-    (cancelService)="cancelService()">
+    (cancelService)="cancelService()"
+  >
   </app-service-header>
 
   <app-feedback-message [message]="message" class="m-t-16"></app-feedback-message>
 
-  <app-service-gaps class="m-t-16"
+  <app-service-gaps
+    class="m-t-16"
     [gaps]="gaps"
     [signupLoading]="signupLoading"
     [currentUserId]="currentUserId"
     (signup)="signup($event)"
-    (withdraw)="withdraw($event)">
+    (withdraw)="withdraw($event)"
+  >
   </app-service-gaps>
 </div>
 

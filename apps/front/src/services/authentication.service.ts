@@ -20,7 +20,10 @@ export class AuthenticationService {
     return this._payload;
   }
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {
     this.loadToken();
   }
 
@@ -46,9 +49,9 @@ export class AuthenticationService {
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post<{ token: string; refresh_token: string }>(`${this.url}/auth/login`, credentials).pipe(
-      tap((tokens) => this.storeAccessToken(tokens.token, tokens.refresh_token)),
-    );
+    return this.http
+      .post<{ token: string; refresh_token: string }>(`${this.url}/auth/login`, credentials)
+      .pipe(tap((tokens) => this.storeAccessToken(tokens.token, tokens.refresh_token)));
   }
 
   storeAccessToken(token: string, refreshToken: string): void {

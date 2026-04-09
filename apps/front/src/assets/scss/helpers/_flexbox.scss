@@ -4,7 +4,9 @@ $utilities: (
   'flex': (
     property: flex,
     class: flex,
-    values: (fill: 1 1 auto)
+    values: (
+      fill: 1 1 auto,
+    ),
   ),
   'justify-content': (
     property: justify-content,
@@ -15,7 +17,7 @@ $utilities: (
       center: center,
       between: space-between,
       around: space-around,
-    )
+    ),
   ),
   'align-items': (
     property: align-items,
@@ -26,6 +28,6 @@ $utilities: (
       center: center,
       baseline: baseline,
       stretch: stretch,
-    )
+    ),
   ),
 );

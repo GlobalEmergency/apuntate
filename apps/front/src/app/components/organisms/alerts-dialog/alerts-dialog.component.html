@@ -1,6 +1,6 @@
 <h1>Alerts</h1>
 <ng-container>
-  <mat-card *ngFor="let alert of alerts" [ngClass]="{'blink': alert.show}" class="alert-card">
+  <mat-card *ngFor="let alert of alerts" [ngClass]="{ blink: alert.show }" class="alert-card">
     <mat-card-title>{{ alert.title }}</mat-card-title>
     <mat-card-content class="alert-content">
       <div>{{ alert.resume }}</div>

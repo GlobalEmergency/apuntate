@@ -22,10 +22,20 @@ import { KeyValuePipe } from '@angular/common';
   selector: 'app-service-edit',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, RouterModule, MatCardModule,
-    MatInputModule, MatButtonModule, MatIconModule, MatSelectModule, MatOptionModule, KeyValuePipe,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
-    UnitManagerComponent, GapManagerComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatOptionModule,
+    KeyValuePipe,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
+    UnitManagerComponent,
+    GapManagerComponent,
   ],
   templateUrl: './service-edit.component.html',
   styleUrls: ['./service-edit.component.scss'],
@@ -100,7 +110,9 @@ export class ServiceEditComponent implements OnInit {
 
   private loadGaps(serviceId: string): void {
     this.serviceRepository.getServiceGaps(serviceId).subscribe({
-      next: (gaps) => { this.gaps = gaps; },
+      next: (gaps) => {
+        this.gaps = gaps;
+      },
     });
   }
 
@@ -134,22 +146,24 @@ export class ServiceEditComponent implements OnInit {
     this.message = null;
     const data = this.form.value;
 
-    this.serviceRepository.updateService(this.service.id, {
-      name: data.name!,
-      description: data.description || '',
-      dateStart: data.dateStart ? new Date(data.dateStart) : undefined,
-      dateEnd: data.dateEnd ? new Date(data.dateEnd) : undefined,
-      datePlace: data.datePlace ? new Date(data.datePlace) : undefined,
-    } as any).subscribe({
-      next: () => {
-        this.saving = false;
-        this.message = { text: 'Servicio actualizado.', type: 'success' };
-      },
-      error: (err) => {
-        this.saving = false;
-        this.message = { text: err.error?.error || 'Error al guardar.', type: 'error' };
-      },
-    });
+    this.serviceRepository
+      .updateService(this.service.id, {
+        name: data.name!,
+        description: data.description || '',
+        dateStart: data.dateStart ? new Date(data.dateStart) : undefined,
+        dateEnd: data.dateEnd ? new Date(data.dateEnd) : undefined,
+        datePlace: data.datePlace ? new Date(data.datePlace) : undefined,
+      } as any)
+      .subscribe({
+        next: () => {
+          this.saving = false;
+          this.message = { text: 'Servicio actualizado.', type: 'success' };
+        },
+        error: (err) => {
+          this.saving = false;
+          this.message = { text: err.error?.error || 'Error al guardar.', type: 'error' };
+        },
+      });
   }
 
   onAddUnit(unitId: string): void {

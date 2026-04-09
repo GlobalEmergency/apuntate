@@ -85,10 +85,18 @@ export class Service {
 
   static fromForm(form: Record<string, any>): Service {
     return new Service(
-      form['id'], form['name'], form['description'],
-      form['dateStart'], form['dateEnd'], form['datePlace'],
-      form['status'], form['units'], form['gaps'],
-      form['category'], form['priority'], form['type'],
+      form['id'],
+      form['name'],
+      form['description'],
+      form['dateStart'],
+      form['dateEnd'],
+      form['datePlace'],
+      form['status'],
+      form['units'],
+      form['gaps'],
+      form['category'],
+      form['priority'],
+      form['type'],
     );
   }
 }

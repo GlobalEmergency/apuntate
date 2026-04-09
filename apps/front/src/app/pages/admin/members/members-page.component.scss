@@ -6,7 +6,10 @@
   gap: 12px;
   align-items: flex-start;
 
-  mat-form-field { flex: 1; min-width: 180px; }
+  mat-form-field {
+    flex: 1;
+    min-width: 180px;
+  }
 
   &__actions {
     display: flex;

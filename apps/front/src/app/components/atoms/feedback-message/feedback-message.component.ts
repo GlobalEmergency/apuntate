@@ -15,9 +15,12 @@ export class FeedbackMessageComponent {
   get iconName(): string {
     if (!this.message) return '';
     switch (this.message.type) {
-      case 'success': return 'check_circle';
-      case 'warning': return 'warning';
-      default: return 'error';
+      case 'success':
+        return 'check_circle';
+      case 'warning':
+        return 'warning';
+      default:
+        return 'error';
     }
   }
 }

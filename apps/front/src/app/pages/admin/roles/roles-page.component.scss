@@ -6,7 +6,10 @@
   gap: 12px;
   align-items: flex-start;
 
-  mat-form-field { flex: 1; min-width: 180px; }
+  mat-form-field {
+    flex: 1;
+    min-width: 180px;
+  }
 
   &__actions {
     display: flex;
@@ -21,6 +24,14 @@
   justify-content: space-between;
   align-items: center;
 
-  &__info { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-  &__actions { display: flex; gap: 4px; }
+  &__info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  &__actions {
+    display: flex;
+    gap: 4px;
+  }
 }

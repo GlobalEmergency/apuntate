@@ -14,11 +14,11 @@
       <div class="admin-form m-t-16">
         <mat-form-field appearance="outline">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="formName" required>
+          <input matInput [(ngModel)]="formName" required />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Identificador</mat-label>
-          <input matInput [(ngModel)]="formIdentifier" required>
+          <input matInput [(ngModel)]="formIdentifier" required />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Especialidad</mat-label>
@@ -74,10 +74,14 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="admin-form__small">
             <mat-label>Cantidad</mat-label>
-            <input matInput type="number" [(ngModel)]="newRoleQuantity" min="1">
+            <input matInput type="number" [(ngModel)]="newRoleQuantity" min="1" />
           </mat-form-field>
-          <button mat-flat-button color="primary" (click)="assignRole(unit.id)"
-                  [disabled]="!newRoleComponentId || saving">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="assignRole(unit.id)"
+            [disabled]="!newRoleComponentId || saving"
+          >
             <mat-icon>add</mat-icon> Asignar
           </button>
         </div>

@@ -8,7 +8,6 @@ import { CalendarRepository } from '../../../domain/interfaces/CalendarRepositor
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   encapsulation: ViewEncapsulation.None,
-  
 })
 export class CalendarComponent {
   calendarOptions: CalendarOptions = {
@@ -18,11 +17,13 @@ export class CalendarComponent {
     weekends: true,
     events: (fetchInfo, successCallback, failureCallback) => {
       this.calendarRepository.getCalendar(fetchInfo.start, fetchInfo.end).subscribe({
-        next: events => {
-          events.forEach(event => { event.url = '/service/' + event.id; });
+        next: (events) => {
+          events.forEach((event) => {
+            event.url = '/service/' + event.id;
+          });
           successCallback(events);
         },
-        error: error => failureCallback(error),
+        error: (error) => failureCallback(error),
       });
     },
   };

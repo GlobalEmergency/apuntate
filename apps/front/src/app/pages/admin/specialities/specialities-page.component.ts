@@ -14,9 +14,15 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   selector: 'app-specialities-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatFormFieldModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './specialities-page.component.html',
   styleUrls: ['./specialities-page.component.scss'],
@@ -41,8 +47,13 @@ export class SpecialitiesPageComponent implements OnInit {
   private loadAll(): void {
     this.loading = true;
     this.adminRepo.listSpecialities().subscribe({
-      next: (specs) => { this.specialities = specs; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (specs) => {
+        this.specialities = specs;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
   }
 
@@ -69,16 +80,27 @@ export class SpecialitiesPageComponent implements OnInit {
     this.message = null;
 
     if (this.editingSpec) {
-      this.adminRepo.updateSpeciality(this.editingSpec.id, {
-        name: this.formName, abbreviation: this.formAbbreviation,
-      }).subscribe({
-        next: () => { this.onSuccess('Speciality updated.'); },
-        error: (err) => { this.onError(err); },
-      });
+      this.adminRepo
+        .updateSpeciality(this.editingSpec.id, {
+          name: this.formName,
+          abbreviation: this.formAbbreviation,
+        })
+        .subscribe({
+          next: () => {
+            this.onSuccess('Speciality updated.');
+          },
+          error: (err) => {
+            this.onError(err);
+          },
+        });
     } else {
       this.adminRepo.createSpeciality(this.formName, this.formAbbreviation).subscribe({
-        next: () => { this.onSuccess('Speciality created.'); },
-        error: (err) => { this.onError(err); },
+        next: () => {
+          this.onSuccess('Speciality created.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
       });
     }
   }
@@ -87,8 +109,12 @@ export class SpecialitiesPageComponent implements OnInit {
     this.saving = true;
     this.message = null;
     this.adminRepo.deleteSpeciality(spec.id).subscribe({
-      next: () => { this.onSuccess('Speciality deleted.'); },
-      error: (err) => { this.onError(err); },
+      next: () => {
+        this.onSuccess('Speciality deleted.');
+      },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 

@@ -5,7 +5,6 @@ import { navItems } from './sidebar-data';
   standalone: false,
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  
 })
 export class SidebarComponent {
   navItems = navItems;

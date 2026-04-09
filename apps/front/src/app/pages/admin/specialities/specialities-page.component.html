@@ -13,15 +13,19 @@
       <div class="admin-form m-t-16">
         <mat-form-field appearance="outline">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="formName" required>
+          <input matInput [(ngModel)]="formName" required />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Abreviatura</mat-label>
-          <input matInput [(ngModel)]="formAbbreviation" required>
+          <input matInput [(ngModel)]="formAbbreviation" required />
         </mat-form-field>
         <div class="admin-form__actions">
-          <button mat-flat-button color="primary" (click)="save()"
-                  [disabled]="saving || !formName || !formAbbreviation">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="save()"
+            [disabled]="saving || !formName || !formAbbreviation"
+          >
             {{ editingSpec ? 'Guardar' : 'Crear' }}
           </button>
           <button mat-stroked-button (click)="cancelForm()">Cancelar</button>

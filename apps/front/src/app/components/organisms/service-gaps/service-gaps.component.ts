@@ -20,7 +20,7 @@ export class ServiceGapsComponent {
   @Output() withdraw = new EventEmitter<string>();
 
   get filledCount(): number {
-    return this.gaps.filter(g => g.user !== null && g.user !== undefined).length;
+    return this.gaps.filter((g) => g.user !== null && g.user !== undefined).length;
   }
 
   get availableCount(): number {

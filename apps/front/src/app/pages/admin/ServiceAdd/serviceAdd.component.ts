@@ -24,9 +24,16 @@ import { FeedbackMessageComponent } from '../../../components/atoms/feedback-mes
   templateUrl: './serviceAdd.component.html',
   styleUrls: ['./serviceAdd.component.scss'],
   imports: [
-    MatInputModule, MatIconModule, ReactiveFormsModule,
-    NgIf, MatOptionModule, MatSelectModule, NgForOf, MatButtonModule,
-    KeyValuePipe, FeedbackMessageComponent,
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatOptionModule,
+    MatSelectModule,
+    NgForOf,
+    MatButtonModule,
+    KeyValuePipe,
+    FeedbackMessageComponent,
   ],
 })
 export class ServiceAddComponent implements OnInit {
@@ -43,9 +50,18 @@ export class ServiceAddComponent implements OnInit {
   ngOnInit(): void {
     if (!this.service) {
       this.service = new Service(
-        uuidv4(), '', '', new Date(), new Date(), new Date(),
-        ServiceStatus.DRAFT, [], [],
-        ServiceCategory.PREVENTIVE, ServicePriority.MEDIUM, ServiceType.COVERAGE,
+        uuidv4(),
+        '',
+        '',
+        new Date(),
+        new Date(),
+        new Date(),
+        ServiceStatus.DRAFT,
+        [],
+        [],
+        ServiceCategory.PREVENTIVE,
+        ServicePriority.MEDIUM,
+        ServiceType.COVERAGE,
       );
     }
 

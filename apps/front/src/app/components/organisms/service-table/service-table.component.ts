@@ -6,7 +6,6 @@ import { Service } from '../../../../domain/entities/Service';
   selector: 'app-service-table',
   templateUrl: './service-table.component.html',
   styleUrls: ['./service-table.component.scss'],
-  
 })
 export class ServiceTableComponent {
   displayedColumns = ['date', 'name', 'status'];

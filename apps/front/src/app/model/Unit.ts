@@ -1,6 +1,6 @@
 import { Service } from '../../domain/entities/Service';
 
-export class Unit{
+export class Unit {
   id: string;
   identifier: string;
   name: string;

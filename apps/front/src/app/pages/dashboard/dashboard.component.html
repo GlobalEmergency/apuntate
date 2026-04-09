@@ -15,7 +15,8 @@
         <app-service-table
           *ngIf="services.length > 0; else noServices"
           [services]="services"
-          (serviceClicked)="showService($event)">
+          (serviceClicked)="showService($event)"
+        >
         </app-service-table>
         <ng-template #noServices>
           <p class="mat-body-1 text-muted m-t-16">No hay servicios pr&oacute;ximos programados.</p>
@@ -29,13 +30,19 @@
       <mat-card-content class="p-24">
         <mat-card-title>Tu resumen</mat-card-title>
         <div *ngIf="profile?.stats; else noStats" class="dashboard-stats m-t-16">
-          <app-stat-icon icon="schedule" color="primary"
+          <app-stat-icon
+            icon="schedule"
+            color="primary"
             [value]="profile.stats.totalHours + ' h'"
-            label="Horas de servicio">
+            label="Horas de servicio"
+          >
           </app-stat-icon>
-          <app-stat-icon icon="assignment_turned_in" color="accent"
+          <app-stat-icon
+            icon="assignment_turned_in"
+            color="accent"
             [value]="'' + profile.stats.totalServices"
-            label="Servicios realizados">
+            label="Servicios realizados"
+          >
           </app-stat-icon>
         </div>
         <ng-template #noStats>
@@ -49,7 +56,10 @@
         <mat-card-title>Mi perfil</mat-card-title>
         <div class="dashboard-profile m-t-16">
           <app-summary-row label="Email" [value]="profile.email"></app-summary-row>
-          <app-summary-row label="Miembro desde" [value]="(profile.dateStart | date:'dd/MM/yyyy') || ''"></app-summary-row>
+          <app-summary-row
+            label="Miembro desde"
+            [value]="(profile.dateStart | date: 'dd/MM/yyyy') || ''"
+          ></app-summary-row>
           <div class="summary-row">
             <span class="text-muted">Rol</span>
             <span>

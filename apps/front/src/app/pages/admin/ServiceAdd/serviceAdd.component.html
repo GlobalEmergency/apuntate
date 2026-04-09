@@ -5,7 +5,7 @@
 <form (ngSubmit)="sendForm()" [formGroup]="serviceForm">
   <mat-form-field appearance="fill" class="w-100">
     <mat-label>Nombre</mat-label>
-    <input matInput required formControlName="name">
+    <input matInput required formControlName="name" />
     <mat-error *ngIf="serviceForm.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
     <mat-hint>Nombre del servicio</mat-hint>
   </mat-form-field>

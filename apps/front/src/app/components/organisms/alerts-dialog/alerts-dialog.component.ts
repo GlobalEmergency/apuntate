@@ -17,7 +17,7 @@ export class AlertsDialogComponent {
   alerts: Alert[] = [];
 
   constructor(private alertService: AlertService) {
-    this.alertService.getAlerts().subscribe(alerts => {
+    this.alertService.getAlerts().subscribe((alerts) => {
       this.alerts = alerts;
     });
   }

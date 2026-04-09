@@ -10,13 +10,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
     </div>
   `,
-  styles: [`
-    .spinner-overlay {
-      display: flex;
-      justify-content: center;
-      padding: 48px;
-    }
-  `],
+  styles: [
+    `
+      .spinner-overlay {
+        display: flex;
+        justify-content: center;
+        padding: 48px;
+      }
+    `,
+  ],
 })
 export class SpinnerOverlayComponent {
   @Input() diameter = 40;

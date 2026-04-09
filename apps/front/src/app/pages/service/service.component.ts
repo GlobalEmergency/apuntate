@@ -10,7 +10,6 @@ import { AuthenticationService } from '../../../services/authentication.service'
   selector: 'app-service',
   templateUrl: './service.component.html',
   styleUrls: ['./service.component.scss'],
-  
 })
 export class ServiceComponent implements OnInit {
   service: Service | null = null;

@@ -13,9 +13,7 @@
 <app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
 
 <div *ngIf="!loading">
-  <div *ngIf="organizations.length === 0" class="text-muted">
-    No perteneces a ninguna organizaci&oacute;n.
-  </div>
+  <div *ngIf="organizations.length === 0" class="text-muted">No perteneces a ninguna organizaci&oacute;n.</div>
 
   <div *ngIf="selectedOrgId">
     <button mat-flat-button color="primary" (click)="openInvite()" class="m-b-16" *ngIf="!showInviteForm">
@@ -29,15 +27,15 @@
         <div class="admin-form m-t-16">
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput [(ngModel)]="inviteEmail" type="email" required>
+            <input matInput [(ngModel)]="inviteEmail" type="email" required />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="inviteName" required>
+            <input matInput [(ngModel)]="inviteName" required />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Apellidos</mat-label>
-            <input matInput [(ngModel)]="inviteSurname">
+            <input matInput [(ngModel)]="inviteSurname" />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Rol en la organizaci&oacute;n</mat-label>
@@ -47,11 +45,15 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Contrase&ntilde;a (si es nuevo usuario)</mat-label>
-            <input matInput [(ngModel)]="invitePassword" type="password">
+            <input matInput [(ngModel)]="invitePassword" type="password" />
           </mat-form-field>
           <div class="admin-form__actions">
-            <button mat-flat-button color="primary" (click)="invite()"
-                    [disabled]="saving || !inviteEmail || !inviteName">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="invite()"
+              [disabled]="saving || !inviteEmail || !inviteName"
+            >
               Invitar
             </button>
             <button mat-stroked-button (click)="cancelInvite()">Cancelar</button>
@@ -76,13 +78,15 @@
           </div>
           <div class="member-item__actions">
             <mat-form-field appearance="outline" class="member-item__role-select">
-              <mat-select [ngModel]="m.role" (selectionChange)="changeRole(m.user.id, $event.value)"
-                          [disabled]="saving">
+              <mat-select
+                [ngModel]="m.role"
+                (selectionChange)="changeRole(m.user.id, $event.value)"
+                [disabled]="saving"
+              >
                 <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-icon-button color="warn" (click)="removeMember(m.user.id, m.user.name)"
-                    [disabled]="saving">
+            <button mat-icon-button color="warn" (click)="removeMember(m.user.id, m.user.name)" [disabled]="saving">
               <mat-icon>person_remove</mat-icon>
             </button>
           </div>

@@ -34,7 +34,10 @@ describe('ServiceHttpRepository', () => {
     });
     const req = httpMock.expectOne(`${apiUrl}/services/nexts`);
     expect(req.request.method).toBe('GET');
-    req.flush([{ id: '1', name: 'S1' }, { id: '2', name: 'S2' }]);
+    req.flush([
+      { id: '1', name: 'S1' },
+      { id: '2', name: 'S2' },
+    ]);
   });
 
   it('should fetch single service', () => {

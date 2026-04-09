@@ -34,9 +34,6 @@ import { FeedbackMessageComponent } from '../../components/atoms/feedback-messag
     TablerIconsModule.pick(TablerIcons),
     FeedbackMessageComponent,
   ],
-  declarations: [
-    LoginPage,
-    RegisterComponent,
-  ],
+  declarations: [LoginPage, RegisterComponent],
 })
 export class AuthenticationModule {}

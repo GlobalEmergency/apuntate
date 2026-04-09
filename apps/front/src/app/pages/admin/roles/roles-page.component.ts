@@ -16,9 +16,17 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   selector: 'app-roles-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatSelectModule, MatFormFieldModule, MatChipsModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './roles-page.component.html',
   styleUrls: ['./roles-page.component.scss'],
@@ -44,10 +52,19 @@ export class RolesPageComponent implements OnInit {
   private loadAll(): void {
     this.loading = true;
     this.adminRepo.listRoles().subscribe({
-      next: (roles) => { this.roles = roles; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (roles) => {
+        this.roles = roles;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
-    this.adminRepo.listRequirements().subscribe({ next: (r) => { this.requirements = r; } });
+    this.adminRepo.listRequirements().subscribe({
+      next: (r) => {
+        this.requirements = r;
+      },
+    });
   }
 
   openCreate(): void {
@@ -73,17 +90,27 @@ export class RolesPageComponent implements OnInit {
     this.message = null;
 
     if (this.editingRole) {
-      this.adminRepo.updateRole(this.editingRole.id, {
-        name: this.formName,
-        requirement_ids: this.formRequirementIds,
-      }).subscribe({
-        next: () => { this.onSuccess('Role updated.'); },
-        error: (err) => { this.onError(err); },
-      });
+      this.adminRepo
+        .updateRole(this.editingRole.id, {
+          name: this.formName,
+          requirement_ids: this.formRequirementIds,
+        })
+        .subscribe({
+          next: () => {
+            this.onSuccess('Role updated.');
+          },
+          error: (err) => {
+            this.onError(err);
+          },
+        });
     } else {
       this.adminRepo.createRole(this.formName, this.formRequirementIds).subscribe({
-        next: () => { this.onSuccess('Role created.'); },
-        error: (err) => { this.onError(err); },
+        next: () => {
+          this.onSuccess('Role created.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
       });
     }
   }
@@ -92,8 +119,12 @@ export class RolesPageComponent implements OnInit {
     this.saving = true;
     this.message = null;
     this.adminRepo.deleteRole(role.id).subscribe({
-      next: () => { this.onSuccess('Role deleted.'); },
-      error: (err) => { this.onError(err); },
+      next: () => {
+        this.onSuccess('Role deleted.');
+      },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 

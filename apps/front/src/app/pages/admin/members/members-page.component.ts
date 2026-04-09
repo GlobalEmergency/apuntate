@@ -16,9 +16,17 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   selector: 'app-members-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatSelectModule, MatFormFieldModule, MatChipsModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './members-page.component.html',
   styleUrls: ['./members-page.component.scss'],
@@ -61,7 +69,9 @@ export class MembersPageComponent implements OnInit {
           this.loading = false;
         }
       },
-      error: () => { this.loading = false; },
+      error: () => {
+        this.loading = false;
+      },
     });
   }
 
@@ -73,8 +83,13 @@ export class MembersPageComponent implements OnInit {
     if (!this.selectedOrgId) return;
     this.loading = true;
     this.adminRepo.listMembers(this.selectedOrgId).subscribe({
-      next: (members) => { this.members = members; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (members) => {
+        this.members = members;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
   }
 
@@ -94,24 +109,26 @@ export class MembersPageComponent implements OnInit {
   invite(): void {
     this.saving = true;
     this.message = null;
-    this.adminRepo.inviteMember(this.selectedOrgId, {
-      email: this.inviteEmail,
-      name: this.inviteName,
-      surname: this.inviteSurname,
-      role: this.inviteRole,
-      password: this.invitePassword || undefined,
-    }).subscribe({
-      next: () => {
-        this.saving = false;
-        this.showInviteForm = false;
-        this.message = { text: 'Member invited successfully.', type: 'success' };
-        this.loadMembers();
-      },
-      error: (err) => {
-        this.saving = false;
-        this.message = { text: err.error?.error || 'Error inviting member.', type: 'error' };
-      },
-    });
+    this.adminRepo
+      .inviteMember(this.selectedOrgId, {
+        email: this.inviteEmail,
+        name: this.inviteName,
+        surname: this.inviteSurname,
+        role: this.inviteRole,
+        password: this.invitePassword || undefined,
+      })
+      .subscribe({
+        next: () => {
+          this.saving = false;
+          this.showInviteForm = false;
+          this.message = { text: 'Member invited successfully.', type: 'success' };
+          this.loadMembers();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.message = { text: err.error?.error || 'Error inviting member.', type: 'error' };
+        },
+      });
   }
 
   changeRole(userId: string, newRole: string): void {

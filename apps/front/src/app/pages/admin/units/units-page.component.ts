@@ -16,9 +16,17 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   selector: 'app-units-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatSelectModule, MatFormFieldModule, MatChipsModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './units-page.component.html',
   styleUrls: ['./units-page.component.scss'],
@@ -50,11 +58,24 @@ export class UnitsPageComponent implements OnInit {
   private loadAll(): void {
     this.loading = true;
     this.adminRepo.listUnits().subscribe({
-      next: (units) => { this.units = units; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (units) => {
+        this.units = units;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
-    this.adminRepo.listSpecialities().subscribe({ next: (s) => { this.specialities = s; } });
-    this.adminRepo.listRoles().subscribe({ next: (r) => { this.roles = r; } });
+    this.adminRepo.listSpecialities().subscribe({
+      next: (s) => {
+        this.specialities = s;
+      },
+    });
+    this.adminRepo.listRoles().subscribe({
+      next: (r) => {
+        this.roles = r;
+      },
+    });
   }
 
   openCreate(): void {
@@ -82,17 +103,28 @@ export class UnitsPageComponent implements OnInit {
     this.message = null;
 
     if (this.editingUnit) {
-      this.adminRepo.updateUnit(this.editingUnit.id, {
-        name: this.formName, identifier: this.formIdentifier,
-        speciality_id: this.formSpecialityId || undefined,
-      }).subscribe({
-        next: () => { this.onSuccess('Unit updated.'); },
-        error: (err) => { this.onError(err); },
-      });
+      this.adminRepo
+        .updateUnit(this.editingUnit.id, {
+          name: this.formName,
+          identifier: this.formIdentifier,
+          speciality_id: this.formSpecialityId || undefined,
+        })
+        .subscribe({
+          next: () => {
+            this.onSuccess('Unit updated.');
+          },
+          error: (err) => {
+            this.onError(err);
+          },
+        });
     } else {
       this.adminRepo.registerUnit(this.formName, this.formIdentifier, this.formSpecialityId || undefined).subscribe({
-        next: () => { this.onSuccess('Unit registered.'); },
-        error: (err) => { this.onError(err); },
+        next: () => {
+          this.onSuccess('Unit registered.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
       });
     }
   }
@@ -101,8 +133,12 @@ export class UnitsPageComponent implements OnInit {
     this.saving = true;
     this.message = null;
     this.adminRepo.decommissionUnit(unit.id).subscribe({
-      next: () => { this.onSuccess('Unit decommissioned.'); },
-      error: (err) => { this.onError(err); },
+      next: () => {
+        this.onSuccess('Unit decommissioned.');
+      },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 
@@ -119,15 +155,21 @@ export class UnitsPageComponent implements OnInit {
         this.newRoleQuantity = 1;
         this.onSuccess('Role assigned.');
       },
-      error: (err) => { this.onError(err); },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 
   unassignRole(unitId: string, ucId: string): void {
     this.saving = true;
     this.adminRepo.unassignRoleFromUnit(unitId, ucId).subscribe({
-      next: () => { this.onSuccess('Role unassigned.'); },
-      error: (err) => { this.onError(err); },
+      next: () => {
+        this.onSuccess('Role unassigned.');
+      },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 

@@ -13,9 +13,7 @@
     border-bottom-left-radius: $border-radius;
     border-color: $borderColor;
   }
-  .mdc-text-field--outlined
-    .mdc-notched-outline
-    .mdc-notched-outline__trailing {
+  .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
     border-top-right-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     border-color: $borderColor;

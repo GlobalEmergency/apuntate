@@ -1,4 +1,4 @@
-@use "sass:meta";
+@use 'sass:meta';
 
 @mixin syntax-colors($args...) {
   @each $name, $color in meta.keywords($args) {

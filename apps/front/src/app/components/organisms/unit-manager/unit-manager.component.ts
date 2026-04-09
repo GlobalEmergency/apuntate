@@ -10,7 +10,15 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-unit-manager',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatSelectModule, MatFormFieldModule, FormsModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    FormsModule,
+  ],
   templateUrl: './unit-manager.component.html',
   styleUrls: ['./unit-manager.component.scss'],
 })

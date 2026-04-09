@@ -11,12 +11,14 @@ import { CommonModule } from '@angular/common';
       <span class="f-w-600" [ngClass]="colorClass">{{ value }}</span>
     </div>
   `,
-  styles: [`
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-    }
-  `],
+  styles: [
+    `
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+      }
+    `,
+  ],
 })
 export class SummaryRowComponent {
   @Input() label = '';

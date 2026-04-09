@@ -14,9 +14,15 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   selector: 'app-requirements-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatFormFieldModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './requirements-page.component.html',
   styleUrls: ['./requirements-page.component.scss'],
@@ -40,8 +46,13 @@ export class RequirementsPageComponent implements OnInit {
   private loadAll(): void {
     this.loading = true;
     this.adminRepo.listRequirements().subscribe({
-      next: (reqs) => { this.requirements = reqs; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (reqs) => {
+        this.requirements = reqs;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
   }
 
@@ -67,13 +78,21 @@ export class RequirementsPageComponent implements OnInit {
 
     if (this.editingReq) {
       this.adminRepo.renameRequirement(this.editingReq.id, this.formName).subscribe({
-        next: () => { this.onSuccess('Requirement renamed.'); },
-        error: (err) => { this.onError(err); },
+        next: () => {
+          this.onSuccess('Requirement renamed.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
       });
     } else {
       this.adminRepo.createRequirement(this.formName).subscribe({
-        next: () => { this.onSuccess('Requirement created.'); },
-        error: (err) => { this.onError(err); },
+        next: () => {
+          this.onSuccess('Requirement created.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
       });
     }
   }
@@ -82,8 +101,12 @@ export class RequirementsPageComponent implements OnInit {
     this.saving = true;
     this.message = null;
     this.adminRepo.deleteRequirement(req.id).subscribe({
-      next: () => { this.onSuccess('Requirement deleted.'); },
-      error: (err) => { this.onError(err); },
+      next: () => {
+        this.onSuccess('Requirement deleted.');
+      },
+      error: (err) => {
+        this.onError(err);
+      },
     });
   }
 

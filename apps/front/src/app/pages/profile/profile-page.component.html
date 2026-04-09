@@ -19,21 +19,19 @@
         </div>
         <div class="profile-row">
           <span class="text-muted">Miembro desde</span>
-          <span>{{ profile.dateStart | date:'dd/MM/yyyy' }}</span>
+          <span>{{ profile.dateStart | date: 'dd/MM/yyyy' }}</span>
         </div>
-        <button mat-stroked-button (click)="startEdit()" class="m-t-16">
-          <mat-icon>edit</mat-icon> Editar
-        </button>
+        <button mat-stroked-button (click)="startEdit()" class="m-t-16"><mat-icon>edit</mat-icon> Editar</button>
       </div>
 
       <div *ngIf="editingProfile" class="admin-form m-t-16">
         <mat-form-field appearance="outline">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="formName" required>
+          <input matInput [(ngModel)]="formName" required />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Apellidos</mat-label>
-          <input matInput [(ngModel)]="formSurname">
+          <input matInput [(ngModel)]="formSurname" />
         </mat-form-field>
         <div class="admin-form__actions">
           <button mat-flat-button color="primary" (click)="saveProfile()" [disabled]="saving || !formName">
@@ -78,8 +76,12 @@
               <mat-option *ngFor="let req of availableRequirements" [value]="req.id">{{ req.name }}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-flat-button color="primary" (click)="addRequirement()"
-                  [disabled]="!selectedRequirementId || saving">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="addRequirement()"
+            [disabled]="!selectedRequirementId || saving"
+          >
             <mat-icon>add</mat-icon> A&ntilde;adir
           </button>
         </div>

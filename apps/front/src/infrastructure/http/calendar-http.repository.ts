@@ -14,8 +14,6 @@ export class CalendarHttpRepository extends CalendarRepository {
   }
 
   getCalendar(start: Date, end: Date): Observable<EventInput[]> {
-    return this.http.get<EventInput[]>(
-      `${this.url}/services/calendar?s=${start.toISOString()}&e=${end.toISOString()}`
-    );
+    return this.http.get<EventInput[]>(`${this.url}/services/calendar?s=${start.toISOString()}&e=${end.toISOString()}`);
   }
 }

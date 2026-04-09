@@ -16,9 +16,17 @@ import { AdminRepository } from '../../../domain/interfaces/AdminRepository';
   selector: 'app-profile-page',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, MatIconModule,
-    MatInputModule, MatFormFieldModule, MatChipsModule, MatSelectModule,
-    FeedbackMessageComponent, SpinnerOverlayComponent,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatSelectModule,
+    FeedbackMessageComponent,
+    SpinnerOverlayComponent,
   ],
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.scss'],
@@ -40,14 +48,23 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfile();
-    this.adminRepo.listRequirements().subscribe({ next: (r) => { this.allRequirements = r; } });
+    this.adminRepo.listRequirements().subscribe({
+      next: (r) => {
+        this.allRequirements = r;
+      },
+    });
   }
 
   private loadProfile(): void {
     this.loading = true;
     this.adminRepo.getProfile().subscribe({
-      next: (profile) => { this.profile = profile; this.loading = false; },
-      error: () => { this.loading = false; },
+      next: (profile) => {
+        this.profile = profile;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
   }
 
@@ -80,7 +97,7 @@ export class ProfilePageComponent implements OnInit {
 
   get availableRequirements(): any[] {
     const myIds = (this.profile?.requirements || []).map((r: any) => r.id);
-    return this.allRequirements.filter(r => !myIds.includes(r.id));
+    return this.allRequirements.filter((r) => !myIds.includes(r.id));
   }
 
   addRequirement(): void {

@@ -17,7 +17,7 @@ export class AlertService {
   }
 
   private loadInitialAlerts(): void {
-    this.alertRepository.getAlerts().subscribe(alerts => this.alertsSubject.next(alerts));
+    this.alertRepository.getAlerts().subscribe((alerts) => this.alertsSubject.next(alerts));
   }
 
   openSnackBar(message: string, action?: string): void {
@@ -29,9 +29,7 @@ export class AlertService {
   }
 
   discardAlert(alert: Alert): void {
-    const updatedAlerts = this.alertsSubject.value.map(a =>
-      a.id === alert.id ? { ...a, show: false } : a
-    );
+    const updatedAlerts = this.alertsSubject.value.map((a) => (a.id === alert.id ? { ...a, show: false } : a));
 
     // Update UI optimistically
     this.alertsSubject.next(updatedAlerts);
@@ -39,9 +37,7 @@ export class AlertService {
     this.alertRepository.discardAlert(alert).subscribe({
       error: () => {
         // Revert on failure
-        this.alertsSubject.next(this.alertsSubject.value.map(a =>
-          a.id === alert.id ? { ...a, show: true } : a
-        ));
+        this.alertsSubject.next(this.alertsSubject.value.map((a) => (a.id === alert.id ? { ...a, show: true } : a)));
       },
     });
   }

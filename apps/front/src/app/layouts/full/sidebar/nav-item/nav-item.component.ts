@@ -5,10 +5,9 @@ import { AuthenticationService } from '../../../../../services/authentication.se
 
 @Component({
   standalone: false,
-    selector: 'app-nav-item',
-    templateUrl: './nav-item.component.html',
-    styleUrls: [],
-    
+  selector: 'app-nav-item',
+  templateUrl: './nav-item.component.html',
+  styleUrls: [],
 })
 export class AppNavItemComponent {
   @Input() item: NavItem;

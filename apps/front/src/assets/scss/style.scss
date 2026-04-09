@@ -1,25 +1,25 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
-@import "variables";
-@import "layouts/transitions";
-@import "helpers/color";
-@import "helpers/icon-size";
+@import 'variables';
+@import 'layouts/transitions';
+@import 'helpers/color';
+@import 'helpers/icon-size';
 
 // Theme
-@import "themecolors/default_theme";
+@import 'themecolors/default_theme';
 
 html {
   @include mat.all-component-themes($bluetheme);
 }
 
 // Container layout
-@import "overrides/materialoverrides";
-@import "container";
-@import "layouts/layouts";
-@import "grid/grid";
-@import "helpers/custom-flex";
-@import "helpers/index";
+@import 'overrides/materialoverrides';
+@import 'container';
+@import 'layouts/layouts';
+@import 'grid/grid';
+@import 'helpers/custom-flex';
+@import 'helpers/index';
 
 // Pages
-@import "pages/dashboards";
-@import "pages/auth";
+@import 'pages/dashboards';
+@import 'pages/auth';

@@ -22,12 +22,7 @@ import { ServiceHeaderComponent } from '../components/organisms/service-header/s
 import { ServiceGapsComponent } from '../components/organisms/service-gaps/service-gaps.component';
 
 @NgModule({
-  declarations: [
-    CalendarComponent,
-    DashboardComponent,
-    ServiceComponent,
-    ServiceTableComponent,
-  ],
+  declarations: [CalendarComponent, DashboardComponent, ServiceComponent, ServiceTableComponent],
   imports: [
     CommonModule,
     MaterialModule,

@@ -1,6 +1,4 @@
-<div *ngIf="message"
-     class="feedback"
-     [ngClass]="'feedback--' + message.type">
+<div *ngIf="message" class="feedback" [ngClass]="'feedback--' + message.type">
   <mat-icon>{{ iconName }}</mat-icon>
   <span>{{ message.text }}</span>
 </div>

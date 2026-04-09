@@ -32,8 +32,12 @@
   }
 
   &__icon {
-    &--filled { color: $success; }
-    &--empty { color: $gray-100; }
+    &--filled {
+      color: $success;
+    }
+    &--empty {
+      color: $gray-100;
+    }
   }
 
   &__requirements {

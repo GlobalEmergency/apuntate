@@ -6,9 +6,8 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 
 @Component({
   standalone: false,
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    
+  selector: 'app-login',
+  templateUrl: './login.component.html',
 })
 export class LoginPage {
   loading = false;

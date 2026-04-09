@@ -1,16 +1,18 @@
 @use '@angular/material' as mat;
 
-$bluetheme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$blue-palette,
-    tertiary: mat.$cyan-palette,
-  ),
-  typography: (
-    brand-family: 'Plus Jakarta Sans',
-    plain-family: 'Plus Jakarta Sans',
-  ),
-));
+$bluetheme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$blue-palette,
+      tertiary: mat.$cyan-palette,
+    ),
+    typography: (
+      brand-family: 'Plus Jakarta Sans',
+      plain-family: 'Plus Jakarta Sans',
+    ),
+  )
+);
 
 :root {
   --primary-color: #5d87ff;

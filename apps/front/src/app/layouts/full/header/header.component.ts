@@ -10,7 +10,6 @@ import { AlertsDialogComponent } from '../../../components/organisms/alerts-dial
   selector: 'app-header',
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
-  
 })
 export class HeaderComponent {
   @Input() showToggle = true;
@@ -27,8 +26,8 @@ export class HeaderComponent {
     public router: Router,
     public alertService: AlertService,
   ) {
-    this.alertService.getAlerts().subscribe(alerts => {
-      this.alertsActive = alerts.filter(alert => alert.show).length;
+    this.alertService.getAlerts().subscribe((alerts) => {
+      this.alertsActive = alerts.filter((alert) => alert.show).length;
     });
   }
 

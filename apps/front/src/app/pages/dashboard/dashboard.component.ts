@@ -10,7 +10,6 @@ import { AuthenticationService } from '../../../services/authentication.service'
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  
 })
 export class DashboardComponent implements OnInit {
   services: Service[] = [];
@@ -32,8 +31,12 @@ export class DashboardComponent implements OnInit {
     }
 
     this.serviceRepository.getNextEvents().subscribe({
-      next: (data) => { this.services = data; },
-      error: () => { this.message = { text: 'Error al cargar los servicios.', type: 'error' }; },
+      next: (data) => {
+        this.services = data;
+      },
+      error: () => {
+        this.message = { text: 'Error al cargar los servicios.', type: 'error' };
+      },
     });
 
     this.profileRepository.getProfile().subscribe({
@@ -43,7 +46,9 @@ export class DashboardComponent implements OnInit {
           this.userName = data.name + (data.surname ? ' ' + data.surname : '');
         }
       },
-      error: () => { this.message = { text: 'Error al cargar el perfil.', type: 'error' }; },
+      error: () => {
+        this.message = { text: 'Error al cargar el perfil.', type: 'error' };
+      },
     });
   }
 

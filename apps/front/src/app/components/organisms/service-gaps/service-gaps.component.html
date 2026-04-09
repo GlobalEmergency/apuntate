@@ -15,7 +15,8 @@
             [isCurrentUser]="isCurrentUser(gap)"
             [loading]="signupLoading === gap.id"
             (signup)="signup.emit($event)"
-            (withdraw)="withdraw.emit($event)">
+            (withdraw)="withdraw.emit($event)"
+          >
           </app-gap-item>
         </div>
       </mat-card-content>
@@ -29,7 +30,11 @@
         <div class="summary-list m-t-16">
           <app-summary-row label="Posiciones totales" [value]="'' + gaps.length"></app-summary-row>
           <app-summary-row label="Cubiertas" [value]="'' + filledCount" colorClass="text-success"></app-summary-row>
-          <app-summary-row label="Disponibles" [value]="'' + availableCount" colorClass="text-warning"></app-summary-row>
+          <app-summary-row
+            label="Disponibles"
+            [value]="'' + availableCount"
+            colorClass="text-warning"
+          ></app-summary-row>
         </div>
       </mat-card-content>
     </mat-card>

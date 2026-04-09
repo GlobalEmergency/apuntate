@@ -4,7 +4,10 @@ export abstract class AdminRepository {
   // Units
   abstract listUnits(): Observable<any[]>;
   abstract registerUnit(name: string, identifier: string, specialityId?: string): Observable<any>;
-  abstract updateUnit(unitId: string, data: { name?: string; identifier?: string; speciality_id?: string }): Observable<any>;
+  abstract updateUnit(
+    unitId: string,
+    data: { name?: string; identifier?: string; speciality_id?: string },
+  ): Observable<any>;
   abstract decommissionUnit(unitId: string): Observable<void>;
   abstract assignRoleToUnit(unitId: string, componentId: string, quantity: number): Observable<any>;
   abstract unassignRoleFromUnit(unitId: string, unitComponentId: string): Observable<void>;
@@ -29,7 +32,10 @@ export abstract class AdminRepository {
 
   // Members
   abstract listMembers(organizationId: string): Observable<any[]>;
-  abstract inviteMember(organizationId: string, data: { email: string; name: string; surname: string; role: string; password?: string }): Observable<any>;
+  abstract inviteMember(
+    organizationId: string,
+    data: { email: string; name: string; surname: string; role: string; password?: string },
+  ): Observable<any>;
   abstract removeMember(organizationId: string, userId: string): Observable<void>;
   abstract changeMemberRole(organizationId: string, userId: string, role: string): Observable<any>;
 

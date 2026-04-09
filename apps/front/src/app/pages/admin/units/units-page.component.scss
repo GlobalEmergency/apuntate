@@ -6,9 +6,15 @@
   gap: 12px;
   align-items: flex-start;
 
-  mat-form-field { flex: 1; min-width: 180px; }
+  mat-form-field {
+    flex: 1;
+    min-width: 180px;
+  }
 
-  &__small { max-width: 100px; flex: 0 0 100px; }
+  &__small {
+    max-width: 100px;
+    flex: 0 0 100px;
+  }
 
   &__actions {
     display: flex;
@@ -24,8 +30,16 @@
   align-items: center;
   cursor: pointer;
 
-  &__info { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-  &__actions { display: flex; gap: 4px; }
+  &__info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  &__actions {
+    display: flex;
+    gap: 4px;
+  }
 }
 
 .admin-subitem {

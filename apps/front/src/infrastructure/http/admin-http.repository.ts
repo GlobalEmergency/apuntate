@@ -19,7 +19,9 @@ export class AdminHttpRepository extends AdminRepository {
 
   registerUnit(name: string, identifier: string, specialityId?: string): Observable<any> {
     return this.http.post(`${this.url}/units`, {
-      name, identifier, speciality_id: specialityId || null,
+      name,
+      identifier,
+      speciality_id: specialityId || null,
     });
   }
 
@@ -95,7 +97,10 @@ export class AdminHttpRepository extends AdminRepository {
     return this.http.get<any[]>(`${this.url}/organizations/${organizationId}/members`);
   }
 
-  inviteMember(organizationId: string, data: { email: string; name: string; surname: string; role: string; password?: string }): Observable<any> {
+  inviteMember(
+    organizationId: string,
+    data: { email: string; name: string; surname: string; role: string; password?: string },
+  ): Observable<any> {
     return this.http.post(`${this.url}/organizations/${organizationId}/members`, data);
   }
 
