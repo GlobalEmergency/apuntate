@@ -29,8 +29,8 @@ final class CalendarTransform
         return [
             'id' => (string) $service->getId(),
             'title' => $service->getName(),
-            'start' => $service->getDateStart()->toIso8601String(),
-            'end' => $service->getDateEnd()->toIso8601String(),
+            'start' => $service->getDateStart()->utc()->format('Y-m-d\TH:i:s\Z'),
+            'end' => $service->getDateEnd()->utc()->format('Y-m-d\TH:i:s\Z'),
             'allDay' => false,
         ];
     }

@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setName('Admin');
         $user->setSurname('Admin');
-        $user->setDateStart(new \DateTime());
+        $user->setDateStart(new \DateTime('now', new \DateTimeZone('UTC')));
         $user->setEmail($email);
         $user->setPassword($this->passwordEncoder->hashPassword($user, $password));
         $user->setRoles(['ROLE_ADMIN']);

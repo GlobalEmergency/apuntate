@@ -40,12 +40,12 @@ final class ServicesController extends AbstractController
     #[Route('/calendar', name: 'calendar', methods: ['GET'])]
     public function calendar(Request $request): JsonResponse
     {
-        $dateStart = Carbon::parseFromLocale(
-            $request->get('s', Carbon::now()->startOfMonth()->format('d-m-Y'))
-        )->startOfDay();
-        $dateEnd = Carbon::parseFromLocale(
-            $request->get('e', Carbon::now()->endOfMonth()->format('d-m-Y'))
-        )->endOfDay();
+        $dateStart = Carbon::parse(
+            $request->get('s', Carbon::now('UTC')->startOfMonth()->toIso8601String())
+        )->utc()->startOfDay();
+        $dateEnd = Carbon::parse(
+            $request->get('e', Carbon::now('UTC')->endOfMonth()->toIso8601String())
+        )->utc()->endOfDay();
 
         $services = $this->serviceRepository->findBetweenDates($dateStart, $dateEnd);
 
@@ -61,9 +61,9 @@ final class ServicesController extends AbstractController
         try {
             $service = $createService->execute(
                 name: $data['name'] ?? '',
-                dateStart: new \DateTimeImmutable($data['dateStart'] ?? 'now'),
-                dateEnd: new \DateTimeImmutable($data['dateEnd'] ?? 'now'),
-                datePlace: new \DateTimeImmutable($data['datePlace'] ?? 'now'),
+                dateStart: new \DateTimeImmutable($data['dateStart'] ?? 'now', new \DateTimeZone('UTC')),
+                dateEnd: new \DateTimeImmutable($data['dateEnd'] ?? 'now', new \DateTimeZone('UTC')),
+                datePlace: new \DateTimeImmutable($data['datePlace'] ?? 'now', new \DateTimeZone('UTC')),
                 description: $data['description'] ?? null,
             );
         } catch (\DomainException|\DateMalformedStringException $e) {
@@ -99,9 +99,9 @@ final class ServicesController extends AbstractController
                 serviceId: $serviceId,
                 name: $data['name'] ?? null,
                 description: $data['description'] ?? null,
-                dateStart: isset($data['dateStart']) ? new \DateTimeImmutable($data['dateStart']) : null,
-                dateEnd: isset($data['dateEnd']) ? new \DateTimeImmutable($data['dateEnd']) : null,
-                datePlace: isset($data['datePlace']) ? new \DateTimeImmutable($data['datePlace']) : null,
+                dateStart: isset($data['dateStart']) ? new \DateTimeImmutable($data['dateStart'], new \DateTimeZone('UTC')) : null,
+                dateEnd: isset($data['dateEnd']) ? new \DateTimeImmutable($data['dateEnd'], new \DateTimeZone('UTC')) : null,
+                datePlace: isset($data['datePlace']) ? new \DateTimeImmutable($data['datePlace'], new \DateTimeZone('UTC')) : null,
                 status: $data['status'] ?? null,
             );
         } catch (\DomainException|\DateMalformedStringException $e) {
@@ -147,11 +147,9 @@ final class ServicesController extends AbstractController
             'id' => $s->getId()->toRfc4122(),
             'name' => $s->getName(),
             'description' => $s->getDescription(),
-            'dateStart' => $s->getDateStart()->toIso8601String(),
-            'dateEnd' => $s->getDateEnd()->toIso8601String(),
-            'datePlace' => $s->getDatePlace() instanceof Carbon
-                ? $s->getDatePlace()->toIso8601String()
-                : $s->getDatePlace()->format('c'),
+            'dateStart' => $s->getDateStart()->utc()->format('Y-m-d\TH:i:s\Z'),
+            'dateEnd' => $s->getDateEnd()->utc()->format('Y-m-d\TH:i:s\Z'),
+            'datePlace' => $s->getDatePlace()->utc()->format('Y-m-d\TH:i:s\Z'),
             'status' => $s->getStatus()->value,
             'units' => array_map(fn ($u) => [
                 'id' => $u->getId()->toRfc4122(),
@@ -178,8 +176,8 @@ final class ServicesController extends AbstractController
                     ] : null,
                 ] : null,
             ], $s->getGaps()->toArray()),
-            'createdAt' => $s->getCreatedAt()->format('c'),
-            'updatedAt' => $s->getUpdatedAt()->format('c'),
+            'createdAt' => (clone $s->getCreatedAt())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+            'updatedAt' => (clone $s->getUpdatedAt())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
         ];
     }
 }

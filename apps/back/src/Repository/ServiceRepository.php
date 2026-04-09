@@ -46,7 +46,7 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.dateStart > :now')
-            ->setParameter('now', Carbon::now())
+            ->setParameter('now', Carbon::now('UTC'))
             ->orderBy('s.dateStart', 'ASC')
             ->getQuery()
             ->getResult();
@@ -57,8 +57,8 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.dateStart BETWEEN :start AND :end')
-            ->setParameter('start', $start->format('Y-m-d H:i'))
-            ->setParameter('end', $end->format('Y-m-d H:i'))
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->orderBy('s.dateStart', 'ASC')
             ->getQuery()
             ->getResult();

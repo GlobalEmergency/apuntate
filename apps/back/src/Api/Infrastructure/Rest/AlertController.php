@@ -35,7 +35,7 @@ final class AlertController extends AbstractController
             'type' => $alert->getType(),
             'show' => !$alert->isRead(),
             'service_id' => $alert->getService()?->getId()->toRfc4122(),
-            'created_at' => $alert->getCreatedAt()->format('c'),
+            'created_at' => (clone $alert->getCreatedAt())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
         ], $alerts);
 
         return new JsonResponse($result);

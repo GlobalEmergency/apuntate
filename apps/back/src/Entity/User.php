@@ -235,8 +235,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->setDateStart(new \DateTime());
-        $this->setCreatedAt(new \DateTime());
-        $this->setUpdatedAt(new \DateTime());
+        $this->setDateStart(new \DateTime('now', new \DateTimeZone('UTC')));
+        $this->setCreatedAt(new \DateTime('now', new \DateTimeZone('UTC')));
+        $this->setUpdatedAt(new \DateTime('now', new \DateTimeZone('UTC')));
     }
 }
