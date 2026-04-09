@@ -5,9 +5,10 @@ import { Inject } from '@angular/core';
 import { AuthenticationService } from '../../../../services/authentication.service';
 
 @Component({
+  standalone: false,
     selector: 'app-login',
     templateUrl: './login.component.html',
-    standalone: false
+    
 })
 export class LoginPage {
   loading = false;

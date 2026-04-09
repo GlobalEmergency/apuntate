@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: false,
     selector: 'app-branding',
     template: `
     <div class="branding">
@@ -14,6 +15,6 @@ import { Component } from '@angular/core';
       </a>
     </div>
   `,
-    standalone: false,
+    
 })
 export class BrandingComponent {}

@@ -84,8 +84,7 @@ export class JwtInterceptor implements HttpInterceptor {
       return this.tokenSubject.pipe(
         filter(token => token !== null),
         take(1),
-        switchMap(token => {
-          // Perform the request again now that we got a new token!
+        switchMap(_token => {
           return next.handle(this.addToken(request));
         })
       );

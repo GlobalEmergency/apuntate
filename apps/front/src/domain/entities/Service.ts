@@ -56,9 +56,9 @@ export class Service {
   readonly type: string;
 
   constructor(
-    id: string = '',
-    name: string = '',
-    description: string = '',
+    id = '',
+    name = '',
+    description = '',
     dateStart: Date = new Date(),
     dateEnd: Date = new Date(),
     datePlace: Date = new Date(),

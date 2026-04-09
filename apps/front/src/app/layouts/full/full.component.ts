@@ -8,9 +8,10 @@ import { NavigationEnd, Router } from '@angular/router';
 const MOBILE_BREAKPOINT = 'screen and (max-width: 768px)';
 
 @Component({
+  standalone: false,
   selector: 'app-full',
   templateUrl: './full.component.html',
-  standalone: false,
+  
 })
 export class FullComponent implements OnInit, OnDestroy {
   @ViewChild('leftsidenav') sidenav!: MatSidenav;

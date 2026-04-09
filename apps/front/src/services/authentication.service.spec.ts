@@ -9,9 +9,6 @@ describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpMock: HttpTestingController;
 
-  // Valid JWT with payload: { "username": "test@test.com", "roles": ["ROLE_ADMIN"], "sub": "user-1" }
-  const validToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sInN1YiI6InVzZXItMSJ9.placeholder';
-
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: false,
     selector: 'app-root',
     templateUrl: './app.component.html',
-    standalone: false
+    
 })
 export class AppComponent {
   title = 'GlobalEmergency | Apúntate';

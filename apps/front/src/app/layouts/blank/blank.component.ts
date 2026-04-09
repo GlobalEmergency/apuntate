@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: false,
     selector: 'app-blank',
     templateUrl: './blank.component.html',
     styleUrls: [],
-    standalone: false
+    
 })
 export class BlankComponent {
   constructor() {}

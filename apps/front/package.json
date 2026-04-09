@@ -7,7 +7,9 @@
     "prebuild": "npx ts-node setenv.ts",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "tests": "ng test --watch=false --browsers=ChromeHeadless",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -21,10 +23,10 @@
     "@angular/platform-browser": "^19.2.20",
     "@angular/platform-browser-dynamic": "^19.2.20",
     "@angular/router": "^19.2.20",
-    "@fullcalendar/angular": "^6.1.10",
-    "@fullcalendar/core": "^6.1.11",
-    "@fullcalendar/daygrid": "^6.1.11",
-    "angular-tabler-icons": "^2.47.0",
+    "@fullcalendar/angular": "^6.1.20",
+    "@fullcalendar/core": "^6.1.20",
+    "@fullcalendar/daygrid": "^6.1.20",
+    "angular-tabler-icons": "^3.26.0",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.5.0",
     "sass": "^1.57.1",
@@ -38,8 +40,10 @@
     "@angular/compiler-cli": "^19.2.20",
     "@types/jasmine": "~4.3.0",
     "@types/uuid": "^9.0.8",
+    "angular-eslint": "^19.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "eslint": "^9.0.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
@@ -47,6 +51,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.0.0"
   }
 }

@@ -4,5 +4,5 @@ export class Alert {
     resume: string;
     message: string;
     type: string;
-    show: boolean = true;
+    show = true;
 }

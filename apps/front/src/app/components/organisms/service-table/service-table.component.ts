@@ -2,10 +2,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Service } from '../../../../domain/entities/Service';
 
 @Component({
+  standalone: false,
   selector: 'app-service-table',
   templateUrl: './service-table.component.html',
   styleUrls: ['./service-table.component.scss'],
-  standalone: false,
+  
 })
 export class ServiceTableComponent {
   displayedColumns = ['date', 'name', 'status'];

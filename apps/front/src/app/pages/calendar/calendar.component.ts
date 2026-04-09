@@ -4,10 +4,11 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { CalendarRepository } from '../../../domain/interfaces/CalendarRepository';
 
 @Component({
+  standalone: false,
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  
 })
 export class CalendarComponent {
   calendarOptions: CalendarOptions = {

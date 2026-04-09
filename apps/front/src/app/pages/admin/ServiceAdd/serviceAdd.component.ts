@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
 
 @Component({
-  selector: 'service-add',
+  selector: 'app-service-add',
   templateUrl: './serviceAdd.component.html',
   styleUrls: ['./serviceAdd.component.scss'],
   imports: [

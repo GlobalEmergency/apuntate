@@ -6,10 +6,11 @@ import { AlertService } from '../../../../services/alert.service';
 import { AlertsDialogComponent } from '../../../components/organisms/alerts-dialog/alerts-dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-header',
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  
 })
 export class HeaderComponent {
   @Input() showToggle = true;

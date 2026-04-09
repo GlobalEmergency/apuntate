@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../../../services/authentication.service';
 
 @Component({
+  standalone: false,
     selector: 'app-nav-item',
     templateUrl: './nav-item.component.html',
     styleUrls: [],
-    standalone: false,
+    
 })
 export class AppNavItemComponent {
   @Input() item: NavItem;

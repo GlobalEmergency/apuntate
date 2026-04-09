@@ -6,10 +6,11 @@ import { ServiceRepository } from '../../../domain/interfaces/ServiceRepository'
 import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
+  standalone: false,
   selector: 'app-service',
   templateUrl: './service.component.html',
   styleUrls: ['./service.component.scss'],
-  standalone: false,
+  
 })
 export class ServiceComponent implements OnInit {
   service: Service | null = null;
