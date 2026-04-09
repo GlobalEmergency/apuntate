@@ -1,0 +1,30 @@
+@import 'variables';
+
+.unit-manager {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: $light;
+    border-radius: $border-radius;
+  }
+
+  &__add {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__select {
+    flex: 1;
+    min-width: 200px;
+  }
+}

@@ -1,0 +1,37 @@
+<div class="gap-item" [ngClass]="gap.user ? 'gap-item--filled' : 'gap-item--empty'">
+  <div class="gap-item__info">
+    <mat-icon [ngClass]="gap.user ? 'gap-item__icon--filled' : 'gap-item__icon--empty'">
+      {{ gap.user ? 'person' : 'person_outline' }}
+    </mat-icon>
+    <div>
+      <span class="mat-body-1 f-w-600">{{ gap.component || 'Voluntario' }}</span>
+      <span *ngIf="gap.unit" class="mat-body-2 text-muted m-l-8">&middot; {{ gap.unit }}</span>
+      <div *ngIf="gap.requirements?.length" class="gap-item__requirements">
+        <mat-chip *ngFor="let req of gap.requirements" class="gap-item__chip">{{ req.name }}</mat-chip>
+      </div>
+      <div *ngIf="gap.user" class="gap-item__username">
+        {{ gap.user.name }} {{ gap.user.surname }}
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button *ngIf="!gap.user"
+            mat-flat-button color="primary"
+            [disabled]="loading"
+            (click)="signup.emit(gap.id)">
+      <mat-progress-spinner *ngIf="loading" diameter="18" mode="indeterminate"
+        class="gap-item__spinner"></mat-progress-spinner>
+      {{ loading ? 'Apuntando...' : 'Apuntarme' }}
+    </button>
+
+    <button *ngIf="isCurrentUser"
+            mat-stroked-button color="warn"
+            [disabled]="loading"
+            (click)="withdraw.emit(gap.id)">
+      Cancelar inscripci&oacute;n
+    </button>
+
+    <mat-chip *ngIf="gap.user && !isCurrentUser" color="accent">Ocupado</mat-chip>
+  </div>
+</div>

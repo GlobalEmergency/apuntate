@@ -1,0 +1,89 @@
+<h1>Unidades</h1>
+<app-feedback-message [message]="message"></app-feedback-message>
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading">
+  <button mat-flat-button color="primary" (click)="openCreate()" class="m-b-16" *ngIf="!showForm">
+    <mat-icon>add</mat-icon> Registrar unidad
+  </button>
+
+  <!-- Form -->
+  <mat-card *ngIf="showForm" class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>{{ editingUnit ? 'Editar unidad' : 'Nueva unidad' }}</mat-card-title>
+      <div class="admin-form m-t-16">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="formName" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Identificador</mat-label>
+          <input matInput [(ngModel)]="formIdentifier" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Especialidad</mat-label>
+          <mat-select [(ngModel)]="formSpecialityId">
+            <mat-option value="">Sin especialidad</mat-option>
+            <mat-option *ngFor="let s of specialities" [value]="s.id">{{ s.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="admin-form__actions">
+          <button mat-flat-button color="primary" (click)="save()" [disabled]="saving || !formName || !formIdentifier">
+            {{ editingUnit ? 'Guardar' : 'Registrar' }}
+          </button>
+          <button mat-stroked-button (click)="cancelForm()">Cancelar</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- List -->
+  <mat-card *ngFor="let unit of units" class="cardWithShadow m-b-8">
+    <mat-card-content class="p-24">
+      <div class="admin-item">
+        <div class="admin-item__info" (click)="toggleExpand(unit.id)">
+          <span class="f-w-600">{{ unit.identifier }}</span>
+          <span class="m-l-8">{{ unit.name }}</span>
+          <mat-chip *ngIf="unit.speciality" class="m-l-8">{{ unit.speciality.name }}</mat-chip>
+        </div>
+        <div class="admin-item__actions">
+          <button mat-icon-button (click)="openEdit(unit)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="decommission(unit)" [disabled]="saving">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Expanded: roles -->
+      <div *ngIf="expandedUnitId === unit.id" class="m-t-16">
+        <h3>Roles asignados</h3>
+        <div *ngFor="let uc of unit.unitComponents" class="admin-subitem">
+          <span>{{ uc.component?.name }} (x{{ uc.quantity }})</span>
+          <button mat-icon-button color="warn" (click)="unassignRole(unit.id, uc.id)" [disabled]="saving">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <p *ngIf="!unit.unitComponents?.length" class="text-muted">Sin roles asignados</p>
+
+        <div class="admin-form m-t-8">
+          <mat-form-field appearance="outline">
+            <mat-label>Rol</mat-label>
+            <mat-select [(ngModel)]="newRoleComponentId">
+              <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="admin-form__small">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" [(ngModel)]="newRoleQuantity" min="1">
+          </mat-form-field>
+          <button mat-flat-button color="primary" (click)="assignRole(unit.id)"
+                  [disabled]="!newRoleComponentId || saving">
+            <mat-icon>add</mat-icon> Asignar
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p *ngIf="units.length === 0" class="text-muted">No hay unidades registradas.</p>
+</div>

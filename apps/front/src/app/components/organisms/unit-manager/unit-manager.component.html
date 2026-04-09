@@ -1,0 +1,34 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <mat-card-title>Unidades / Veh&iacute;culos</mat-card-title>
+
+    <div class="unit-manager__list m-t-16" *ngIf="units.length > 0">
+      <div *ngFor="let unit of units" class="unit-manager__item">
+        <div>
+          <span class="f-w-600">{{ unit.identifier || unit.name }}</span>
+          <span class="text-muted m-l-8">{{ unit.name }}</span>
+        </div>
+        <button mat-icon-button color="warn" (click)="onRemove(unit.id)" [disabled]="loading">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <p *ngIf="units.length === 0" class="mat-body-1 text-muted m-t-16">
+      No hay unidades asignadas.
+    </p>
+
+    <div class="unit-manager__add m-t-16" *ngIf="unassignedUnits.length > 0">
+      <mat-form-field appearance="outline" class="unit-manager__select">
+        <mat-label>A&ntilde;adir unidad</mat-label>
+        <mat-select [(ngModel)]="selectedUnitId">
+          <mat-option *ngFor="let unit of unassignedUnits" [value]="unit.id">
+            {{ unit.identifier || unit.name }} &mdash; {{ unit.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="onAdd()" [disabled]="!selectedUnitId || loading">
+        <mat-icon>add</mat-icon> A&ntilde;adir
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,82 @@
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading && service">
+  <div class="service-edit__header">
+    <h1>Editar servicio</h1>
+    <button mat-stroked-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+  </div>
+
+  <app-feedback-message [message]="message" class="m-t-16"></app-feedback-message>
+
+  <!-- Basic info -->
+  <mat-card class="cardWithShadow m-t-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>Datos b&aacute;sicos</mat-card-title>
+      <form [formGroup]="form" (ngSubmit)="saveBasicInfo()" class="m-t-16">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descripci&oacute;n</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+        <div class="service-edit__dates">
+          <mat-form-field appearance="outline">
+            <mat-label>Presentaci&oacute;n</mat-label>
+            <input matInput type="datetime-local" formControlName="datePlace">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Inicio</mat-label>
+            <input matInput type="datetime-local" formControlName="dateStart">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Fin</mat-label>
+            <input matInput type="datetime-local" formControlName="dateEnd">
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+          <mat-icon>save</mat-icon> Guardar cambios
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Units -->
+  <div class="m-t-16">
+    <app-unit-manager
+      [units]="units"
+      [availableUnits]="availableUnits"
+      [loading]="saving"
+      (addUnit)="onAddUnit($event)"
+      (removeUnit)="onRemoveUnit($event)">
+    </app-unit-manager>
+  </div>
+
+  <!-- Gaps -->
+  <div class="m-t-16">
+    <app-gap-manager
+      [gaps]="gaps"
+      [availableUnitComponents]="availableUnitComponents"
+      [loading]="saving"
+      (addGap)="onAddGap($event)"
+      (removeGap)="onRemoveGap($event)">
+    </app-gap-manager>
+  </div>
+</div>
+
+<div *ngIf="!loading && !service">
+  <mat-card class="cardWithShadow">
+    <mat-card-content class="p-24 text-center">
+      <mat-icon class="service-edit__not-found-icon">error_outline</mat-icon>
+      <p class="mat-body-1 m-t-16">Servicio no encontrado.</p>
+      <button mat-flat-button color="primary" routerLink="/dashboard" class="m-t-16">Volver al inicio</button>
+    </mat-card-content>
+  </mat-card>
+</div>

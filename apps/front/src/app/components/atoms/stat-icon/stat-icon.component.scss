@@ -1,0 +1,23 @@
+@import 'variables';
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &__icon {
+    &--primary {
+      color: $primary;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    &--accent {
+      color: $accent;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+}

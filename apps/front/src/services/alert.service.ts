@@ -1,50 +1,48 @@
-import {Inject, Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Alert } from '../domain/Alert';
-import { ApiService } from './api.service';
-import {map} from "rxjs/operators";
-import {AlertRepositoryInterface} from "../domain/AlertRepositoryInterface";
+import { Alert } from '../domain/entities/Alert';
+import { AlertRepository } from '../domain/interfaces/AlertRepository';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AlertService {
-  private alertsSubject: BehaviorSubject<Alert[]> = new BehaviorSubject<Alert[]>([]);
-  private alerts$: Observable<Alert[]> = this.alertsSubject.asObservable();
+  private alertsSubject = new BehaviorSubject<Alert[]>([]);
+  private alerts$ = this.alertsSubject.asObservable();
 
   constructor(
     private snackBar: MatSnackBar,
-    @Inject(ApiService) private alertRepository: AlertRepositoryInterface,
+    private alertRepository: AlertRepository,
   ) {
     this.loadInitialAlerts();
   }
 
-  private loadInitialAlerts() {
+  private loadInitialAlerts(): void {
     this.alertRepository.getAlerts().subscribe(alerts => this.alertsSubject.next(alerts));
   }
 
-  openSnackBar(message: string, action?: string) {
-    this.snackBar.open(message, action, {
-      duration: 3000,
-    });
+  openSnackBar(message: string, action?: string): void {
+    this.snackBar.open(message, action, { duration: 3000 });
   }
 
   getAlerts(): Observable<Alert[]> {
     return this.alerts$;
   }
 
-  discardAlert(alert: Alert) {
+  discardAlert(alert: Alert): void {
+    const updatedAlerts = this.alertsSubject.value.map(a =>
+      a.id === alert.id ? { ...a, show: false } : a
+    );
 
-    const updatedAlerts = this.alertsSubject.value.map(alertMap => {
-      if (alertMap.id === alert.id) {
-        return { ...alertMap, show: false };
-      }
-      return alertMap;
-    });
+    // Update UI optimistically
+    this.alertsSubject.next(updatedAlerts);
 
-    this.alertRepository.discardAlert(alert).subscribe(() => {
-      this.alertsSubject.next(updatedAlerts);
+    this.alertRepository.discardAlert(alert).subscribe({
+      error: () => {
+        // Revert on failure
+        this.alertsSubject.next(this.alertsSubject.value.map(a =>
+          a.id === alert.id ? { ...a, show: true } : a
+        ));
+      },
     });
   }
 }

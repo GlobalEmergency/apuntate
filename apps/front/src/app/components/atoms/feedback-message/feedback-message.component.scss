@@ -1,0 +1,25 @@
+@import 'variables';
+
+.feedback {
+  border-radius: $border-radius;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+
+  &--success {
+    background: $light-success;
+    color: $success;
+  }
+
+  &--error {
+    background: $light-error;
+    color: $error;
+  }
+
+  &--warning {
+    background: $light-warning;
+    color: $warning;
+  }
+}

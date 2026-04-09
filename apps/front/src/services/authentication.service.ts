@@ -1,42 +1,44 @@
-import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {CanLoadFn, CanMatchFn, Router, UrlMatcher, UrlSegment} from '@angular/router';
-import {catchError, switchMap, tap} from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentAccessToken: string | null = null;
-  payload: any = null;
-  url = environment.api_url;
+  private _payload: any = null;
+  private url = environment.api_url;
 
-  constructor(@Inject(HttpClient) private http: HttpClient, private router: Router) {
+  get payload(): any {
+    return this._payload;
+  }
+
+  constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
   }
 
-  public checkAuthentication(role: string | null = null): boolean {
-    if (this.currentAccessToken === null || this.payload === null) {
+  checkAuthentication(role: string | null = null): boolean {
+    if (this.currentAccessToken === null || this._payload === null) {
       return false;
     }
     if (role !== null) {
-      return !!this.payload.roles?.includes(role);
+      return !!this._payload.roles?.includes(role);
     }
     return true;
   }
 
-  loadToken() {
+  loadToken(): void {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token) {
       this.currentAccessToken = token;
-      this.payload = jwtDecode(token);
+      this._payload = jwtDecode(token);
       this.isAuthenticated.next(true);
     } else {
       this.isAuthenticated.next(false);
@@ -53,20 +55,20 @@ export class AuthenticationService {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     this.currentAccessToken = token;
-    this.payload = jwtDecode(token);
+    this._payload = jwtDecode(token);
     this.isAuthenticated.next(true);
   }
 
-  logout() {
+  logout(): void {
     this.currentAccessToken = null;
-    this.payload = null;
+    this._payload = null;
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.isAuthenticated.next(false);
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
-  getNewAccessToken() {
+  getNewAccessToken(): Observable<any> | null {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (refreshToken && refreshToken !== 'undefined') {
       return this.http.post(`${this.url}/auth/refresh`, { refresh_token: refreshToken }).pipe(
@@ -75,10 +77,9 @@ export class AuthenticationService {
           return of(null);
         }),
       );
-    } else {
-      this.logout();
-      return null;
     }
+    this.logout();
+    return null;
   }
 
   register(data: any): Observable<any> {

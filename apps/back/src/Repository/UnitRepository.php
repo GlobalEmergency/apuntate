@@ -19,4 +19,16 @@ class UnitRepository extends ServiceEntityRepository implements UnitRepositoryIn
     {
         return $this->find($id);
     }
+
+    public function save(Unit $unit): void
+    {
+        $this->getEntityManager()->persist($unit);
+        $this->getEntityManager()->flush();
+    }
+
+    public function delete(Unit $unit): void
+    {
+        $this->getEntityManager()->remove($unit);
+        $this->getEntityManager()->flush();
+    }
 }

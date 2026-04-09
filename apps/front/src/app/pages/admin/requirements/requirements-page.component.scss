@@ -1,0 +1,25 @@
+@import 'variables';
+
+.admin-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+
+  mat-form-field { flex: 1; min-width: 180px; }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 8px;
+  }
+}
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__actions { display: flex; gap: 4px; }
+}

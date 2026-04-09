@@ -1,6 +1,7 @@
-<div class="row">
+<app-feedback-message [message]="message"></app-feedback-message>
 
-  <div class="col-lg-8">
+<div class="row">
+  <div class="col-sm-12 col-lg-8">
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <mat-card-title>Bienvenido</mat-card-title>
@@ -10,42 +11,35 @@
 
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
-        <mat-card-title>Próximos servicios</mat-card-title>
-        <app-servicestable
+        <mat-card-title>Pr&oacute;ximos servicios</mat-card-title>
+        <app-service-table
           *ngIf="services.length > 0; else noServices"
           [services]="services"
           (serviceClicked)="showService($event)">
-        </app-servicestable>
+        </app-service-table>
         <ng-template #noServices>
-          <p class="mat-body-1 text-muted m-t-16">No hay servicios próximos programados.</p>
+          <p class="mat-body-1 text-muted m-t-16">No hay servicios pr&oacute;ximos programados.</p>
         </ng-template>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-sm-12 col-lg-4">
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <mat-card-title>Tu resumen</mat-card-title>
-        <div *ngIf="profile?.stats; else noStats" class="m-t-16"
-             style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <mat-icon style="color: #5d87ff; font-size: 32px; width: 32px; height: 32px;">schedule</mat-icon>
-            <div>
-              <div class="mat-headline-5 f-w-600">{{ profile.stats.totalHours }} h</div>
-              <span class="mat-body-2 text-muted">Horas de servicio</span>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <mat-icon style="color: #49beff; font-size: 32px; width: 32px; height: 32px;">assignment_turned_in</mat-icon>
-            <div>
-              <div class="mat-headline-5 f-w-600">{{ profile.stats.totalServices }}</div>
-              <span class="mat-body-2 text-muted">Servicios realizados</span>
-            </div>
-          </div>
+        <div *ngIf="profile?.stats; else noStats" class="dashboard-stats m-t-16">
+          <app-stat-icon icon="schedule" color="primary"
+            [value]="profile.stats.totalHours + ' h'"
+            label="Horas de servicio">
+          </app-stat-icon>
+          <app-stat-icon icon="assignment_turned_in" color="accent"
+            [value]="'' + profile.stats.totalServices"
+            label="Servicios realizados">
+          </app-stat-icon>
         </div>
         <ng-template #noStats>
-          <p class="mat-body-1 text-muted m-t-16">Cargando estadísticas...</p>
+          <p class="mat-body-1 text-muted m-t-16">Cargando estad&iacute;sticas...</p>
         </ng-template>
       </mat-card-content>
     </mat-card>
@@ -53,22 +47,17 @@
     <mat-card *ngIf="profile" class="cardWithShadow">
       <mat-card-content class="p-24">
         <mat-card-title>Mi perfil</mat-card-title>
-        <div class="m-t-16" style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between;">
-            <span class="text-muted">Email</span>
-            <span>{{ profile.email }}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span class="text-muted">Miembro desde</span>
-            <span>{{ profile.dateStart | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
+        <div class="dashboard-profile m-t-16">
+          <app-summary-row label="Email" [value]="profile.email"></app-summary-row>
+          <app-summary-row label="Miembro desde" [value]="(profile.dateStart | date:'dd/MM/yyyy') || ''"></app-summary-row>
+          <div class="summary-row">
             <span class="text-muted">Rol</span>
-            <mat-chip *ngFor="let role of profile.roles">{{ role }}</mat-chip>
+            <span>
+              <mat-chip *ngFor="let role of profile.roles">{{ role }}</mat-chip>
+            </span>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
-
 </div>

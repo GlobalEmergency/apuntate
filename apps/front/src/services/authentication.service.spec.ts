@@ -9,12 +9,15 @@ describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpMock: HttpTestingController;
 
+  // Valid JWT with payload: { "username": "test@test.com", "roles": ["ROLE_ADMIN"], "sub": "user-1" }
+  const validToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sInN1YiI6InVzZXItMSJ9.placeholder';
+
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    providers: [AuthenticationService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      imports: [RouterTestingModule],
+      providers: [AuthenticationService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+    });
     service = TestBed.inject(AuthenticationService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -59,19 +62,19 @@ describe('AuthenticationService', () => {
 
   it('should return false for unauthenticated user', () => {
     service.currentAccessToken = null;
-    service.payload = null;
     expect(service.checkAuthentication()).toBeFalse();
   });
 
-  it('should return true for authenticated user', () => {
-    service.currentAccessToken = 'token';
-    service.payload = { roles: ['ROLE_ADMIN'] };
+  it('should return true for authenticated user with valid token', () => {
+    // Simulate storing a token to set payload via storeAccessToken
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl19.hYJpS9hYMwXPnB4nUYBqwwj6K8';
+    service.storeAccessToken(token, 'refresh');
     expect(service.checkAuthentication()).toBeTrue();
   });
 
   it('should check role when provided', () => {
-    service.currentAccessToken = 'token';
-    service.payload = { roles: ['ROLE_ADMIN'] };
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl19.hYJpS9hYMwXPnB4nUYBqwwj6K8';
+    service.storeAccessToken(token, 'refresh');
     expect(service.checkAuthentication('ROLE_ADMIN')).toBeTrue();
     expect(service.checkAuthentication('ROLE_SUPER')).toBeFalse();
   });

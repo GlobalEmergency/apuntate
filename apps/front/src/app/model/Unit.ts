@@ -1,4 +1,4 @@
-import {Service} from "../../domain/Service";
+import { Service } from '../../domain/entities/Service';
 
 export class Unit{
   id: string;

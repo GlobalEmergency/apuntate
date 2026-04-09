@@ -1,16 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { navItems } from './sidebar-data';
-import { NavService } from '../../../../services/nav.service';
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    standalone: false
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  standalone: false,
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   navItems = navItems;
-
-  constructor(public navService: NavService) { }
-
-  ngOnInit(): void { }
 }

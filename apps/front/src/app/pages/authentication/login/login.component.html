@@ -1,20 +1,14 @@
 <div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
   <div class="position-relative row w-100 h-100 bg-gredient justify-content-center">
-    <div class="col-lg-4 d-flex align-items-center">
+    <div class="col-lg-4 col-sm-8 d-flex align-items-center">
       <mat-card class="cardWithShadow boxed-auth">
         <mat-card-content class="p-32">
           <div class="text-center">
-            <img src="assets/images/logos/apuntate.png" class="align-middle m-2"
-              alt="logo" style="max-width: 100%; height: auto;" />
+            <img src="assets/images/logos/apuntate.png" class="align-middle m-2 auth-logo"
+              alt="logo" />
           </div>
 
-          <div *ngIf="message" class="m-t-16 p-16 f-s-14"
-               [style.background]="message.type === 'success' ? '#e8f5e9' : '#fce4ec'"
-               [style.color]="message.type === 'success' ? '#2e7d32' : '#c62828'"
-               style="border-radius: 8px; display: flex; align-items: center; gap: 8px;">
-            <mat-icon>{{ message.type === 'success' ? 'check_circle' : 'error' }}</mat-icon>
-            <span>{{ message.text }}</span>
-          </div>
+          <app-feedback-message [message]="message" class="m-t-16"></app-feedback-message>
 
           <form class="m-t-30" (ngSubmit)="login()" [formGroup]="credentials">
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email</mat-label>
@@ -22,16 +16,16 @@
               <input matInput type="email" placeholder="Email" formControlName="email">
               <mat-error *ngIf="(email?.dirty || email?.touched) && email?.errors">
                 <span *ngIf="email?.errors?.['required']">El email es obligatorio</span>
-                <span *ngIf="email?.errors?.['email']">El email no es válido</span>
+                <span *ngIf="email?.errors?.['email']">El email no es v&aacute;lido</span>
               </mat-error>
             </mat-form-field>
 
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contrase&ntilde;a</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput type="password" placeholder="Contraseña" formControlName="password">
               <mat-error *ngIf="(password?.dirty || password?.touched) && password?.errors">
-                <span *ngIf="password?.errors?.['required']">La contraseña es obligatoria</span>
-                <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+                <span *ngIf="password?.errors?.['required']">La contrase&ntilde;a es obligatoria</span>
+                <span *ngIf="password?.errors?.['minlength']">La contrase&ntilde;a debe tener al menos 6 caracteres</span>
               </mat-error>
             </mat-form-field>
 
@@ -40,13 +34,13 @@
             </div>
             <button mat-flat-button color="primary" type="submit" [disabled]="!credentials.valid || loading" class="w-100">
               <mat-progress-spinner *ngIf="loading" diameter="20" mode="indeterminate"
-                style="display: inline-block; margin-right: 8px;"></mat-progress-spinner>
-              {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+                class="spinner-inline"></mat-progress-spinner>
+              {{ loading ? 'Iniciando sesi&oacute;n...' : 'Iniciar sesi&oacute;n' }}
             </button>
           </form>
-          <span class="d-block f-w-500 text-center m-t-24">¿Aún sin cuenta?
+          <span class="d-block f-w-500 text-center m-t-24">&iquest;A&uacute;n sin cuenta?
             <a [routerLink]="['/register']" class="text-decoration-none text-primary f-w-500 f-s-14">
-              Regístrate</a>
+              Reg&iacute;strate</a>
           </span>
         </mat-card-content>
       </mat-card>

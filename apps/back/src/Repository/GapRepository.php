@@ -79,4 +79,10 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
             ->getQuery()
             ->getResult();
     }
+
+    public function delete(Gap $gap): void
+    {
+        $this->getEntityManager()->remove($gap);
+        $this->getEntityManager()->flush();
+    }
 }

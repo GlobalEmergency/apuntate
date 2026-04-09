@@ -1,0 +1,29 @@
+@import 'variables';
+
+.service-edit {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__dates {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    mat-form-field {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+
+  &__not-found-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: $gray-100;
+  }
+}

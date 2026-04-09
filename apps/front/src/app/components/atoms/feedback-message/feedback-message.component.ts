@@ -6,16 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-feedback-message',
   standalone: true,
   imports: [CommonModule, MatIconModule],
-  template: `
-    <div *ngIf="message"
-         [style.background]="message.type === 'success' ? '#e8f5e9' : '#fce4ec'"
-         [style.color]="message.type === 'success' ? '#2e7d32' : '#c62828'"
-         style="border-radius: 8px; display: flex; align-items: center; gap: 8px; padding: 12px 16px; font-size: 14px;">
-      <mat-icon>{{ message.type === 'success' ? 'check_circle' : 'error' }}</mat-icon>
-      <span>{{ message.text }}</span>
-    </div>
-  `,
+  templateUrl: './feedback-message.component.html',
+  styleUrls: ['./feedback-message.component.scss'],
 })
 export class FeedbackMessageComponent {
-  @Input() message: { text: string; type: 'success' | 'error' } | null = null;
+  @Input() message: { text: string; type: 'success' | 'error' | 'warning' } | null = null;
+
+  get iconName(): string {
+    if (!this.message) return '';
+    switch (this.message.type) {
+      case 'success': return 'check_circle';
+      case 'warning': return 'warning';
+      default: return 'error';
+    }
+  }
 }

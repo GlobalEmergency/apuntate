@@ -1,22 +1,15 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  Input,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {AuthenticationService} from "../../../../services/authentication.service";
-import {Router} from "@angular/router";
-import {AlertService} from "../../../../services/alert.service";
-import {AlertsDialogComponent} from "../../../components/alerts/AlertsDialogComponent";
-
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { Router } from '@angular/router';
+import { AlertService } from '../../../../services/alert.service';
+import { AlertsDialogComponent } from '../../../components/organisms/alerts-dialog/alerts-dialog.component';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class HeaderComponent {
   @Input() showToggle = true;
@@ -25,28 +18,27 @@ export class HeaderComponent {
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
 
-  showFiller = false;
   alertsActive = 0;
 
   constructor(
     public dialog: MatDialog,
     public authService: AuthenticationService,
     public router: Router,
-    public alertService: AlertService
+    public alertService: AlertService,
   ) {
     this.alertService.getAlerts().subscribe(alerts => {
       this.alertsActive = alerts.filter(alert => alert.show).length;
     });
   }
 
-  showAlerts() {
+  showAlerts(): void {
     this.dialog.open(AlertsDialogComponent, {
       width: '100%',
       panelClass: 'alerts-dialog',
     });
   }
 
-  closeSession() {
+  closeSession(): void {
     this.authService.logout();
   }
 }

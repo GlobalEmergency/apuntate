@@ -1,0 +1,40 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <div class="service-header__title">
+      <mat-card-title>{{ service.name }}</mat-card-title>
+      <mat-chip-listbox *ngIf="service.status">
+        <mat-chip color="primary" selected>{{ service.status }}</mat-chip>
+      </mat-chip-listbox>
+    </div>
+
+    <p *ngIf="service.description" class="mat-body-1 m-t-16">{{ service.description }}</p>
+
+    <div class="service-header__dates m-t-16">
+      <app-date-info *ngIf="service.datePlace" label="Presentaci&oacute;n" [date]="service.datePlace"></app-date-info>
+      <app-date-info *ngIf="service.dateStart" label="Inicio" [date]="service.dateStart"></app-date-info>
+      <app-date-info *ngIf="service.dateEnd" label="Fin" [date]="service.dateEnd"></app-date-info>
+    </div>
+
+    <div *ngIf="isAdmin" class="service-header__actions m-t-16">
+      <button mat-flat-button color="primary" (click)="publish.emit()"
+              *ngIf="service.status === 'draft'" [disabled]="loading">
+        <mat-icon>publish</mat-icon> Publicar servicio
+      </button>
+      <button mat-stroked-button color="primary" (click)="edit.emit()">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
+      <button mat-stroked-button color="warn" (click)="onCancelRequest()"
+              *ngIf="service.status !== 'cancelled' && service.status !== 'finished'">
+        <mat-icon>cancel</mat-icon> Cancelar servicio
+      </button>
+    </div>
+
+    <app-confirm-action *ngIf="confirmingCancel" class="m-t-16"
+      message="&iquest;Seguro que quieres cancelar este servicio?"
+      confirmLabel="S&iacute;, cancelar"
+      cancelLabel="No"
+      (confirm)="onConfirmCancel()"
+      (cancel)="onDismissCancel()">
+    </app-confirm-action>
+  </mat-card-content>
+</mat-card>

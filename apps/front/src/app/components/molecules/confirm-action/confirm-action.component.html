@@ -1,0 +1,10 @@
+<div class="confirm-action">
+  <span class="confirm-action__message">
+    <mat-icon>warning</mat-icon>
+    {{ message }}
+  </span>
+  <div class="confirm-action__buttons">
+    <button mat-flat-button color="warn" (click)="confirm.emit()">{{ confirmLabel }}</button>
+    <button mat-stroked-button (click)="cancel.emit()">{{ cancelLabel }}</button>
+  </div>
+</div>

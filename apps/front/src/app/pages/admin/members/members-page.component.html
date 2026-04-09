@@ -1,0 +1,95 @@
+<h1>Miembros</h1>
+<app-feedback-message [message]="message"></app-feedback-message>
+
+<div *ngIf="organizations.length > 1" class="m-b-16">
+  <mat-form-field appearance="outline">
+    <mat-label>Organizaci&oacute;n</mat-label>
+    <mat-select [(ngModel)]="selectedOrgId" (selectionChange)="onOrgChange()">
+      <mat-option *ngFor="let org of organizations" [value]="org.id">{{ org.name }} ({{ org.role }})</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading">
+  <div *ngIf="organizations.length === 0" class="text-muted">
+    No perteneces a ninguna organizaci&oacute;n.
+  </div>
+
+  <div *ngIf="selectedOrgId">
+    <button mat-flat-button color="primary" (click)="openInvite()" class="m-b-16" *ngIf="!showInviteForm">
+      <mat-icon>person_add</mat-icon> Invitar miembro
+    </button>
+
+    <!-- Invite form -->
+    <mat-card *ngIf="showInviteForm" class="cardWithShadow m-b-16">
+      <mat-card-content class="p-24">
+        <mat-card-title>Invitar miembro</mat-card-title>
+        <div class="admin-form m-t-16">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="inviteEmail" type="email" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="inviteName" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput [(ngModel)]="inviteSurname">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Rol en la organizaci&oacute;n</mat-label>
+            <mat-select [(ngModel)]="inviteRole">
+              <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Contrase&ntilde;a (si es nuevo usuario)</mat-label>
+            <input matInput [(ngModel)]="invitePassword" type="password">
+          </mat-form-field>
+          <div class="admin-form__actions">
+            <button mat-flat-button color="primary" (click)="invite()"
+                    [disabled]="saving || !inviteEmail || !inviteName">
+              Invitar
+            </button>
+            <button mat-stroked-button (click)="cancelInvite()">Cancelar</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Members list -->
+    <mat-card *ngFor="let m of members" class="cardWithShadow m-b-8">
+      <mat-card-content class="p-24">
+        <div class="member-item">
+          <div class="member-item__info">
+            <mat-icon class="member-item__avatar">person</mat-icon>
+            <div>
+              <span class="f-w-600">{{ m.user.name }} {{ m.user.surname }}</span>
+              <span class="text-muted m-l-8">{{ m.user.email }}</span>
+              <div *ngIf="m.user.requirements?.length" class="m-t-4">
+                <mat-chip *ngFor="let req of m.user.requirements">{{ req.name }}</mat-chip>
+              </div>
+            </div>
+          </div>
+          <div class="member-item__actions">
+            <mat-form-field appearance="outline" class="member-item__role-select">
+              <mat-select [ngModel]="m.role" (selectionChange)="changeRole(m.user.id, $event.value)"
+                          [disabled]="saving">
+                <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-icon-button color="warn" (click)="removeMember(m.user.id, m.user.name)"
+                    [disabled]="saving">
+              <mat-icon>person_remove</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <p *ngIf="members.length === 0" class="text-muted">No hay miembros en esta organizaci&oacute;n.</p>
+  </div>
+</div>
