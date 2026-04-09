@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private string $password;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date', nullable: true)]
     private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
@@ -156,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->email;
     }

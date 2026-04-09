@@ -52,6 +52,9 @@ export class ProfilePageComponent implements OnInit {
       next: (r) => {
         this.allRequirements = r;
       },
+      error: () => {
+        this.message = { text: 'Error al cargar los requisitos.', type: 'error' };
+      },
     });
   }
 

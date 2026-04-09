@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/requirements')]
 final class RequirementController extends AbstractController
@@ -33,6 +34,7 @@ final class RequirementController extends AbstractController
         return new JsonResponse(array_map($this->serialize(...), $requirements));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', methods: ['POST'])]
     public function create(Request $request, CreateRequirement $createRequirement): JsonResponse
     {
@@ -47,6 +49,7 @@ final class RequirementController extends AbstractController
         return new JsonResponse($this->serialize($requirement), Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{requirementId}', methods: ['PUT'])]
     public function rename(string $requirementId, Request $request, RenameRequirement $renameRequirement): JsonResponse
     {
@@ -61,6 +64,7 @@ final class RequirementController extends AbstractController
         return new JsonResponse($this->serialize($requirement));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{requirementId}', methods: ['DELETE'])]
     public function delete(string $requirementId): JsonResponse
     {

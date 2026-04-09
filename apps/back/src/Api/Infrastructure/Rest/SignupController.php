@@ -39,7 +39,7 @@ final class SignupController extends AbstractController
 
         return new JsonResponse([
             'id' => $gap->getId()->toRfc4122(),
-            'service_id' => $gap->getService()->getId()->toRfc4122(),
+            'service_id' => $gap->getService()?->getId()?->toRfc4122(),
             'user' => $user->getName(),
         ], Response::HTTP_CREATED);
     }

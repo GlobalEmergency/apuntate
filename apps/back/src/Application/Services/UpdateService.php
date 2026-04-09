@@ -34,6 +34,25 @@ final class UpdateService
             if ('' === trim($name)) {
                 throw new \DomainException('Service name cannot be empty.');
             }
+        }
+
+        if (null !== $status) {
+            $parsed = ServiceStatus::tryFrom($status);
+            if (null === $parsed) {
+                throw new \DomainException(sprintf('Invalid service status: %s.', $status));
+            }
+            $this->assertValidTransition($service->getStatus(), $parsed);
+        }
+
+        if (null !== $dateStart || null !== $dateEnd) {
+            $effectiveStart = $dateStart ?? $service->getDateStart();
+            $effectiveEnd = $dateEnd ?? $service->getDateEnd();
+            if ($effectiveEnd <= $effectiveStart) {
+                throw new \DomainException('End date must be after start date.');
+            }
+        }
+
+        if (null !== $name) {
             $service->setName($name);
         }
 
@@ -53,20 +72,33 @@ final class UpdateService
             $service->setDatePlace($datePlace);
         }
 
-        if (null !== $status) {
-            $parsed = ServiceStatus::tryFrom($status);
-            if (null === $parsed) {
-                throw new \DomainException(sprintf('Invalid service status: %s.', $status));
-            }
+        if (isset($parsed)) {
             $service->setStatus($parsed);
-        }
-
-        if ((null !== $dateStart || null !== $dateEnd) && $service->getDateEnd() <= $service->getDateStart()) {
-            throw new \DomainException('End date must be after start date.');
         }
 
         $this->serviceRepository->save($service);
 
         return $service;
+    }
+
+    /** @var array<string, ServiceStatus[]> */
+    private const ALLOWED_TRANSITIONS = [
+        'draft' => [ServiceStatus::CONFIRMED, ServiceStatus::CANCELLED],
+        'requested' => [ServiceStatus::ACCEPTED, ServiceStatus::REJECTED, ServiceStatus::CANCELLED],
+        'accepted' => [ServiceStatus::CONFIRMED, ServiceStatus::CANCELLED],
+        'rejected' => [ServiceStatus::DRAFT],
+        'confirmed' => [ServiceStatus::DEBRIEFING, ServiceStatus::CANCELLED],
+        'debriefing' => [ServiceStatus::FINISHED],
+        'cancelled' => [],
+        'finished' => [],
+    ];
+
+    private function assertValidTransition(ServiceStatus $current, ServiceStatus $target): void
+    {
+        $allowed = self::ALLOWED_TRANSITIONS[$current->value];
+
+        if (!\in_array($target, $allowed, true)) {
+            throw new \DomainException(sprintf('Cannot transition from "%s" to "%s".', $current->value, $target->value));
+        }
     }
 }

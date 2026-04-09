@@ -36,7 +36,7 @@ class GapsFixtures extends Fixture
         $date->modify('+'.rand(3, 12).' hours');
         $service->setDateEnd(clone $date);
 
-        $service->setDatePlace(clone $service->getDateStart()->modify('-'.rand(30, 90).' minutes'));
+        $service->setDatePlace((clone $service->getDateStart())->modify('-'.rand(30, 90).' minutes'));
         $this->manager->persist($service);
 
         return $service;

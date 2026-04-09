@@ -89,8 +89,8 @@ export class ServiceAddComponent implements OnInit {
 
     this.service = Service.fromForm(this.serviceForm.value);
     this.serviceRepository.addService(this.service).subscribe({
-      next: () => {
-        this.router.navigate(['/service/' + this.service.id]);
+      next: (response: any) => {
+        this.router.navigate(['/service/' + (response?.id || this.service.id)]);
       },
       error: (err) => {
         this.message = { text: err.error?.error || 'Error al crear el servicio.', type: 'error' };

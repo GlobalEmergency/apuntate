@@ -25,7 +25,7 @@ class AddUnitToServiceTest extends TestCase
     {
         $this->serviceRepository = $this->createMock(ServiceRepositoryInterface::class);
         $this->unitRepository = $this->createMock(UnitRepositoryInterface::class);
-        $this->createGaps = new CreateGaps($this->unitRepository);
+        $this->createGaps = new CreateGaps();
         $this->useCase = new AddUnitToService(
             $this->serviceRepository,
             $this->unitRepository,

@@ -1,6 +1,12 @@
 import { FormControl } from '@angular/forms';
 import { Gap } from './Gap';
 
+export interface UnitSummary {
+  id: string;
+  name: string;
+  identifier: string;
+}
+
 export interface ServiceForm {
   id: FormControl<string>;
   name: FormControl<string>;
@@ -12,7 +18,7 @@ export interface ServiceForm {
   dateStart: FormControl<Date>;
   dateEnd: FormControl<Date>;
   datePlace: FormControl<Date>;
-  units: FormControl<Gap[]>;
+  units: FormControl<UnitSummary[]>;
   gaps: FormControl<Gap[]>;
 }
 
@@ -49,7 +55,7 @@ export class Service {
   readonly dateEnd: Date;
   readonly datePlace: Date;
   readonly status: ServiceStatus;
-  readonly units: Gap[];
+  readonly units: UnitSummary[];
   readonly gaps: Gap[];
   readonly category: ServiceCategory;
   readonly priority: ServicePriority;
@@ -63,7 +69,7 @@ export class Service {
     dateEnd: Date = new Date(),
     datePlace: Date = new Date(),
     status: ServiceStatus = ServiceStatus.DRAFT,
-    units: Gap[] = [],
+    units: UnitSummary[] = [],
     gaps: Gap[] = [],
     category: ServiceCategory = ServiceCategory.PREVENTIVE,
     priority: ServicePriority = ServicePriority.MEDIUM,

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/specialities', name: 'api_specialities_')]
 final class SpecialitiesController extends AbstractController
@@ -24,6 +25,7 @@ final class SpecialitiesController extends AbstractController
         return new JsonResponse(array_map($this->serialize(...), $listSpecialities->execute()));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, CreateSpeciality $createSpeciality): JsonResponse
     {
@@ -41,6 +43,7 @@ final class SpecialitiesController extends AbstractController
         return new JsonResponse($this->serialize($speciality), Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{specialityId}', name: 'update', methods: ['PUT'])]
     public function update(string $specialityId, Request $request, UpdateSpeciality $updateSpeciality): JsonResponse
     {
@@ -59,6 +62,7 @@ final class SpecialitiesController extends AbstractController
         return new JsonResponse($this->serialize($speciality));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{specialityId}', name: 'delete', methods: ['DELETE'])]
     public function delete(string $specialityId, DeleteSpeciality $deleteSpeciality): JsonResponse
     {

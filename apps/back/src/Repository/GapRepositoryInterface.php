@@ -18,6 +18,8 @@ interface GapRepositoryInterface
     /** @return Gap[] */
     public function findAvailableByService(string $serviceId): array;
 
+    public function findFirstAvailableForUpdate(string $serviceId): ?Gap;
+
     /** @return Gap[] */
     public function findByService(string $serviceId): array;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Entity\Gap;
+use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
 
@@ -32,6 +33,8 @@ final class SignupForService
             throw new \DomainException('Gap not found.');
         }
 
+        $this->assertServiceIsBookable($gap);
+
         if (null !== $gap->getUser()) {
             throw new \DomainException('This position is already taken.');
         }
@@ -52,16 +55,33 @@ final class SignupForService
             throw new \DomainException('No available positions for this service.');
         }
 
-        foreach ($availableGaps as $gap) {
-            if ($this->userMeetsRequirements($user, $gap)) {
-                $gap->setUser($user);
-                $this->gapRepository->save($gap);
-
-                return $gap;
+        foreach ($availableGaps as $candidate) {
+            if (!$this->userMeetsRequirements($user, $candidate)) {
+                continue;
             }
+
+            $locked = $this->gapRepository->findByIdForUpdate($candidate->getId()->toRfc4122());
+            if (null === $locked || null !== $locked->getUser()) {
+                continue;
+            }
+
+            $this->assertServiceIsBookable($locked);
+
+            $locked->setUser($user);
+            $this->gapRepository->save($locked);
+
+            return $locked;
         }
 
         throw new \DomainException('No available positions matching your qualifications.');
+    }
+
+    private function assertServiceIsBookable(Gap $gap): void
+    {
+        $service = $gap->getService();
+        if (null === $service || ServiceStatus::CONFIRMED !== $service->getStatus()) {
+            throw new \DomainException('This service is not accepting signups.');
+        }
     }
 
     /** @return string[] Names of missing requirements */

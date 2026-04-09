@@ -28,18 +28,10 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(this.addToken(request)).pipe(
       catchError((err) => {
-        if (err instanceof HttpErrorResponse) {
-          switch (err.status) {
-            case 400:
-              return this.handle400Error(err);
-            case 401:
-              return this.handle401Error(request, next);
-            default:
-              return throwError(err);
-          }
-        } else {
-          return throwError(err);
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          return this.handle401Error(request, next);
         }
+        return throwError(() => err);
       }),
     );
   }
@@ -58,11 +50,6 @@ export class JwtInterceptor implements HttpInterceptor {
     } else {
       return req;
     }
-  }
-
-  private handle400Error(_err: HttpErrorResponse): Observable<null> {
-    this.authenticationService.logout();
-    return of(null);
   }
 
   // Indicates our access token is invalid, try to load a new one

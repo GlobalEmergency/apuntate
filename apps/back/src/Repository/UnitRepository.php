@@ -21,6 +21,12 @@ class UnitRepository extends ServiceEntityRepository implements UnitRepositoryIn
         return $this->find($id);
     }
 
+    /** @return Unit[] */
+    public function findAll(): array
+    {
+        return parent::findAll();
+    }
+
     public function save(Unit $unit): void
     {
         $this->getEntityManager()->persist($unit);

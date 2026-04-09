@@ -32,4 +32,10 @@ class RequirementRepository extends ServiceEntityRepository implements Requireme
     {
         return $this->find($id);
     }
+
+    /** @return Requirement[] */
+    public function findAll(): array
+    {
+        return parent::findAll();
+    }
 }

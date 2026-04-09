@@ -31,4 +31,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     {
         return $this->findOneBy(['email' => $email]);
     }
+
+    /** @return User[] */
+    public function findBatch(int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('u')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
