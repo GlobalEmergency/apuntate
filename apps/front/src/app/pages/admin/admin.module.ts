@@ -1,13 +1,8 @@
 import { NgModule } from '@angular/core';
-import {RouterModule} from "@angular/router";
-import {AdminRouting} from "./admin.routing";
-import {ServiceAddComponent} from "./ServiceAdd/serviceAdd.component";
+import { RouterModule } from '@angular/router';
+import { AdminRouting } from './admin.routing';
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(AdminRouting),
-  ],
-  declarations: [
-  ],
+  imports: [RouterModule.forChild(AdminRouting)],
 })
-export class AdminModule { }
+export class AdminModule {}

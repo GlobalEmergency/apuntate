@@ -1,0 +1,45 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <mat-card-title>Huecos (Gaps)</mat-card-title>
+
+    <div class="gap-manager__list m-t-16" *ngIf="gaps.length > 0">
+      <div
+        *ngFor="let gap of gaps"
+        class="gap-manager__item"
+        [ngClass]="gap.user ? 'gap-manager__item--filled' : 'gap-manager__item--empty'"
+      >
+        <div class="gap-manager__info">
+          <mat-icon [ngClass]="gap.user ? 'gap-manager__icon--filled' : 'gap-manager__icon--empty'">
+            {{ gap.user ? 'person' : 'person_outline' }}
+          </mat-icon>
+          <div>
+            <span class="f-w-600">{{ gap.component || 'Voluntario' }}</span>
+            <span *ngIf="gap.unit" class="text-muted m-l-8">&middot; {{ gap.unit }}</span>
+            <div *ngIf="gap.requirements?.length" class="gap-manager__requirements">
+              <mat-chip *ngFor="let req of gap.requirements" class="gap-manager__chip">{{ req.name }}</mat-chip>
+            </div>
+            <div *ngIf="gap.user" class="gap-manager__username">{{ gap.user.name }} {{ gap.user.surname }}</div>
+          </div>
+        </div>
+        <button *ngIf="canDelete(gap)" mat-icon-button color="warn" (click)="onRemove(gap.id)" [disabled]="loading">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <p *ngIf="gaps.length === 0" class="mat-body-1 text-muted m-t-16">No hay huecos definidos.</p>
+
+    <div class="gap-manager__add m-t-16" *ngIf="availableUnitComponents.length > 0">
+      <mat-form-field appearance="outline" class="gap-manager__select">
+        <mat-label>A&ntilde;adir hueco manual</mat-label>
+        <mat-select [(ngModel)]="selectedUnitComponentId">
+          <mat-option *ngFor="let uc of availableUnitComponents" [value]="uc.id">
+            {{ uc.component?.name || uc.name }} ({{ uc.unit?.name || '' }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="onAdd()" [disabled]="!selectedUnitComponentId || loading">
+        <mat-icon>add</mat-icon> A&ntilde;adir hueco
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

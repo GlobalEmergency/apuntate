@@ -1,10 +1,8 @@
-import {Component, OnInit} from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-not-found',
-    templateUrl: './notfound.component.html',
-    standalone: false
+  standalone: false,
+  selector: 'app-not-found',
+  templateUrl: './notfound.component.html',
 })
-export class NotfoundComponent {
-
-}
+export class NotfoundComponent {}

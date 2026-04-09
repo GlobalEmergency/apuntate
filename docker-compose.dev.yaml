@@ -6,15 +6,23 @@ services:
       - ~/.composer:/var/www/.composer
       - ~/.ssh:/var/www/.ssh
       - ./apps/back:/var/www/html/:delegated
+      - backend-cache:/var/www/html/var
     ports:
       - "8081:80"
     environment:
       PHP_IDE_CONFIG: "serverName=apuntate,apuntate_test"
+      XDEBUG_MODE: "off"
+      APP_ENV: prod
+      APP_DEBUG: 0
 
   frontend:
     ports:
-      - "4210:4200"
+      - "4211:4200"
 
   pgsql:
     ports:
       - "5434:5432"
+
+volumes:
+  backend-cache:
+    driver: local

@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    standalone: false
+  standalone: false,
+  selector: 'app-root',
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   title = 'GlobalEmergency | Apúntate';
-  constructor() {
-  }
+  constructor() {}
 }

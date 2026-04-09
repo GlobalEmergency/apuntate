@@ -12,4 +12,8 @@ interface UnitRepositoryInterface
 
     /** @return Unit[] */
     public function findAll(): array;
+
+    public function save(Unit $unit): void;
+
+    public function delete(Unit $unit): void;
 }

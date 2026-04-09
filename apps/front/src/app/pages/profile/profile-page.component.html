@@ -1,0 +1,108 @@
+<h1>Mi perfil</h1>
+<app-feedback-message [message]="message"></app-feedback-message>
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading && profile">
+  <!-- Profile info -->
+  <mat-card class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>Datos personales</mat-card-title>
+
+      <div *ngIf="!editingProfile" class="profile-info m-t-16">
+        <div class="profile-row">
+          <span class="text-muted">Nombre</span>
+          <span class="f-w-600">{{ profile.name }} {{ profile.surname }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="text-muted">Email</span>
+          <span>{{ profile.email }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="text-muted">Miembro desde</span>
+          <span>{{ profile.dateStart | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <button mat-stroked-button (click)="startEdit()" class="m-t-16"><mat-icon>edit</mat-icon> Editar</button>
+      </div>
+
+      <div *ngIf="editingProfile" class="admin-form m-t-16">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="formName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput [(ngModel)]="formSurname" />
+        </mat-form-field>
+        <div class="admin-form__actions">
+          <button mat-flat-button color="primary" (click)="saveProfile()" [disabled]="saving || !formName">
+            Guardar
+          </button>
+          <button mat-stroked-button (click)="cancelEdit()">Cancelar</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Organizations -->
+  <mat-card *ngIf="profile.organizations?.length" class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>Mis organizaciones</mat-card-title>
+      <div class="profile-info m-t-16">
+        <div *ngFor="let org of profile.organizations" class="profile-row">
+          <span class="f-w-600">{{ org.name }}</span>
+          <mat-chip>{{ org.role }}</mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Requirements / Qualifications -->
+  <mat-card class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>Mis cualificaciones</mat-card-title>
+      <div class="m-t-16">
+        <div *ngFor="let req of profile.requirements" class="profile-req">
+          <span>{{ req.name }}</span>
+          <button mat-icon-button color="warn" (click)="removeRequirement(req.id)" [disabled]="saving">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <p *ngIf="!profile.requirements?.length" class="text-muted">Sin cualificaciones registradas.</p>
+
+        <div *ngIf="availableRequirements.length > 0" class="admin-form m-t-16">
+          <mat-form-field appearance="outline">
+            <mat-label>A&ntilde;adir cualificaci&oacute;n</mat-label>
+            <mat-select [(ngModel)]="selectedRequirementId">
+              <mat-option *ngFor="let req of availableRequirements" [value]="req.id">{{ req.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="addRequirement()"
+            [disabled]="!selectedRequirementId || saving"
+          >
+            <mat-icon>add</mat-icon> A&ntilde;adir
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Stats -->
+  <mat-card *ngIf="profile.stats" class="cardWithShadow">
+    <mat-card-content class="p-24">
+      <mat-card-title>Estad&iacute;sticas</mat-card-title>
+      <div class="profile-info m-t-16">
+        <div class="profile-row">
+          <span class="text-muted">Servicios realizados</span>
+          <span class="f-w-600">{{ profile.stats.totalServices }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="text-muted">Horas de servicio</span>
+          <span class="f-w-600">{{ profile.stats.totalHours }} h</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

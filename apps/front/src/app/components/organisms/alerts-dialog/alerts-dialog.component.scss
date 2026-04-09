@@ -1,0 +1,25 @@
+@keyframes blink {
+  0% {
+    border-color: red;
+  }
+  50% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: red;
+  }
+}
+
+.blink {
+  animation: blink 1s linear infinite;
+  border: 1px solid red;
+}
+
+.alert-card {
+  margin: 1em 2em;
+}
+
+.alert-content {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-8">
+    <mat-card class="cardWithShadow">
+      <mat-card-content class="p-24">
+        <mat-card-title>Posiciones</mat-card-title>
+
+        <p *ngIf="gaps.length === 0" class="mat-body-1 text-muted m-t-16">
+          No hay posiciones definidas para este servicio.
+        </p>
+
+        <div *ngIf="gaps.length > 0" class="gaps-list m-t-16">
+          <app-gap-item
+            *ngFor="let gap of gaps"
+            [gap]="gap"
+            [isCurrentUser]="isCurrentUser(gap)"
+            [loading]="signupLoading === gap.id"
+            (signup)="signup.emit($event)"
+            (withdraw)="withdraw.emit($event)"
+          >
+          </app-gap-item>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-sm-12 col-lg-4">
+    <mat-card class="cardWithShadow">
+      <mat-card-content class="p-24">
+        <mat-card-title>Resumen</mat-card-title>
+        <div class="summary-list m-t-16">
+          <app-summary-row label="Posiciones totales" [value]="'' + gaps.length"></app-summary-row>
+          <app-summary-row label="Cubiertas" [value]="'' + filledCount" colorClass="text-success"></app-summary-row>
+          <app-summary-row
+            label="Disponibles"
+            [value]="'' + availableCount"
+            colorClass="text-warning"
+          ></app-summary-row>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

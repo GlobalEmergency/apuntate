@@ -1,0 +1,16 @@
+.dashboard-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dashboard-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+}

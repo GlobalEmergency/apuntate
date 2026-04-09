@@ -42,7 +42,7 @@
   position: relative;
   text-align: center;
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     width: 100px;
@@ -51,7 +51,7 @@
     background: $borderColor;
   }
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     right: 0;
     width: 100px;
@@ -69,4 +69,14 @@
 
 .max-width-form {
   max-width: 450px;
+}
+
+.auth-logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.spinner-inline {
+  display: inline-block;
+  margin-right: 8px;
 }

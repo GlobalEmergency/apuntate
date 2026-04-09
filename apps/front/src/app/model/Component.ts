@@ -1,6 +1,6 @@
-import {Requirement} from './Requirement';
+import { Requirement } from './Requirement';
 
-export class Component{
+export class Component {
   name: string;
   requirements: Requirement[];
   quantity: number;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
+use GlobalEmergency\Apuntate\Application\Services\RenameRequirement;
 use GlobalEmergency\Apuntate\Entity\Requirement;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\RequirementRepositoryInterface;
@@ -52,6 +53,23 @@ class RequirementController extends AbstractController
             'id' => $requirement->getId()->toRfc4122(),
             'name' => $requirement->getName(),
         ], Response::HTTP_CREATED);
+    }
+
+    #[Route('/{requirementId}', methods: ['PUT'])]
+    public function rename(string $requirementId, Request $request, RenameRequirement $renameRequirement): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        try {
+            $requirement = $renameRequirement->execute($requirementId, $data['name'] ?? '');
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([
+            'id' => $requirement->getId()->toRfc4122(),
+            'name' => $requirement->getName(),
+        ]);
     }
 
     #[Route('/{requirementId}', methods: ['DELETE'])]

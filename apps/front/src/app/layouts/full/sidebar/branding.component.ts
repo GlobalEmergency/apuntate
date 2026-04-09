@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-branding',
-    template: `
+  standalone: false,
+  selector: 'app-branding',
+  template: `
     <div class="branding">
       <a routerLink="/">
         <img
@@ -14,6 +15,5 @@ import { Component } from '@angular/core';
       </a>
     </div>
   `,
-    standalone: false,
 })
 export class BrandingComponent {}

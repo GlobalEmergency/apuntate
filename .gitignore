@@ -46,6 +46,10 @@ apps/front/typings/
 apps/front/template/
 apps/front/www/
 
+# === Root (monorepo tools) ===
+node_modules/
+package-lock.json
+
 # === Terraform ===
 .terraform/
 *.tfstate

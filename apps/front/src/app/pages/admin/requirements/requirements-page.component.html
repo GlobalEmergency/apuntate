@@ -1,0 +1,43 @@
+<h1>Cualificaciones</h1>
+<app-feedback-message [message]="message"></app-feedback-message>
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading">
+  <button mat-flat-button color="primary" (click)="openCreate()" class="m-b-16" *ngIf="!showForm">
+    <mat-icon>add</mat-icon> Crear cualificaci&oacute;n
+  </button>
+
+  <mat-card *ngIf="showForm" class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>{{ editingReq ? 'Renombrar' : 'Nueva cualificaci\u00f3n' }}</mat-card-title>
+      <div class="admin-form m-t-16">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="formName" required />
+        </mat-form-field>
+        <div class="admin-form__actions">
+          <button mat-flat-button color="primary" (click)="save()" [disabled]="saving || !formName">
+            {{ editingReq ? 'Guardar' : 'Crear' }}
+          </button>
+          <button mat-stroked-button (click)="cancelForm()">Cancelar</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngFor="let req of requirements" class="cardWithShadow m-b-8">
+    <mat-card-content class="p-24">
+      <div class="admin-item">
+        <span class="f-w-600">{{ req.name }}</span>
+        <div class="admin-item__actions">
+          <button mat-icon-button (click)="openEdit(req)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteReq(req)" [disabled]="saving">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p *ngIf="requirements.length === 0" class="text-muted">No hay cualificaciones definidas.</p>
+</div>

@@ -1,50 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Component;
 
-/**
- * @method Component|null find($id, $lockMode = null, $lockVersion = null)
- * @method Component|null findOneBy(array $criteria, array $orderBy = null)
- * @method Component[]    findAll()
- * @method Component[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class ComponentRepository extends ServiceEntityRepository
+class ComponentRepository extends ServiceEntityRepository implements ComponentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Component::class);
     }
 
-    // /**
-    //  * @return Component[] Returns an array of Component objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findById(string $id): ?Component
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Component
+    public function save(Component $component): void
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->getEntityManager()->persist($component);
+        $this->getEntityManager()->flush();
     }
-    */
+
+    public function delete(Component $component): void
+    {
+        $this->getEntityManager()->remove($component);
+        $this->getEntityManager()->flush();
+    }
 }

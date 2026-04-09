@@ -10,14 +10,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// icons
 import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { AuthenticationRoutes } from './authentication.routing';
-
 import { LoginPage } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { FeedbackMessageComponent } from '../../components/atoms/feedback-message/feedback-message.component';
 
 @NgModule({
   imports: [
@@ -33,10 +32,8 @@ import { RegisterComponent } from './register/register.component';
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
+    FeedbackMessageComponent,
   ],
-  declarations: [
-    LoginPage,
-    RegisterComponent,
-  ],
+  declarations: [LoginPage, RegisterComponent],
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}

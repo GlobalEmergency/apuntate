@@ -1,4 +1,4 @@
-export class Requirement{
+export class Requirement {
   id: string;
   name: string;
 }

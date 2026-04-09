@@ -1,50 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\UnitComponent;
 
-/**
- * @method UnitComponent|null find($id, $lockMode = null, $lockVersion = null)
- * @method UnitComponent|null findOneBy(array $criteria, array $orderBy = null)
- * @method UnitComponent[]    findAll()
- * @method UnitComponent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class UnitComponentRepository extends ServiceEntityRepository
+class UnitComponentRepository extends ServiceEntityRepository implements UnitComponentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UnitComponent::class);
     }
 
-    // /**
-    //  * @return UnitComponent[] Returns an array of UnitComponent objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findById(string $id): ?UnitComponent
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?UnitComponent
+    public function save(UnitComponent $unitComponent): void
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->getEntityManager()->persist($unitComponent);
+        $this->getEntityManager()->flush();
     }
-    */
+
+    public function delete(UnitComponent $unitComponent): void
+    {
+        $this->getEntityManager()->remove($unitComponent);
+        $this->getEntityManager()->flush();
+    }
 }

@@ -21,4 +21,6 @@ interface GapRepositoryInterface
 
     /** @return Gap[] */
     public function findCompletedByUser(User $user): array;
+
+    public function delete(Gap $gap): void;
 }

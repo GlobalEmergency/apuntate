@@ -1,39 +1,41 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Service } from '../../../domain/Service';
-import { ApiService } from '../../../services/api.service';
+import { Service } from '../../../domain/entities/Service';
+import { Gap } from '../../../domain/entities/Gap';
+import { ServiceRepository } from '../../../domain/interfaces/ServiceRepository';
 import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
-    selector: 'app-service',
-    templateUrl: './service.component.html',
-    styleUrls: ['./service.component.scss'],
-    standalone: false
+  standalone: false,
+  selector: 'app-service',
+  templateUrl: './service.component.html',
+  styleUrls: ['./service.component.scss'],
 })
-export class ServiceComponent {
+export class ServiceComponent implements OnInit {
   service: Service | null = null;
-  gaps: any[] = [];
+  gaps: Gap[] = [];
   loading = true;
   signupLoading: string | null = null;
   message: { text: string; type: 'success' | 'error' } | null = null;
-  confirmingCancel = false;
+  isAdmin = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthenticationService,
-    @Inject(ApiService) private apiService: ApiService,
+    private serviceRepository: ServiceRepository,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.isAdmin = this.authService.checkAuthentication('ROLE_ADMIN');
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
     this.loadService(id);
   }
 
-  private loadService(id: string) {
+  private loadService(id: string): void {
     this.loading = true;
-    this.apiService.getService(id).subscribe({
+    this.serviceRepository.getService(id).subscribe({
       next: (service) => {
         this.service = service;
         this.loadGaps(id);
@@ -45,8 +47,8 @@ export class ServiceComponent {
     });
   }
 
-  loadGaps(serviceId: string) {
-    this.apiService.getServiceGaps(serviceId).subscribe({
+  private loadGaps(serviceId: string): void {
+    this.serviceRepository.getServiceGaps(serviceId).subscribe({
       next: (gaps) => {
         this.gaps = gaps;
         this.loading = false;
@@ -57,28 +59,16 @@ export class ServiceComponent {
     });
   }
 
-  isAdmin(): boolean {
-    return this.authService.checkAuthentication('ROLE_ADMIN');
-  }
-
-  currentUserEmail(): string {
-    return this.authService.payload?.username || '';
-  }
-
-  isSignedUp(gap: any): boolean {
-    return gap.user?.id === this.currentUserId();
-  }
-
-  currentUserId(): string {
+  get currentUserId(): string {
     return this.authService.payload?.sub || '';
   }
 
-  signup(gapId: string) {
+  signup(gapId: string): void {
     if (!this.service) return;
     this.signupLoading = gapId;
     this.message = null;
 
-    this.apiService.signupForService(this.service.id, gapId).subscribe({
+    this.serviceRepository.signupForService(this.service.id, gapId).subscribe({
       next: () => {
         this.signupLoading = null;
         this.message = { text: 'Te has apuntado correctamente.', type: 'success' };
@@ -91,12 +81,12 @@ export class ServiceComponent {
     });
   }
 
-  withdraw(gapId: string) {
+  withdraw(gapId: string): void {
     if (!this.service) return;
     this.signupLoading = gapId;
     this.message = null;
 
-    this.apiService.withdrawFromService(this.service.id, gapId).subscribe({
+    this.serviceRepository.withdrawFromService(this.service.id, gapId).subscribe({
       next: () => {
         this.signupLoading = null;
         this.message = { text: 'Has cancelado tu inscripción.', type: 'success' };
@@ -109,16 +99,12 @@ export class ServiceComponent {
     });
   }
 
-  filledGaps(): number {
-    return this.gaps.filter((g) => g.user !== null).length;
-  }
-
-  publish() {
+  publish(): void {
     if (!this.service) return;
     this.loading = true;
     this.message = null;
 
-    this.apiService.publishService(this.service.id).subscribe({
+    this.serviceRepository.publishService(this.service.id).subscribe({
       next: () => {
         this.message = { text: 'Servicio publicado. Se ha notificado a todos los miembros.', type: 'success' };
         this.loading = false;
@@ -131,35 +117,24 @@ export class ServiceComponent {
     });
   }
 
-  edit() {
+  edit(): void {
     if (!this.service) return;
     this.router.navigate(['/service', this.service.id, 'edit']);
   }
 
-  cancelService() {
-    if (!this.service || this.confirmingCancel) return;
-    this.confirmingCancel = true;
-  }
-
-  confirmCancel() {
+  cancelService(): void {
     if (!this.service) return;
     this.loading = true;
-    this.apiService.cancelService(this.service.id).subscribe({
+    this.serviceRepository.cancelService(this.service.id).subscribe({
       next: () => {
         this.message = { text: 'Servicio cancelado.', type: 'success' };
         this.loading = false;
-        this.confirmingCancel = false;
         this.loadService(this.service!.id);
       },
       error: (err) => {
         this.message = { text: err.error?.error || 'Error al cancelar el servicio.', type: 'error' };
         this.loading = false;
-        this.confirmingCancel = false;
       },
     });
-  }
-
-  dismissCancel() {
-    this.confirmingCancel = false;
   }
 }

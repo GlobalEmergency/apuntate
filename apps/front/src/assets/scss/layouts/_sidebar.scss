@@ -37,11 +37,18 @@
       }
 
       &.activeMenu {
+        background-color: $primary !important;
+        color: $white !important;
+
         .mdc-list-item__primary-text {
           color: $white !important;
         }
 
         .mat-mdc-list-item-icon {
+          color: $white !important;
+        }
+
+        .routeIcon {
           color: $white !important;
         }
       }
@@ -69,7 +76,6 @@
   flex-direction: column;
   height: 100%;
 }
-
 
 .side-img {
   margin-top: -60px;

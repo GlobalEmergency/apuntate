@@ -1,155 +1,33 @@
-<div *ngIf="loading" style="display: flex; justify-content: center; padding: 48px;">
-  <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
-</div>
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
 
-<div *ngIf="!loading && service" class="row">
-  <div class="col-lg-8">
-    <mat-card class="cardWithShadow">
-      <mat-card-content class="p-24">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <mat-card-title>{{ service.name }}</mat-card-title>
-          <mat-chip-listbox *ngIf="service.status">
-            <mat-chip color="primary" selected>{{ service.status }}</mat-chip>
-          </mat-chip-listbox>
-        </div>
+<div *ngIf="!loading && service">
+  <app-service-header
+    [service]="service"
+    [isAdmin]="isAdmin"
+    [loading]="loading"
+    (publish)="publish()"
+    (edit)="edit()"
+    (cancelService)="cancelService()"
+  >
+  </app-service-header>
 
-        <p *ngIf="service.description" class="mat-body-1 m-t-16">{{ service.description }}</p>
+  <app-feedback-message [message]="message" class="m-t-16"></app-feedback-message>
 
-        <div style="display: flex; gap: 24px; flex-wrap: wrap;" class="m-t-16">
-          <div *ngIf="service.datePlace">
-            <span class="mat-body-2 text-muted">Presentación</span>
-            <p class="mat-body-1">{{ service.datePlace | date:'dd/MM/yyyy HH:mm' }}</p>
-          </div>
-          <div *ngIf="service.dateStart">
-            <span class="mat-body-2 text-muted">Inicio</span>
-            <p class="mat-body-1">{{ service.dateStart | date:'dd/MM/yyyy HH:mm' }}</p>
-          </div>
-          <div *ngIf="service.dateEnd">
-            <span class="mat-body-2 text-muted">Fin</span>
-            <p class="mat-body-1">{{ service.dateEnd | date:'dd/MM/yyyy HH:mm' }}</p>
-          </div>
-        </div>
-
-        <div *ngIf="isAdmin()" class="m-t-16" style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button mat-flat-button color="primary" (click)="publish()"
-                  *ngIf="service.status === 'draft'"
-                  [disabled]="loading">
-            <mat-icon>publish</mat-icon> Publicar servicio
-          </button>
-          <button mat-stroked-button color="primary" (click)="edit()">
-            <mat-icon>edit</mat-icon> Editar
-          </button>
-          <button mat-stroked-button color="warn" (click)="cancelService()"
-                  *ngIf="service.status !== 'cancelled' && service.status !== 'finished'">
-            <mat-icon>cancel</mat-icon> Cancelar servicio
-          </button>
-        </div>
-
-        <!-- Cancel confirmation -->
-        <div *ngIf="confirmingCancel" class="m-t-16 p-16"
-             style="background: #fff3e0; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-          <span style="color: #e65100;">
-            <mat-icon style="vertical-align: middle;">warning</mat-icon>
-            ¿Seguro que quieres cancelar este servicio?
-          </span>
-          <div style="display: flex; gap: 8px;">
-            <button mat-flat-button color="warn" (click)="confirmCancel()">Sí, cancelar</button>
-            <button mat-stroked-button (click)="dismissCancel()">No</button>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <div *ngIf="message" class="m-t-16 p-16 f-s-14"
-         [style.background]="message.type === 'success' ? '#e8f5e9' : '#fce4ec'"
-         [style.color]="message.type === 'success' ? '#2e7d32' : '#c62828'"
-         style="border-radius: 8px; display: flex; align-items: center; gap: 8px;">
-      <mat-icon>{{ message.type === 'success' ? 'check_circle' : 'error' }}</mat-icon>
-      <span>{{ message.text }}</span>
-    </div>
-
-    <mat-card class="cardWithShadow m-t-16">
-      <mat-card-content class="p-24">
-        <mat-card-title>Posiciones</mat-card-title>
-
-        <div *ngIf="gaps.length === 0" class="m-t-16">
-          <p class="mat-body-1 text-muted">No hay posiciones definidas para este servicio.</p>
-        </div>
-
-        <div *ngIf="gaps.length > 0" class="m-t-16"
-             style="display: flex; flex-direction: column; gap: 12px;">
-          <div *ngFor="let gap of gaps"
-               style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; flex-wrap: wrap; gap: 8px;"
-               [style.background]="gap.user ? '#e8f5e9' : '#f5f5f5'">
-
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <mat-icon [style.color]="gap.user ? '#2e7d32' : '#bdbdbd'">
-                {{ gap.user ? 'person' : 'person_outline' }}
-              </mat-icon>
-              <div>
-                <span class="mat-body-1 f-w-600">{{ gap.component || 'Voluntario' }}</span>
-                <span *ngIf="gap.unit" class="mat-body-2 text-muted m-l-8">· {{ gap.unit }}</span>
-                <div *ngIf="gap.requirements?.length > 0" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
-                  <mat-chip *ngFor="let req of gap.requirements" style="font-size: 11px;">{{ req.name }}</mat-chip>
-                </div>
-                <div *ngIf="gap.user" class="mat-body-2" style="color: #2e7d32; margin-top: 2px;">
-                  {{ gap.user.name }} {{ gap.user.surname }}
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <button *ngIf="!gap.user"
-                      mat-flat-button color="primary"
-                      [disabled]="signupLoading === gap.id"
-                      (click)="signup(gap.id)">
-                <mat-progress-spinner *ngIf="signupLoading === gap.id" diameter="18" mode="indeterminate"
-                  style="display: inline-block; margin-right: 6px;"></mat-progress-spinner>
-                {{ signupLoading === gap.id ? 'Apuntando...' : 'Apuntarme' }}
-              </button>
-
-              <button *ngIf="isSignedUp(gap)"
-                      mat-stroked-button color="warn"
-                      [disabled]="signupLoading === gap.id"
-                      (click)="withdraw(gap.id)">
-                Cancelar inscripción
-              </button>
-
-              <mat-chip *ngIf="gap.user && !isSignedUp(gap)" color="accent">Ocupado</mat-chip>
-            </div>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="col-lg-4">
-    <mat-card class="cardWithShadow">
-      <mat-card-content class="p-24">
-        <mat-card-title>Resumen</mat-card-title>
-        <div class="m-t-16" style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between;">
-            <span class="text-muted">Posiciones totales</span>
-            <span class="f-w-600">{{ gaps.length }}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span class="text-muted">Cubiertas</span>
-            <span class="f-w-600" style="color: #2e7d32;">{{ filledGaps() }}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span class="text-muted">Disponibles</span>
-            <span class="f-w-600" style="color: #e65100;">{{ gaps.length - filledGaps() }}</span>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <app-service-gaps
+    class="m-t-16"
+    [gaps]="gaps"
+    [signupLoading]="signupLoading"
+    [currentUserId]="currentUserId"
+    (signup)="signup($event)"
+    (withdraw)="withdraw($event)"
+  >
+  </app-service-gaps>
 </div>
 
 <div *ngIf="!loading && !service">
   <mat-card class="cardWithShadow">
     <mat-card-content class="p-24 text-center">
-      <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: #bdbdbd;">error_outline</mat-icon>
+      <mat-icon class="service-not-found__icon">error_outline</mat-icon>
       <p class="mat-body-1 m-t-16">Servicio no encontrado.</p>
       <button mat-flat-button color="primary" routerLink="/dashboard" class="m-t-16">Volver al inicio</button>
     </mat-card-content>

@@ -1,0 +1,52 @@
+<h1>Roles</h1>
+<app-feedback-message [message]="message"></app-feedback-message>
+<app-spinner-overlay *ngIf="loading"></app-spinner-overlay>
+
+<div *ngIf="!loading">
+  <button mat-flat-button color="primary" (click)="openCreate()" class="m-b-16" *ngIf="!showForm">
+    <mat-icon>add</mat-icon> Crear rol
+  </button>
+
+  <mat-card *ngIf="showForm" class="cardWithShadow m-b-16">
+    <mat-card-content class="p-24">
+      <mat-card-title>{{ editingRole ? 'Editar rol' : 'Nuevo rol' }}</mat-card-title>
+      <div class="admin-form m-t-16">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="formName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Requisitos</mat-label>
+          <mat-select [(ngModel)]="formRequirementIds" multiple>
+            <mat-option *ngFor="let req of requirements" [value]="req.id">{{ req.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="admin-form__actions">
+          <button mat-flat-button color="primary" (click)="save()" [disabled]="saving || !formName">
+            {{ editingRole ? 'Guardar' : 'Crear' }}
+          </button>
+          <button mat-stroked-button (click)="cancelForm()">Cancelar</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngFor="let role of roles" class="cardWithShadow m-b-8">
+    <mat-card-content class="p-24">
+      <div class="admin-item">
+        <div class="admin-item__info">
+          <span class="f-w-600">{{ role.name }}</span>
+          <mat-chip *ngFor="let req of role.requirements" class="m-l-4">{{ req.name }}</mat-chip>
+        </div>
+        <div class="admin-item__actions">
+          <button mat-icon-button (click)="openEdit(role)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteRole(role)" [disabled]="saving">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p *ngIf="roles.length === 0" class="text-muted">No hay roles definidos.</p>
+</div>

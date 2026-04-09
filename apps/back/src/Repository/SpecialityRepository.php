@@ -1,50 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GlobalEmergency\Apuntate\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Speciality;
 
-/**
- * @method Speciality|null find($id, $lockMode = null, $lockVersion = null)
- * @method Speciality|null findOneBy(array $criteria, array $orderBy = null)
- * @method Speciality[]    findAll()
- * @method Speciality[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class SpecialityRepository extends ServiceEntityRepository
+class SpecialityRepository extends ServiceEntityRepository implements SpecialityRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Speciality::class);
     }
 
-    // /**
-    //  * @return Speciality[] Returns an array of Speciality objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findById(string $id): ?Speciality
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Speciality
+    public function save(Speciality $speciality): void
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->getEntityManager()->persist($speciality);
+        $this->getEntityManager()->flush();
     }
-    */
+
+    public function delete(Speciality $speciality): void
+    {
+        $this->getEntityManager()->remove($speciality);
+        $this->getEntityManager()->flush();
+    }
 }

@@ -12,3 +12,15 @@ api_requirements:
   resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\RequirementController
 api_alerts:
   resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\AlertController
+api_service_units:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\ServiceUnitsController
+api_service_gaps:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\ServiceGapsController
+api_units:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\UnitsController
+api_components:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\ComponentsController
+api_specialities:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\SpecialitiesController
+api_members:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\MembersController

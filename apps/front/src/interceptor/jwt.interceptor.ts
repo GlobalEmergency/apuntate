@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
-import {
-  catchError,
-  finalize,
-  switchMap,
-  filter,
-  take,
-} from 'rxjs/operators';
+import { catchError, finalize, switchMap, filter, take } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class JwtInterceptor implements HttpInterceptor {
   tokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   isRefreshingToken = false;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private authenticationService: AuthenticationService) {}
 
   // Intercept every HTTP call
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -26,7 +27,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     return next.handle(this.addToken(request)).pipe(
-      catchError(err => {
+      catchError((err) => {
         if (err instanceof HttpErrorResponse) {
           switch (err.status) {
             case 400:
@@ -39,7 +40,7 @@ export class JwtInterceptor implements HttpInterceptor {
         } else {
           return throwError(err);
         }
-      })
+      }),
     );
   }
 
@@ -55,8 +56,8 @@ export class JwtInterceptor implements HttpInterceptor {
     if (this.authenticationService.currentAccessToken) {
       return req.clone({
         headers: new HttpHeaders({
-          Authorization: `Bearer ${this.authenticationService.currentAccessToken}`
-        })
+          Authorization: `Bearer ${this.authenticationService.currentAccessToken}`,
+        }),
       });
     } else {
       return req;
@@ -82,12 +83,11 @@ export class JwtInterceptor implements HttpInterceptor {
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     if (this.isRefreshingToken) {
       return this.tokenSubject.pipe(
-        filter(token => token !== null),
+        filter((token) => token !== null),
         take(1),
-        switchMap(token => {
-          // Perform the request again now that we got a new token!
+        switchMap((_token) => {
           return next.handle(this.addToken(request));
-        })
+        }),
       );
     }
 
@@ -98,26 +98,27 @@ export class JwtInterceptor implements HttpInterceptor {
     this.authenticationService.currentAccessToken = null;
 
     // First, get a new access token
-    return this.authenticationService.getNewAccessToken()?.pipe(
-      switchMap((tokens: any) => {
-        if (tokens) {
-          // Store the new token
-          this.authenticationService.storeAccessToken(tokens.token, tokens.refresh_token);
-          // Use the subject so other calls can continue with the new token
-          this.tokenSubject.next(tokens.token);
+    return (
+      this.authenticationService.getNewAccessToken()?.pipe(
+        switchMap((tokens: any) => {
+          if (tokens) {
+            // Store the new token
+            this.authenticationService.storeAccessToken(tokens.token, tokens.refresh_token);
+            // Use the subject so other calls can continue with the new token
+            this.tokenSubject.next(tokens.token);
 
-          // Perform the initial request again with the new token
-          return next.handle(this.addToken(request));
-
-        } else {
-          // No new token or other problem occurred
-          return of(null);
-        }
-      }),
-      finalize(() => {
-        // Unblock the token reload logic when everything is done
-        this.isRefreshingToken = false;
-      })
-    ) ?? of(null);
+            // Perform the initial request again with the new token
+            return next.handle(this.addToken(request));
+          } else {
+            // No new token or other problem occurred
+            return of(null);
+          }
+        }),
+        finalize(() => {
+          // Unblock the token reload logic when everything is done
+          this.isRefreshingToken = false;
+        }),
+      ) ?? of(null)
+    );
   }
 }

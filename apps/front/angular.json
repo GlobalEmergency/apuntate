@@ -25,6 +25,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/scss"
+              ]
+            },
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -89,6 +94,11 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/scss"
+              ]
+            },
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -96,7 +106,15 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
@@ -107,6 +125,9 @@
     "analytics": false,
     "cache": {
       "enabled": false
-    }
+    },
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }
