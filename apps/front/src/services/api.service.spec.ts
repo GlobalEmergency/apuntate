@@ -5,7 +5,8 @@ import { environment } from '../environments/environment';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ServiceHttpRepository } from '../infrastructure/http/service-http.repository';
 import { AlertHttpRepository } from '../infrastructure/http/alert-http.repository';
-import { ProfileHttpRepository } from '../infrastructure/http/profile-http.repository';
+import { AdminHttpRepository } from '../infrastructure/http/admin-http.repository';
+import { AdminRepository } from '../domain/interfaces/AdminRepository';
 
 const apiUrl = environment.api_url;
 
@@ -145,16 +146,21 @@ describe('AlertHttpRepository', () => {
   });
 });
 
-describe('ProfileHttpRepository', () => {
-  let service: ProfileHttpRepository;
+describe('AdminHttpRepository', () => {
+  let service: AdminHttpRepository;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      providers: [ProfileHttpRepository, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [
+        { provide: AdminRepository, useClass: AdminHttpRepository },
+        AdminHttpRepository,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
-    service = TestBed.inject(ProfileHttpRepository);
+    service = TestBed.inject(AdminHttpRepository);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -162,7 +168,7 @@ describe('ProfileHttpRepository', () => {
 
   it('should fetch profile', () => {
     const mockProfile = { name: 'John', email: 'john@test.com', stats: { totalServices: 5, totalHours: 12 } };
-    service.getProfile().subscribe((data) => {
+    service.getProfile().subscribe((data: any) => {
       expect(data).toEqual(mockProfile);
     });
     const req = httpMock.expectOne(`${apiUrl}/profile`);
