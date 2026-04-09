@@ -68,7 +68,7 @@ final class ServicesController extends AbstractController
                 datePlace: new \DateTimeImmutable($data['datePlace'] ?? 'now'),
                 description: $data['description'] ?? null,
             );
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\DateMalformedStringException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
@@ -110,7 +110,7 @@ final class ServicesController extends AbstractController
                 datePlace: isset($data['datePlace']) ? new \DateTimeImmutable($data['datePlace']) : null,
                 status: $data['status'] ?? null,
             );
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\DateMalformedStringException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 

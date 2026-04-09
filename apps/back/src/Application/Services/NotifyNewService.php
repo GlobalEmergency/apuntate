@@ -9,7 +9,7 @@ use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Repository\AlertRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 
-class NotifyNewService
+final class NotifyNewService implements ServiceNotifierInterface
 {
     public function __construct(
         private AlertRepositoryInterface $alertRepository,

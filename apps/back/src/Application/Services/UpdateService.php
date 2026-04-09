@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Entity\Service;
+use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
 
 final class UpdateService
@@ -53,10 +54,14 @@ final class UpdateService
         }
 
         if (null !== $status) {
-            $service->setStatusFromString($status);
+            $parsed = ServiceStatus::tryFrom($status);
+            if (null === $parsed) {
+                throw new \DomainException(sprintf('Invalid service status: %s.', $status));
+            }
+            $service->setStatus($parsed);
         }
 
-        if ($service->getDateEnd() <= $service->getDateStart()) {
+        if ((null !== $dateStart || null !== $dateEnd) && $service->getDateEnd() <= $service->getDateStart()) {
             throw new \DomainException('End date must be after start date.');
         }
 

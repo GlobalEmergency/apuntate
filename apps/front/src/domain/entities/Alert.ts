@@ -1,8 +1,8 @@
-export class Alert {
+export interface Alert {
   id: string;
   title: string;
   resume: string;
   message: string;
   type: string;
-  show = true;
+  show: boolean;
 }

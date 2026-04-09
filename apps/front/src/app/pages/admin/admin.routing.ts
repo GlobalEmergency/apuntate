@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ServiceAddComponent } from './ServiceAdd/serviceAdd.component';
+import { ServiceAddComponent } from './service-add/service-add.component';
 import { ServiceEditComponent } from './service-edit/service-edit.component';
 import { UnitsPageComponent } from './units/units-page.component';
 import { RolesPageComponent } from './roles/roles-page.component';

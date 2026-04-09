@@ -46,13 +46,14 @@ class CreateGapsTest extends TestCase
         $this->assertCount(2, $result->getGaps());
     }
 
-    public function testSkipsUnknownUnit(): void
+    public function testThrowsOnUnknownUnit(): void
     {
         $this->unitRepository->method('findById')->willReturn(null);
 
-        $service = new Service();
-        $result = $this->createGaps->execute($service, ['unknown-id' => 3]);
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Unit not found: unknown-id.');
 
-        $this->assertCount(0, $result->getGaps());
+        $service = new Service();
+        $this->createGaps->execute($service, ['unknown-id' => 3]);
     }
 }

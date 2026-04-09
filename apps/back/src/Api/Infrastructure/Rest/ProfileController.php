@@ -27,20 +27,7 @@ final class ProfileController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $profile = $this->getUserProfile->execute($user);
-
-        $profile['organizations'] = array_map(fn ($m) => [
-            'id' => $m->getOrganization()->getId()->toRfc4122(),
-            'name' => $m->getOrganization()->getName(),
-            'role' => $m->getRole(),
-        ], $user->getMemberships()->toArray());
-
-        $profile['requirements'] = array_map(fn ($r) => [
-            'id' => $r->getId()->toRfc4122(),
-            'name' => $r->getName(),
-        ], $user->getRequirements()->toArray());
-
-        return new JsonResponse($profile);
+        return new JsonResponse($this->getUserProfile->execute($user));
     }
 
     #[Route('', methods: ['PUT'])]

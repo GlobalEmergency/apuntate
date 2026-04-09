@@ -34,7 +34,7 @@ final class ServiceUnitsController extends AbstractController
 
         return new JsonResponse(
             $this->serializer->serialize($service, 'json'),
-            Response::HTTP_OK,
+            Response::HTTP_CREATED,
             [],
             true,
         );

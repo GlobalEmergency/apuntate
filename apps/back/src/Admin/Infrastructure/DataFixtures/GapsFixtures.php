@@ -25,7 +25,7 @@ class GapsFixtures extends Fixture
     {
         $service = new Service();
         $service->setId(\Symfony\Component\Uid\Uuid::v4());
-        $service->setStatus('active');
+        $service->setStatus(\GlobalEmergency\Apuntate\Entity\ServiceStatus::CONFIRMED);
 
         $service->setName('Test Service '.rand(1, 100));
         $service->setDescription('Test Description');

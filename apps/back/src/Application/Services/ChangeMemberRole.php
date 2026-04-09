@@ -22,10 +22,14 @@ final class ChangeMemberRole
         }
 
         $targetMember = null;
+        $adminCount = 0;
+
         foreach ($organization->getMembers() as $member) {
+            if ($member->isAdmin()) {
+                ++$adminCount;
+            }
             if ($member->getUser()->getId()->toRfc4122() === $userId) {
                 $targetMember = $member;
-                break;
             }
         }
 
@@ -33,16 +37,8 @@ final class ChangeMemberRole
             throw new \DomainException('User is not a member of this organization.');
         }
 
-        if ($targetMember->isAdmin() && OrganizationMember::ROLE_ADMIN !== $newRole) {
-            $adminCount = 0;
-            foreach ($organization->getMembers() as $member) {
-                if ($member->isAdmin()) {
-                    ++$adminCount;
-                }
-            }
-            if ($adminCount <= 1) {
-                throw new \DomainException('Cannot demote the last admin of the organization.');
-            }
+        if ($targetMember->isAdmin() && OrganizationMember::ROLE_ADMIN !== $newRole && $adminCount <= 1) {
+            throw new \DomainException('Cannot demote the last admin of the organization.');
         }
 
         $targetMember->setRole($newRole);

@@ -6,6 +6,7 @@ namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\Service;
+use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
 
 final class CreateGaps
@@ -21,53 +22,56 @@ final class CreateGaps
         foreach ($holes as $unitId => $amount) {
             $unit = $this->unitRepository->findById($unitId);
             if (null === $unit) {
-                continue;
+                throw new \DomainException(sprintf('Unit not found: %s.', $unitId));
             }
 
-            $nexted = [];
-            $holesCreated = 0;
+            $this->generateGapsForUnit($service, $unit, $amount);
+        }
 
-            foreach ($unit->getUnitComponents() as $unitComponent) {
-                $gap = new Gap();
-                $gap->setService($service);
-                $gap->setUnitComponent($unitComponent);
-                $service->addGap($gap);
-                ++$holesCreated;
+        return $service;
+    }
 
-                if ($unitComponent->getQuantity() > 1) {
-                    $nexted[] = [$unitComponent, $unitComponent->getQuantity() - 1];
-                }
+    private function generateGapsForUnit(Service $service, Unit $unit, int $amount): void
+    {
+        $gapsCreated = 0;
+
+        // First pass: create one gap per unit component
+        $expandableComponents = [];
+        foreach ($unit->getUnitComponents() as $unitComponent) {
+            $service->addGap($this->createGap($service, $unitComponent));
+            ++$gapsCreated;
+
+            if ($unitComponent->getQuantity() > 1) {
+                $expandableComponents[] = [$unitComponent, $unitComponent->getQuantity() - 1];
             }
+        }
 
-            while ($amount > $holesCreated) {
-                foreach ($nexted as $key => $value) {
-                    $unitComponent = $value[0];
-                    $rest = $value[1];
-
-                    if ($holesCreated >= $amount) {
-                        break;
-                    }
-
-                    $gap = new Gap();
-                    $gap->setService($service);
-                    $gap->setUnitComponent($unitComponent);
-                    $service->addGap($gap);
-                    ++$holesCreated;
-
-                    if ($rest > 1) {
-                        $nexted[$key][1] = $rest - 1;
-                    } else {
-                        unset($nexted[$key]);
-                        break;
-                    }
+        // Expansion pass: fill remaining slots by repeating components up to their quantity
+        while ($gapsCreated < $amount && !empty($expandableComponents)) {
+            foreach ($expandableComponents as $key => [$unitComponent, $remainingSlots]) {
+                if ($gapsCreated >= $amount) {
+                    break;
                 }
 
-                if (empty($nexted)) {
+                $service->addGap($this->createGap($service, $unitComponent));
+                ++$gapsCreated;
+
+                if ($remainingSlots > 1) {
+                    $expandableComponents[$key][1] = $remainingSlots - 1;
+                } else {
+                    unset($expandableComponents[$key]);
                     break;
                 }
             }
         }
+    }
 
-        return $service;
+    private function createGap(Service $service, \GlobalEmergency\Apuntate\Entity\UnitComponent $unitComponent): Gap
+    {
+        $gap = new Gap();
+        $gap->setService($service);
+        $gap->setUnitComponent($unitComponent);
+
+        return $gap;
     }
 }

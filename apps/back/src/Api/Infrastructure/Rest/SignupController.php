@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SignupController extends AbstractController
+final class SignupController extends AbstractController
 {
     public function __construct(
         private SignupForService $signupForService,

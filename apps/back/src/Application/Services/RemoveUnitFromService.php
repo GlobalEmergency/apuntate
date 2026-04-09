@@ -39,7 +39,7 @@ final class RemoveUnitFromService
             $unitComponentIds[] = $uc->getId()->toRfc4122();
         }
 
-        foreach ($service->getGaps() as $gap) {
+        foreach ($service->getGaps()->toArray() as $gap) {
             $ucId = $gap->getUnitComponent()?->getId()?->toRfc4122();
             if (in_array($ucId, $unitComponentIds, true)) {
                 if (null !== $gap->getUser()) {

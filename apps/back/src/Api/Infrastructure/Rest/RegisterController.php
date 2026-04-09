@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterController extends AbstractController
+final class RegisterController extends AbstractController
 {
     public function __construct(
         private RegisterOrganization $registerOrganization,

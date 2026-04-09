@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
 import { SpinnerOverlayComponent } from '../../../components/atoms/spinner-overlay/spinner-overlay.component';
 import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
+import { AdminCrudBase } from '../admin-crud.base';
 
 @Component({
   selector: 'app-requirements-page',
@@ -27,23 +28,20 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   templateUrl: './requirements-page.component.html',
   styleUrls: ['./requirements-page.component.scss'],
 })
-export class RequirementsPageComponent implements OnInit {
+export class RequirementsPageComponent extends AdminCrudBase implements OnInit {
   requirements: any[] = [];
-  loading = true;
-  saving = false;
-  message: { text: string; type: 'success' | 'error' } | null = null;
-
-  showForm = false;
   editingReq: any = null;
   formName = '';
 
-  constructor(private adminRepo: AdminRepository) {}
+  constructor(private adminRepo: AdminRepository) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadAll();
   }
 
-  private loadAll(): void {
+  loadAll(): void {
     this.loading = true;
     this.adminRepo.listRequirements().subscribe({
       next: (reqs) => {
@@ -110,15 +108,4 @@ export class RequirementsPageComponent implements OnInit {
     });
   }
 
-  private onSuccess(msg: string): void {
-    this.saving = false;
-    this.showForm = false;
-    this.message = { text: msg, type: 'success' };
-    this.loadAll();
-  }
-
-  private onError(err: any): void {
-    this.saving = false;
-    this.message = { text: err.error?.error || 'An error occurred.', type: 'error' };
-  }
 }

@@ -8,6 +8,7 @@ use GlobalEmergency\Apuntate\Application\Services\CreateSpeciality;
 use GlobalEmergency\Apuntate\Application\Services\DeleteSpeciality;
 use GlobalEmergency\Apuntate\Application\Services\ListSpecialities;
 use GlobalEmergency\Apuntate\Application\Services\UpdateSpeciality;
+use GlobalEmergency\Apuntate\Entity\Speciality;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,13 +21,7 @@ final class SpecialitiesController extends AbstractController
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(ListSpecialities $listSpecialities): JsonResponse
     {
-        $specialities = $listSpecialities->execute();
-
-        return new JsonResponse(array_map(fn ($s) => [
-            'id' => $s->getId()->toRfc4122(),
-            'name' => $s->getName(),
-            'abbreviation' => $s->getAbbreviation(),
-        ], $specialities));
+        return new JsonResponse(array_map($this->serialize(...), $listSpecialities->execute()));
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -43,11 +38,7 @@ final class SpecialitiesController extends AbstractController
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse([
-            'id' => $speciality->getId()->toRfc4122(),
-            'name' => $speciality->getName(),
-            'abbreviation' => $speciality->getAbbreviation(),
-        ], Response::HTTP_CREATED);
+        return new JsonResponse($this->serialize($speciality), Response::HTTP_CREATED);
     }
 
     #[Route('/{specialityId}', name: 'update', methods: ['PUT'])]
@@ -65,11 +56,7 @@ final class SpecialitiesController extends AbstractController
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse([
-            'id' => $speciality->getId()->toRfc4122(),
-            'name' => $speciality->getName(),
-            'abbreviation' => $speciality->getAbbreviation(),
-        ]);
+        return new JsonResponse($this->serialize($speciality));
     }
 
     #[Route('/{specialityId}', name: 'delete', methods: ['DELETE'])]
@@ -82,5 +69,15 @@ final class SpecialitiesController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /** @return array<string, mixed> */
+    private function serialize(Speciality $s): array
+    {
+        return [
+            'id' => $s->getId()->toRfc4122(),
+            'name' => $s->getName(),
+            'abbreviation' => $s->getAbbreviation(),
+        ];
     }
 }

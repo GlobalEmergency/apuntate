@@ -1,9 +1,10 @@
-import { Component, Output, EventEmitter, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../../../services/authentication.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../services/alert.service';
 import { AlertsDialogComponent } from '../../../components/organisms/alerts-dialog/alerts-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: false,
@@ -11,7 +12,7 @@ import { AlertsDialogComponent } from '../../../components/organisms/alerts-dial
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   @Input() showToggle = true;
   @Input() toggleChecked = false;
   @Output() toggleMobileNav = new EventEmitter<void>();
@@ -19,6 +20,7 @@ export class HeaderComponent {
   @Output() toggleCollapsed = new EventEmitter<void>();
 
   alertsActive = 0;
+  private alertsSub: Subscription;
 
   constructor(
     public dialog: MatDialog,
@@ -26,9 +28,13 @@ export class HeaderComponent {
     public router: Router,
     public alertService: AlertService,
   ) {
-    this.alertService.getAlerts().subscribe((alerts) => {
+    this.alertsSub = this.alertService.getAlerts().subscribe((alerts) => {
       this.alertsActive = alerts.filter((alert) => alert.show).length;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.alertsSub.unsubscribe();
   }
 
   showAlerts(): void {

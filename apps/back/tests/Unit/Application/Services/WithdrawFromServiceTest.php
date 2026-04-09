@@ -31,7 +31,7 @@ class WithdrawFromServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUser($user);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
 
         $this->useCase->execute($user, $gap->getId()->toRfc4122());
@@ -48,7 +48,7 @@ class WithdrawFromServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUser($owner);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $otherUser = new User();
         $otherUser->setName('Other');
@@ -68,7 +68,7 @@ class WithdrawFromServiceTest extends TestCase
 
         $gap = new Gap();
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $this->expectException(\DomainException::class);
 

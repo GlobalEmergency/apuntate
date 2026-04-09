@@ -16,7 +16,7 @@ final class WithdrawFromService
 
     public function execute(User $user, string $gapId): void
     {
-        $gap = $this->gapRepository->findById($gapId);
+        $gap = $this->gapRepository->findByIdForUpdate($gapId);
 
         if (null === $gap) {
             throw new \DomainException('Gap not found.');

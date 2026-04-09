@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, MatIconModule],
   templateUrl: './stat-icon.component.html',
   styleUrls: ['./stat-icon.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatIconComponent {
   @Input() icon = '';

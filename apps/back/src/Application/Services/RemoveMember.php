@@ -43,6 +43,7 @@ final class RemoveMember
             throw new \DomainException('Cannot remove the last admin of the organization.');
         }
 
+        $memberToRemove->getUser()->getMemberships()->removeElement($memberToRemove);
         $organization->getMembers()->removeElement($memberToRemove);
         $this->organizationRepository->save($organization);
     }

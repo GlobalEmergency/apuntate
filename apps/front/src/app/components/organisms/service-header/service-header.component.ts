@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ import { Service } from '../../../../domain/entities/Service';
   ],
   templateUrl: './service-header.component.html',
   styleUrls: ['./service-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceHeaderComponent {
   @Input() service!: Service;

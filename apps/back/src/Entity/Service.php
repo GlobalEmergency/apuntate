@@ -89,7 +89,7 @@ class Service
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -199,21 +199,9 @@ class Service
         return ServiceStatus::from($this->status);
     }
 
-    public function setStatus(ServiceStatus|string $status): self
+    public function setStatus(ServiceStatus $status): self
     {
-        $this->status = $status instanceof ServiceStatus ? $status->value : $status;
-
-        return $this;
-    }
-
-    public function setStatusFromString(string $status): self
-    {
-        $parsed = ServiceStatus::tryFrom($status);
-        if (null === $parsed) {
-            throw new \InvalidArgumentException(sprintf('Invalid service status: %s', $status));
-        }
-
-        $this->status = $parsed->value;
+        $this->status = $status->value;
 
         return $this;
     }

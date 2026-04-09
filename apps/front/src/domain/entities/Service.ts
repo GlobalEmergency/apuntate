@@ -6,9 +6,9 @@ export interface ServiceForm {
   name: FormControl<string>;
   description: FormControl<string | null>;
   category: FormControl<ServiceCategory>;
-  priority: FormControl<string>;
-  type: FormControl<string>;
-  status: FormControl<string>;
+  priority: FormControl<ServicePriority>;
+  type: FormControl<ServiceType>;
+  status: FormControl<ServiceStatus>;
   dateStart: FormControl<Date>;
   dateEnd: FormControl<Date>;
   datePlace: FormControl<Date>;
@@ -48,12 +48,12 @@ export class Service {
   readonly dateStart: Date;
   readonly dateEnd: Date;
   readonly datePlace: Date;
-  readonly status: string;
+  readonly status: ServiceStatus;
   readonly units: Gap[];
   readonly gaps: Gap[];
-  readonly category: string;
-  readonly priority: string;
-  readonly type: string;
+  readonly category: ServiceCategory;
+  readonly priority: ServicePriority;
+  readonly type: ServiceType;
 
   constructor(
     id = '',
@@ -62,12 +62,12 @@ export class Service {
     dateStart: Date = new Date(),
     dateEnd: Date = new Date(),
     datePlace: Date = new Date(),
-    status: string = ServiceStatus.DRAFT,
+    status: ServiceStatus = ServiceStatus.DRAFT,
     units: Gap[] = [],
     gaps: Gap[] = [],
-    category: string = ServiceCategory.PREVENTIVE,
-    priority: string = ServicePriority.MEDIUM,
-    type: string = ServiceType.COVERAGE,
+    category: ServiceCategory = ServiceCategory.PREVENTIVE,
+    priority: ServicePriority = ServicePriority.MEDIUM,
+    type: ServiceType = ServiceType.COVERAGE,
   ) {
     this.id = id;
     this.name = name;
@@ -83,20 +83,20 @@ export class Service {
     this.type = type;
   }
 
-  static fromForm(form: Record<string, any>): Service {
+  static fromForm(form: Partial<{ [K in keyof ServiceForm]: ServiceForm[K] extends FormControl<infer V> ? V : never }>): Service {
     return new Service(
-      form['id'],
-      form['name'],
-      form['description'],
-      form['dateStart'],
-      form['dateEnd'],
-      form['datePlace'],
-      form['status'],
-      form['units'],
-      form['gaps'],
-      form['category'],
-      form['priority'],
-      form['type'],
+      form.id,
+      form.name,
+      form.description ?? '',
+      form.dateStart,
+      form.dateEnd,
+      form.datePlace,
+      form.status,
+      form.units,
+      form.gaps,
+      form.category,
+      form.priority,
+      form.type,
     );
   }
 }

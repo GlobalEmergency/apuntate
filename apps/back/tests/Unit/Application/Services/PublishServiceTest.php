@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 
-use GlobalEmergency\Apuntate\Application\Services\NotifyNewService;
 use GlobalEmergency\Apuntate\Application\Services\PublishService;
+use GlobalEmergency\Apuntate\Application\Services\ServiceNotifierInterface;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
@@ -15,13 +15,13 @@ use PHPUnit\Framework\TestCase;
 class PublishServiceTest extends TestCase
 {
     private MockObject&ServiceRepositoryInterface $serviceRepository;
-    private MockObject&NotifyNewService $notifyNewService;
+    private MockObject&ServiceNotifierInterface $notifyNewService;
     private PublishService $useCase;
 
     protected function setUp(): void
     {
         $this->serviceRepository = $this->createMock(ServiceRepositoryInterface::class);
-        $this->notifyNewService = $this->createMock(NotifyNewService::class);
+        $this->notifyNewService = $this->createMock(ServiceNotifierInterface::class);
         $this->useCase = new PublishService($this->serviceRepository, $this->notifyNewService);
     }
 

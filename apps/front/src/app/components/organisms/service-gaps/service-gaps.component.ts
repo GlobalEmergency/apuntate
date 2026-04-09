@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { GapItemComponent } from '../../molecules/gap-item/gap-item.component';
@@ -11,6 +11,7 @@ import { Gap } from '../../../../domain/entities/Gap';
   imports: [CommonModule, MatCardModule, GapItemComponent, SummaryRowComponent],
   templateUrl: './service-gaps.component.html',
   styleUrls: ['./service-gaps.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceGapsComponent {
   @Input() gaps: Gap[] = [];
