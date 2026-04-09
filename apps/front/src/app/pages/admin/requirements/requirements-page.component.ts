@@ -107,5 +107,4 @@ export class RequirementsPageComponent extends AdminCrudBase implements OnInit {
       },
     });
   }
-
 }

@@ -126,5 +126,4 @@ export class RolesPageComponent extends AdminCrudBase implements OnInit {
       },
     });
   }
-
 }

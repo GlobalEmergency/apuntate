@@ -115,5 +115,4 @@ export class SpecialitiesPageComponent extends AdminCrudBase implements OnInit {
       },
     });
   }
-
 }

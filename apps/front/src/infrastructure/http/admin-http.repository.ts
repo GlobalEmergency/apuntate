@@ -34,7 +34,10 @@ export class AdminHttpRepository extends AdminRepository {
     });
   }
 
-  updateUnit(unitId: string, data: { name?: string; identifier?: string; speciality_id?: string }): Observable<UnitDto> {
+  updateUnit(
+    unitId: string,
+    data: { name?: string; identifier?: string; speciality_id?: string },
+  ): Observable<UnitDto> {
     return this.http.put<UnitDto>(`${this.url}/units/${unitId}`, data);
   }
 
@@ -43,7 +46,10 @@ export class AdminHttpRepository extends AdminRepository {
   }
 
   assignRoleToUnit(unitId: string, componentId: string, quantity: number): Observable<UnitComponentDto> {
-    return this.http.post<UnitComponentDto>(`${this.url}/units/${unitId}/roles`, { component_id: componentId, quantity });
+    return this.http.post<UnitComponentDto>(`${this.url}/units/${unitId}/roles`, {
+      component_id: componentId,
+      quantity,
+    });
   }
 
   unassignRoleFromUnit(unitId: string, unitComponentId: string): Observable<void> {

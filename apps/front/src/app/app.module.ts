@@ -29,7 +29,7 @@ import { ServiceRepository } from '../domain/interfaces/ServiceRepository';
 import { ServiceHttpRepository } from '../infrastructure/http/service-http.repository';
 import { AlertRepository } from '../domain/interfaces/AlertRepository';
 import { AlertHttpRepository } from '../infrastructure/http/alert-http.repository';
-import { CalendarRepository} from '../domain/interfaces/CalendarRepository';
+import { CalendarRepository } from '../domain/interfaces/CalendarRepository';
 import { CalendarHttpRepository } from '../infrastructure/http/calendar-http.repository';
 import { AdminRepository } from '../domain/interfaces/AdminRepository';
 import { AdminHttpRepository } from '../infrastructure/http/admin-http.repository';

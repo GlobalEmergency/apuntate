@@ -83,7 +83,9 @@ export class Service {
     this.type = type;
   }
 
-  static fromForm(form: Partial<{ [K in keyof ServiceForm]: ServiceForm[K] extends FormControl<infer V> ? V : never }>): Service {
+  static fromForm(
+    form: Partial<{ [K in keyof ServiceForm]: ServiceForm[K] extends FormControl<infer V> ? V : never }>,
+  ): Service {
     return new Service(
       form.id,
       form.name,

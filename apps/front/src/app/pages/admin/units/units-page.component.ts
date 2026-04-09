@@ -168,5 +168,4 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
       },
     });
   }
-
 }
