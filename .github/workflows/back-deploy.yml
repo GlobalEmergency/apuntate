@@ -27,7 +27,7 @@ jobs:
       run:
         working-directory: .
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Docker build
         run: |
@@ -93,7 +93,7 @@ jobs:
               description: 'Deploying backend...',
             });
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
