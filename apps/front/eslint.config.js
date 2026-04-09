@@ -37,6 +37,7 @@ module.exports = defineConfig([
       "@angular-eslint/no-empty-lifecycle-method": "off",
       "@angular-eslint/no-output-native": "warn",
       "@angular-eslint/component-class-suffix": "warn",
+      "@angular-eslint/prefer-standalone": "off",
     },
   },
   {
