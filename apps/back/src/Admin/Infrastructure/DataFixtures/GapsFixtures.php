@@ -30,7 +30,7 @@ class GapsFixtures extends Fixture
         $service->setName('Test Service '.rand(1, 100));
         $service->setDescription('Test Description');
         // Date start random nexts 5 days
-        $date = new \DateTime();
+        $date = new \DateTime('now', new \DateTimeZone('UTC'));
         $date->modify('+'.rand(1, 5).' days');
         $service->setDateStart(clone $date);
         $date->modify('+'.rand(3, 12).' hours');

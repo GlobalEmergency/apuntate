@@ -105,7 +105,9 @@ export class ServiceEditComponent implements OnInit {
   private toDatetimeLocal(date: Date | string | null): string {
     if (!date) return '';
     const d = new Date(date);
-    return d.toISOString().slice(0, 16);
+    const offset = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - offset * 60000);
+    return local.toISOString().slice(0, 16);
   }
 
   private loadGaps(serviceId: string): void {

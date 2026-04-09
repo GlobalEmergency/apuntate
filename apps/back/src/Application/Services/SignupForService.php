@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Application\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Entity\User;
@@ -13,16 +14,19 @@ final class SignupForService
 {
     public function __construct(
         private GapRepositoryInterface $gapRepository,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
     public function execute(User $user, string $serviceId, ?string $gapId = null): Gap
     {
-        if (null !== $gapId) {
-            return $this->signupForSpecificGap($user, $gapId);
-        }
+        return $this->entityManager->wrapInTransaction(function () use ($user, $serviceId, $gapId): Gap {
+            if (null !== $gapId) {
+                return $this->signupForSpecificGap($user, $gapId);
+            }
 
-        return $this->signupForFirstAvailableGap($user, $serviceId);
+            return $this->signupForFirstAvailableGap($user, $serviceId);
+        });
     }
 
     private function signupForSpecificGap(User $user, string $gapId): Gap

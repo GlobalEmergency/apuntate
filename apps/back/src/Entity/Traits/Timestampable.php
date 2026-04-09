@@ -17,14 +17,14 @@ trait Timestampable
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
     public function setCreatedAt(\DateTime $createdAt): static

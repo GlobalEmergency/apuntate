@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use GlobalEmergency\Apuntate\Application\Services\WithdrawFromService;
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\User;
@@ -19,7 +20,11 @@ class WithdrawFromServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->gapRepository = $this->createMock(GapRepositoryInterface::class);
-        $this->useCase = new WithdrawFromService($this->gapRepository);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('wrapInTransaction')->willReturnCallback(fn (callable $fn) => $fn());
+
+        $this->useCase = new WithdrawFromService($this->gapRepository, $entityManager);
     }
 
     public function testWithdrawsUserFromGap(): void
