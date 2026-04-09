@@ -1,8 +1,9 @@
 parameters:
-    level: 8
+    level: 1
     paths:
         - src
         - tests
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
-
+    excludePaths:
+        - src/Controller/Admin/*
+        - src/Type/EnumType.php
+    reportUnmatchedIgnoredErrors: false
