@@ -9,6 +9,7 @@ use GlobalEmergency\Apuntate\Application\Services\CancelService;
 use GlobalEmergency\Apuntate\Application\Services\CreateService;
 use GlobalEmergency\Apuntate\Application\Services\PublishService;
 use GlobalEmergency\Apuntate\Application\Services\UpdateService;
+use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
 use GlobalEmergency\Apuntate\Services\CalendarTransform;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,14 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/services', name: 'api_services_')]
 final class ServicesController extends AbstractController
 {
     public function __construct(
         private ServiceRepositoryInterface $serviceRepository,
-        private SerializerInterface $serializer,
     ) {
     }
 
@@ -34,10 +33,7 @@ final class ServicesController extends AbstractController
         $services = $this->serviceRepository->findUpcoming();
 
         return new JsonResponse(
-            $this->serializer->serialize($services, 'json'),
-            Response::HTTP_OK,
-            [],
-            true,
+            array_map(fn (Service $s) => $this->serialize($s), $services),
         );
     }
 
@@ -89,12 +85,7 @@ final class ServicesController extends AbstractController
             return new JsonResponse(['error' => 'Service not found.'], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse(
-            $this->serializer->serialize($service, 'json'),
-            Response::HTTP_OK,
-            [],
-            true,
-        );
+        return new JsonResponse($this->serialize($service));
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -117,12 +108,7 @@ final class ServicesController extends AbstractController
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(
-            $this->serializer->serialize($service, 'json'),
-            Response::HTTP_OK,
-            [],
-            true,
-        );
+        return new JsonResponse($this->serialize($service));
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -152,5 +138,48 @@ final class ServicesController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /** @return array<string, mixed> */
+    private function serialize(Service $s): array
+    {
+        return [
+            'id' => $s->getId()->toRfc4122(),
+            'name' => $s->getName(),
+            'description' => $s->getDescription(),
+            'dateStart' => $s->getDateStart()->toIso8601String(),
+            'dateEnd' => $s->getDateEnd()->toIso8601String(),
+            'datePlace' => $s->getDatePlace() instanceof Carbon
+                ? $s->getDatePlace()->toIso8601String()
+                : $s->getDatePlace()->format('c'),
+            'status' => $s->getStatus()->value,
+            'units' => array_map(fn ($u) => [
+                'id' => $u->getId()->toRfc4122(),
+                'name' => $u->getName(),
+                'identifier' => $u->getIdentifier(),
+            ], $s->getUnits()->toArray()),
+            'gaps' => array_map(fn ($g) => [
+                'id' => $g->getId()->toRfc4122(),
+                'user' => $g->getUser() ? [
+                    'id' => (string) $g->getUser()->getId(),
+                    'name' => $g->getUser()->getName(),
+                    'email' => $g->getUser()->getEmail(),
+                ] : null,
+                'unitComponent' => $g->getUnitComponent() ? [
+                    'id' => $g->getUnitComponent()->getId()->toRfc4122(),
+                    'quantity' => $g->getUnitComponent()->getQuantity(),
+                    'component' => $g->getUnitComponent()->getComponent() ? [
+                        'id' => $g->getUnitComponent()->getComponent()->getId()->toRfc4122(),
+                        'name' => $g->getUnitComponent()->getComponent()->getName(),
+                    ] : null,
+                    'unit' => $g->getUnitComponent()->getUnit() ? [
+                        'id' => $g->getUnitComponent()->getUnit()->getId()->toRfc4122(),
+                        'name' => $g->getUnitComponent()->getUnit()->getName(),
+                    ] : null,
+                ] : null,
+            ], $s->getGaps()->toArray()),
+            'createdAt' => $s->getCreatedAt()->format('c'),
+            'updatedAt' => $s->getUpdatedAt()->format('c'),
+        ];
     }
 }
