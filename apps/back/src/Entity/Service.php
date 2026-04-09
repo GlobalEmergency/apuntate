@@ -177,8 +177,12 @@ class Service
         return $this;
     }
 
-    public function getDatePlace(): \DateTimeInterface
+    public function getDatePlace(): Carbon
     {
+        if (!$this->datePlace instanceof Carbon) {
+            $this->datePlace = Carbon::instance($this->datePlace);
+        }
+
         return $this->datePlace;
     }
 

@@ -147,9 +147,9 @@ final class ServicesController extends AbstractController
             'id' => $s->getId()->toRfc4122(),
             'name' => $s->getName(),
             'description' => $s->getDescription(),
-            'dateStart' => $s->getDateStart()->utc()->format('Y-m-d\TH:i:s\Z'),
-            'dateEnd' => $s->getDateEnd()->utc()->format('Y-m-d\TH:i:s\Z'),
-            'datePlace' => $s->getDatePlace()->utc()->format('Y-m-d\TH:i:s\Z'),
+            'dateStart' => (clone $s->getDateStart())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+            'dateEnd' => (clone $s->getDateEnd())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+            'datePlace' => (clone $s->getDatePlace())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
             'status' => $s->getStatus()->value,
             'units' => array_map(fn ($u) => [
                 'id' => $u->getId()->toRfc4122(),
