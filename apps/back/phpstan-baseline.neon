@@ -1,0 +1,386 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Alert\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Alert.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Alert\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Alert.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Alert\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Alert.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Alert\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Alert.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Gap\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Gap.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Gap\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Gap.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Gap\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Gap.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Gap\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Gap.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Gap\\:\\:\\$unitComponent has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Gap.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:getMembers\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:getServices\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:getUnits\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:\\$members with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:\\$services with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Organization\\:\\:\\$units with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Organization.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\OrganizationMember\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/OrganizationMember.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\OrganizationMember\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/OrganizationMember.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\OrganizationMember\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/OrganizationMember.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\OrganizationMember\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/OrganizationMember.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:getComponents\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:getUsers\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:\\$components has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement\\:\\:\\$users has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Requirement.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Service\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Service.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Service\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Service.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Service\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Service.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Service\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Service.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:getUnits\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:getUserSpecialities\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:\\$abbreviation has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:\\$units has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality\\:\\:\\$userSpecialities has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Speciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UnitComponent\\:\\:\\$component has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UnitComponent.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UnitComponent\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UnitComponent.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UnitComponent\\:\\:\\$quantity has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UnitComponent.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UnitComponent\\:\\:\\$unit has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UnitComponent.php
+
+		-
+			message: "#^Class GlobalEmergency\\\\Apuntate\\\\Entity\\\\Requirement referenced with incorrect case\\: GlobalEmergency\\\\Apuntate\\\\Entity\\\\requirement\\.$#"
+			count: 3
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:getGaps\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:getMemberships\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:getOrganizations\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:getRequirements\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:setRoles\\(\\) has parameter \\$roles with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$dateEnd has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$dateStart has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$email has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$gaps has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$memberships with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$password has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$requirements has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$roles has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\User\\:\\:\\$surname has no type specified\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: "#^Class GlobalEmergency\\\\Apuntate\\\\Entity\\\\Speciality referenced with incorrect case\\: GlobalEmergency\\\\Apuntate\\\\Entity\\\\speciality\\.$#"
+			count: 2
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:onPrePersist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:onPreUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:setCreatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Method GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:setUpdatedAt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:\\$dateEnd has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:\\$dateStart has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php
+
+		-
+			message: "#^Property GlobalEmergency\\\\Apuntate\\\\Entity\\\\UserSpeciality\\:\\:\\$speciality has no type specified\\.$#"
+			count: 1
+			path: src/Entity/UserSpeciality.php

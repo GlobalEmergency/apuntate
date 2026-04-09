@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Speciality;
 
+/** @extends ServiceEntityRepository<Speciality> */
 class SpecialityRepository extends ServiceEntityRepository implements SpecialityRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

@@ -13,16 +13,18 @@ class Component
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
+    /** @var Collection<int, Requirement> */
     #[ORM\ManyToMany(targetEntity: Requirement::class, inversedBy: 'components')]
-    private $requirements;
+    private Collection $requirements;
 
+    /** @var Collection<int, UnitComponent> */
     #[ORM\OneToMany(targetEntity: UnitComponent::class, mappedBy: 'component')]
-    private $unitComponents;
+    private Collection $unitComponents;
 
     public function __construct()
     {
@@ -48,9 +50,7 @@ class Component
         return $this;
     }
 
-    /**
-     * @return Collection|requirement[]
-     */
+    /** @return Collection<int, Requirement> */
     public function getRequirements(): Collection
     {
         return $this->requirements;
@@ -72,9 +72,7 @@ class Component
         return $this;
     }
 
-    /**
-     * @return Collection|UnitComponent[]
-     */
+    /** @return Collection<int, UnitComponent> */
     public function getUnitComponents(): Collection
     {
         return $this->unitComponents;

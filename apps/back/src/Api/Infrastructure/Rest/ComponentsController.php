@@ -73,6 +73,7 @@ final class ComponentsController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    /** @return array<string, mixed> */
     private function serialize(Component $c): array
     {
         return [

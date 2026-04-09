@@ -107,6 +107,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    /** @return array<string, mixed> */
     private function serialize(Unit $u): array
     {
         return [

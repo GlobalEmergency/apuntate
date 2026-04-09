@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Alert;
 use GlobalEmergency\Apuntate\Entity\User;
 
+/** @extends ServiceEntityRepository<Alert> */
 class AlertRepository extends ServiceEntityRepository implements AlertRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -36,6 +37,7 @@ class AlertRepository extends ServiceEntityRepository implements AlertRepository
         return $this->find($id);
     }
 
+    /** @return Alert[] */
     public function findUnreadByUser(User $user): array
     {
         return $this->createQueryBuilder('a')
@@ -47,6 +49,7 @@ class AlertRepository extends ServiceEntityRepository implements AlertRepository
             ->getResult();
     }
 
+    /** @return Alert[] */
     public function findByUser(User $user): array
     {
         return $this->createQueryBuilder('a')

@@ -13,16 +13,18 @@ class Requirement
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
+    /** @var Collection<int, Component> */
     #[ORM\ManyToMany(targetEntity: Component::class, mappedBy: 'requirements')]
-    private $components;
+    private Collection $components;
 
+    /** @var Collection<int, User> */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'requirements')]
-    private $users;
+    private Collection $users;
 
     public function __construct()
     {
@@ -48,9 +50,7 @@ class Requirement
         return $this;
     }
 
-    /**
-     * @return Collection|Component[]
-     */
+    /** @return Collection<int, Component> */
     public function getComponents(): Collection
     {
         return $this->components;
@@ -75,9 +75,7 @@ class Requirement
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
+    /** @return Collection<int, User> */
     public function getUsers(): Collection
     {
         return $this->users;

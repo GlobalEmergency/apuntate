@@ -31,12 +31,15 @@ class Organization
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
+    /** @var Collection<int, OrganizationMember> */
     #[ORM\OneToMany(targetEntity: OrganizationMember::class, mappedBy: 'organization', cascade: ['persist'], orphanRemoval: true)]
     private Collection $members;
 
+    /** @var Collection<int, Service> */
     #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'organization')]
     private Collection $services;
 
+    /** @var Collection<int, Unit> */
     #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'organization')]
     private Collection $units;
 
@@ -89,6 +92,7 @@ class Organization
         return $this;
     }
 
+    /** @return Collection<int, OrganizationMember> */
     public function getMembers(): Collection
     {
         return $this->members;
@@ -104,11 +108,13 @@ class Organization
         return $this;
     }
 
+    /** @return Collection<int, Service> */
     public function getServices(): Collection
     {
         return $this->services;
     }
 
+    /** @return Collection<int, Unit> */
     public function getUnits(): Collection
     {
         return $this->units;

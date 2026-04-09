@@ -36,10 +36,12 @@ class Service
     #[ORM\Column(type: 'carbon')]
     private \DateTimeInterface $datePlace;
 
+    /** @var Collection<int, Unit> */
     #[ORM\ManyToMany(targetEntity: Unit::class, inversedBy: 'services')]
     #[MaxDepth(1)]
     private Collection $units;
 
+    /** @var Collection<int, Gap> */
     #[ORM\OneToMany(targetEntity: Gap::class, mappedBy: 'service', cascade: ['persist'])]
     #[MaxDepth(1)]
     private Collection $gaps;
@@ -110,9 +112,7 @@ class Service
         return $this;
     }
 
-    /**
-     * @return Unit[]|Collection
-     */
+    /** @return Collection<int, Unit> */
     public function getUnits(): Collection
     {
         return $this->units;
@@ -134,9 +134,7 @@ class Service
         return $this;
     }
 
-    /**
-     * @return Collection|Gap[]
-     */
+    /** @return Collection<int, Gap> */
     public function getGaps(): Collection
     {
         return $this->gaps;
@@ -155,7 +153,6 @@ class Service
     public function removeGap(Gap $gap): self
     {
         if ($this->gaps->removeElement($gap)) {
-            // set the owning side to null (unless already changed)
             if ($gap->getService() === $this) {
                 $gap->setService(null);
             }
@@ -166,6 +163,10 @@ class Service
 
     public function getDateEnd(): Carbon
     {
+        if (!$this->dateEnd instanceof Carbon) {
+            $this->dateEnd = Carbon::instance($this->dateEnd);
+        }
+
         return $this->dateEnd;
     }
 
@@ -176,14 +177,11 @@ class Service
         return $this;
     }
 
-    public function getDatePlace()
+    public function getDatePlace(): \DateTimeInterface
     {
         return $this->datePlace;
     }
 
-    /**
-     * @param mixed $datePlace
-     */
     public function setDatePlace(\DateTimeInterface $datePlace): self
     {
         $this->datePlace = $datePlace instanceof Carbon ? $datePlace : Carbon::instance($datePlace);
@@ -191,7 +189,7 @@ class Service
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

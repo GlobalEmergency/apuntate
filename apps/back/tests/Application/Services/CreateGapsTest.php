@@ -10,12 +10,13 @@ use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Entity\UnitComponent;
 use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CreateGapsTest extends TestCase
 {
     private CreateGaps $createGaps;
-    private UnitRepositoryInterface $unitRepository;
+    private MockObject&UnitRepositoryInterface $unitRepository;
 
     protected function setUp(): void
     {

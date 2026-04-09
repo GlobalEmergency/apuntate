@@ -8,14 +8,15 @@ use GlobalEmergency\Apuntate\Application\Services\RegisterOrganization;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterOrganizationTest extends TestCase
 {
-    private UserRepositoryInterface $userRepository;
-    private UserPasswordHasherInterface $passwordHasher;
-    private OrganizationRepositoryInterface $organizationRepository;
+    private MockObject&UserRepositoryInterface $userRepository;
+    private MockObject&UserPasswordHasherInterface $passwordHasher;
+    private MockObject&OrganizationRepositoryInterface $organizationRepository;
     private RegisterOrganization $useCase;
 
     protected function setUp(): void

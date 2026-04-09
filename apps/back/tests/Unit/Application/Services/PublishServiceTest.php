@@ -9,12 +9,13 @@ use GlobalEmergency\Apuntate\Application\Services\PublishService;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class PublishServiceTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
-    private NotifyNewService $notifyNewService;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
+    private MockObject&NotifyNewService $notifyNewService;
     private PublishService $useCase;
 
     protected function setUp(): void

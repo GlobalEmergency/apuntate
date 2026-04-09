@@ -5,14 +5,9 @@ namespace GlobalEmergency\Apuntate\Admin\Infrastructure\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use GlobalEmergency\Apuntate\Entity\Service;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GapsFixtures extends Fixture
 {
-    public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder,
-    ) {
-    }
     private ObjectManager $manager;
 
     public function load(ObjectManager $manager): void

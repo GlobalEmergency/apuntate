@@ -8,11 +8,12 @@ use GlobalEmergency\Apuntate\Application\Services\WithdrawFromService;
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class WithdrawFromServiceTest extends TestCase
 {
-    private GapRepositoryInterface $gapRepository;
+    private MockObject&GapRepositoryInterface $gapRepository;
     private WithdrawFromService $useCase;
 
     protected function setUp(): void

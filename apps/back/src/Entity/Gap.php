@@ -25,7 +25,7 @@ class Gap
 
     #[ORM\ManyToOne(targetEntity: UnitComponent::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private $unitComponent;
+    private ?UnitComponent $unitComponent = null;
 
     public function __construct()
     {

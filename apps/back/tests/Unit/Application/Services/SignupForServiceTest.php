@@ -12,11 +12,12 @@ use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\UnitComponent;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class SignupForServiceTest extends TestCase
 {
-    private GapRepositoryInterface $gapRepository;
+    private MockObject&GapRepositoryInterface $gapRepository;
     private SignupForService $useCase;
 
     protected function setUp(): void

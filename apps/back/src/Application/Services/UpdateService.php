@@ -56,9 +56,7 @@ final class UpdateService
             $service->setStatusFromString($status);
         }
 
-        $effectiveStart = $service->getDateStart();
-        $effectiveEnd = $service->getDateEnd();
-        if (null !== $effectiveStart && null !== $effectiveEnd && $effectiveEnd <= $effectiveStart) {
+        if ($service->getDateEnd() <= $service->getDateStart()) {
             throw new \DomainException('End date must be after start date.');
         }
 

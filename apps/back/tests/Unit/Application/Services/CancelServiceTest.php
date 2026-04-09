@@ -8,11 +8,12 @@ use GlobalEmergency\Apuntate\Application\Services\CancelService;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CancelServiceTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
     private CancelService $useCase;
 
     protected function setUp(): void

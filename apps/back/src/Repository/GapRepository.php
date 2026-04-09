@@ -10,6 +10,8 @@ use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\User;
 
 /**
+ * @extends ServiceEntityRepository<Gap>
+ *
  * @method Gap|null find($id, $lockMode = null, $lockVersion = null)
  * @method Gap|null findOneBy(array $criteria, array $orderBy = null)
  * @method Gap[]    findAll()
@@ -43,6 +45,7 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
         $this->getEntityManager()->flush();
     }
 
+    /** @return Gap[] */
     public function findAvailableByService(string $serviceId): array
     {
         return $this->createQueryBuilder('g')
@@ -53,6 +56,7 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
             ->getResult();
     }
 
+    /** @return Gap[] */
     public function findByService(string $serviceId): array
     {
         return $this->createQueryBuilder('g')

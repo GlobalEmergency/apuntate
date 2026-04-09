@@ -15,6 +15,7 @@ final class CreateGaps
     ) {
     }
 
+    /** @param array<string, int> $holes */
     public function execute(Service $service, array $holes): Service
     {
         foreach ($holes as $unitId => $amount) {

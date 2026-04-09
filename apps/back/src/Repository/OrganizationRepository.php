@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Organization;
 
+/** @extends ServiceEntityRepository<Organization> */
 class OrganizationRepository extends ServiceEntityRepository implements OrganizationRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

@@ -20,6 +20,7 @@ final class RegisterOrganization
     ) {
     }
 
+    /** @return array{user: User, organization: Organization} */
     public function execute(string $orgName, string $name, string $email, string $plainPassword): array
     {
         if ('' === trim($orgName)) {

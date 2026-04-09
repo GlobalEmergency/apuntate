@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\User;
 
 /**
+ * @extends ServiceEntityRepository<User>
+ *
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()

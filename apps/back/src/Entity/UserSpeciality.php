@@ -15,21 +15,21 @@ class UserSpeciality
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: Speciality::class, inversedBy: 'userSpecialities')]
     #[ORM\JoinColumn(nullable: false)]
-    private $speciality;
+    private ?Speciality $speciality = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userSpecialities')]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
     #[ORM\Column(type: 'date')]
-    private $dateStart;
+    private \DateTimeInterface $dateStart;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private $dateEnd;
+    private ?\DateTimeInterface $dateEnd = null;
 
     public function __construct()
     {
@@ -41,12 +41,12 @@ class UserSpeciality
         return $this->id;
     }
 
-    public function getSpeciality(): ?speciality
+    public function getSpeciality(): ?Speciality
     {
         return $this->speciality;
     }
 
-    public function setSpeciality(?speciality $speciality): self
+    public function setSpeciality(?Speciality $speciality): self
     {
         $this->speciality = $speciality;
 

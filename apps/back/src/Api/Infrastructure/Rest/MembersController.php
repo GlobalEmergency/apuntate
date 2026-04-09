@@ -85,6 +85,7 @@ final class MembersController extends AbstractController
         return new JsonResponse($this->serialize($member));
     }
 
+    /** @return array<string, mixed> */
     private function serialize(OrganizationMember $m): array
     {
         $user = $m->getUser();

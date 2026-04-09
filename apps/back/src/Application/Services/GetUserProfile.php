@@ -14,6 +14,7 @@ final class GetUserProfile
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function execute(User $user): array
     {
         $gaps = $this->gapRepository->findCompletedByUser($user);
@@ -33,7 +34,7 @@ final class GetUserProfile
 
                 $start = $service->getDateStart();
                 $end = $service->getDateEnd();
-                if (null !== $start && null !== $end) {
+                if ($start !== $end) {
                     $diff = $end->getTimestamp() - $start->getTimestamp();
                     $totalHours += max(0, $diff / 3600);
                 }

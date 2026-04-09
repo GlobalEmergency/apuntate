@@ -10,6 +10,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Service;
 
 /**
+ * @extends ServiceEntityRepository<Service>
+ *
  * @method Service|null find($id, $lockMode = null, $lockVersion = null)
  * @method Service|null findOneBy(array $criteria, array $orderBy = null)
  * @method Service[]    findAll()
@@ -39,6 +41,7 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
         return $this->find($id);
     }
 
+    /** @return Service[] */
     public function findUpcoming(): array
     {
         return $this->createQueryBuilder('s')
@@ -49,6 +52,7 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
             ->getResult();
     }
 
+    /** @return Service[] */
     public function findBetweenDates(\DateTimeInterface $start, \DateTimeInterface $end): array
     {
         return $this->createQueryBuilder('s')
