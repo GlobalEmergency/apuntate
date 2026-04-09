@@ -18,10 +18,5 @@ let envConfigFile = `export const environment = {
 `;
 
 
-if( process.env["APP_ENV"] == "dev" ){
-  envConfigFile += `import 'zone.js/dist/zone-error';`;
-}
-
-
 fs.writeFileSync(targetPath, envConfigFile, 'utf8');
 console.log(`Output generated at ${targetPath}`);
