@@ -7,11 +7,12 @@ namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 use GlobalEmergency\Apuntate\Application\Services\CreateService;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CreateServiceTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
     private CreateService $useCase;
 
     protected function setUp(): void

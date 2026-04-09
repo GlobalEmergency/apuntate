@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Unit;
 
+/** @extends ServiceEntityRepository<Unit> */
 class UnitRepository extends ServiceEntityRepository implements UnitRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -18,6 +19,12 @@ class UnitRepository extends ServiceEntityRepository implements UnitRepositoryIn
     public function findById(string $id): ?Unit
     {
         return $this->find($id);
+    }
+
+    /** @return Unit[] */
+    public function findAll(): array
+    {
+        return parent::findAll();
     }
 
     public function save(Unit $unit): void

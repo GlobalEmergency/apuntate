@@ -10,6 +10,8 @@ use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\User;
 
 /**
+ * @extends ServiceEntityRepository<Gap>
+ *
  * @method Gap|null find($id, $lockMode = null, $lockVersion = null)
  * @method Gap|null findOneBy(array $criteria, array $orderBy = null)
  * @method Gap[]    findAll()
@@ -43,16 +45,36 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
         $this->getEntityManager()->flush();
     }
 
+    /** @return Gap[] */
     public function findAvailableByService(string $serviceId): array
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.service = :serviceId')
             ->andWhere('g.user IS NULL')
             ->setParameter('serviceId', $serviceId)
+            ->leftJoin('g.unitComponent', 'uc')
+            ->addSelect('uc')
+            ->leftJoin('uc.component', 'c')
+            ->addSelect('c')
+            ->leftJoin('c.requirements', 'r')
+            ->addSelect('r')
             ->getQuery()
             ->getResult();
     }
 
+    public function findFirstAvailableForUpdate(string $serviceId): ?Gap
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.service = :serviceId')
+            ->andWhere('g.user IS NULL')
+            ->setParameter('serviceId', $serviceId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)
+            ->getOneOrNullResult();
+    }
+
+    /** @return Gap[] */
     public function findByService(string $serviceId): array
     {
         return $this->createQueryBuilder('g')

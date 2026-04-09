@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/components', name: 'api_components_')]
 final class ComponentsController extends AbstractController
@@ -26,6 +27,7 @@ final class ComponentsController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, CreateRole $createRole): JsonResponse
     {
@@ -43,6 +45,7 @@ final class ComponentsController extends AbstractController
         return new JsonResponse($this->serialize($component), Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{componentId}', name: 'update', methods: ['PUT'])]
     public function update(string $componentId, Request $request, UpdateRole $updateRole): JsonResponse
     {
@@ -61,6 +64,7 @@ final class ComponentsController extends AbstractController
         return new JsonResponse($this->serialize($component));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{componentId}', name: 'delete', methods: ['DELETE'])]
     public function delete(string $componentId, DeleteRole $deleteRole): JsonResponse
     {
@@ -73,6 +77,7 @@ final class ComponentsController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    /** @return array<string, mixed> */
     private function serialize(Component $c): array
     {
         return [

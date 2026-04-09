@@ -17,37 +17,42 @@ use Symfony\Component\Uid\Uuid;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Timestampable;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $surname;
+    private string $surname;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private $email;
+    private string $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $password;
-
-    #[ORM\Column(type: 'date')]
-    private $dateStart;
+    private string $password;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private $dateEnd;
+    private ?\DateTimeInterface $dateStart = null;
 
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTime $dateEnd = null;
+
+    /** @var array<string> */
     #[ORM\Column(type: 'array')]
-    private $roles = [];
+    private array $roles = [];
 
+    /** @var Collection<int, Requirement> */
     #[ORM\ManyToMany(targetEntity: Requirement::class, inversedBy: 'users')]
-    private $requirements;
+    private Collection $requirements;
 
+    /** @var Collection<int, Gap> */
     #[ORM\OneToMany(targetEntity: Gap::class, mappedBy: 'user')]
-    private $gaps;
+    private Collection $gaps;
 
+    /** @var Collection<int, OrganizationMember> */
     #[ORM\OneToMany(targetEntity: OrganizationMember::class, mappedBy: 'user', cascade: ['persist'])]
     private Collection $memberships;
 
@@ -143,6 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->roles;
     }
 
+    /** @param array<string> $roles */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -150,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->email;
     }
@@ -159,15 +165,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
-    /**
-     * @return Collection|requirement[]
-     */
+    /** @return Collection<int, Requirement> */
     public function getRequirements(): Collection
     {
         return $this->requirements;
     }
 
-    public function addRequirement(requirement $requirement): self
+    public function addRequirement(Requirement $requirement): self
     {
         if (!$this->requirements->contains($requirement)) {
             $this->requirements[] = $requirement;
@@ -176,16 +180,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeRequirement(requirement $requirement): self
+    public function removeRequirement(Requirement $requirement): self
     {
         $this->requirements->removeElement($requirement);
 
         return $this;
     }
 
-    /**
-     * @return Collection|Gap[]
-     */
+    /** @return Collection<int, Gap> */
     public function getGaps(): Collection
     {
         return $this->gaps;
@@ -218,11 +220,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getEmail();
     }
 
+    /** @return Collection<int, OrganizationMember> */
     public function getMemberships(): Collection
     {
         return $this->memberships;
     }
 
+    /** @return Organization[] */
     public function getOrganizations(): array
     {
         return $this->memberships->map(fn (OrganizationMember $m) => $m->getOrganization())->toArray();

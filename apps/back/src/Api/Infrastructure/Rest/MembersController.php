@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use GlobalEmergency\Apuntate\Application\Services\ChangeMemberRole;
 use GlobalEmergency\Apuntate\Application\Services\InviteMember;
 use GlobalEmergency\Apuntate\Application\Services\ListMembers;
 use GlobalEmergency\Apuntate\Application\Services\RemoveMember;
 use GlobalEmergency\Apuntate\Entity\OrganizationMember;
+use GlobalEmergency\Apuntate\Security\OrganizationVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +23,8 @@ final class MembersController extends AbstractController
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(string $organizationId, ListMembers $listMembers): JsonResponse
     {
+        $this->denyAccessUnlessGranted(OrganizationVoter::VIEW, $organizationId);
+
         try {
             $members = $listMembers->execute($organizationId);
         } catch (\DomainException $e) {
@@ -33,6 +37,8 @@ final class MembersController extends AbstractController
     #[Route('', name: 'invite', methods: ['POST'])]
     public function invite(string $organizationId, Request $request, InviteMember $inviteMember): JsonResponse
     {
+        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organizationId);
+
         $data = json_decode($request->getContent(), true) ?? [];
 
         try {
@@ -44,8 +50,10 @@ final class MembersController extends AbstractController
                 $data['role'] ?? OrganizationMember::ROLE_MEMBER,
                 $data['password'] ?? null,
             );
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (UniqueConstraintViolationException) {
+            return new JsonResponse(['error' => 'This user is already a member of the organization.'], Response::HTTP_CONFLICT);
         }
 
         return new JsonResponse($this->serialize($member), Response::HTTP_CREATED);
@@ -54,6 +62,8 @@ final class MembersController extends AbstractController
     #[Route('/{userId}', name: 'remove', methods: ['DELETE'])]
     public function remove(string $organizationId, string $userId, RemoveMember $removeMember): JsonResponse
     {
+        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organizationId);
+
         try {
             $removeMember->execute($organizationId, $userId);
         } catch (\DomainException $e) {
@@ -70,6 +80,8 @@ final class MembersController extends AbstractController
         Request $request,
         ChangeMemberRole $changeMemberRole,
     ): JsonResponse {
+        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organizationId);
+
         $data = json_decode($request->getContent(), true) ?? [];
 
         try {
@@ -85,6 +97,7 @@ final class MembersController extends AbstractController
         return new JsonResponse($this->serialize($member));
     }
 
+    /** @return array<string, mixed> */
     private function serialize(OrganizationMember $m): array
     {
         $user = $m->getUser();

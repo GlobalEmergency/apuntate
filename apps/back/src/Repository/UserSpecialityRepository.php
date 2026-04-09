@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\UserSpeciality;
 
 /**
+ * @extends ServiceEntityRepository<UserSpeciality>
+ *
  * @method UserSpeciality|null find($id, $lockMode = null, $lockVersion = null)
  * @method UserSpeciality|null findOneBy(array $criteria, array $orderBy = null)
  * @method UserSpeciality[]    findAll()

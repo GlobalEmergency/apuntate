@@ -5,14 +5,9 @@ namespace GlobalEmergency\Apuntate\Admin\Infrastructure\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use GlobalEmergency\Apuntate\Entity\Service;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GapsFixtures extends Fixture
 {
-    public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder,
-    ) {
-    }
     private ObjectManager $manager;
 
     public function load(ObjectManager $manager): void
@@ -30,7 +25,7 @@ class GapsFixtures extends Fixture
     {
         $service = new Service();
         $service->setId(\Symfony\Component\Uid\Uuid::v4());
-        $service->setStatus('active');
+        $service->setStatus(\GlobalEmergency\Apuntate\Entity\ServiceStatus::CONFIRMED);
 
         $service->setName('Test Service '.rand(1, 100));
         $service->setDescription('Test Description');
@@ -41,7 +36,7 @@ class GapsFixtures extends Fixture
         $date->modify('+'.rand(3, 12).' hours');
         $service->setDateEnd(clone $date);
 
-        $service->setDatePlace(clone $service->getDateStart()->modify('-'.rand(30, 90).' minutes'));
+        $service->setDatePlace((clone $service->getDateStart())->modify('-'.rand(30, 90).' minutes'));
         $this->manager->persist($service);
 
         return $service;

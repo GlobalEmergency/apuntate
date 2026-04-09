@@ -8,11 +8,12 @@ use GlobalEmergency\Apuntate\Application\Services\MarkAlertAsRead;
 use GlobalEmergency\Apuntate\Entity\Alert;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\AlertRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class MarkAlertAsReadTest extends TestCase
 {
-    private AlertRepositoryInterface $alertRepository;
+    private MockObject&AlertRepositoryInterface $alertRepository;
     private MarkAlertAsRead $useCase;
 
     protected function setUp(): void

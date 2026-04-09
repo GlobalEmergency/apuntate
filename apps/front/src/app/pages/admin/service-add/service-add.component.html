@@ -14,7 +14,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Categor&iacute;a</mat-label>
       <mat-select formControlName="category">
-        <mat-option *ngFor="let category of ServiceCategory | keyvalue" [value]="category.key">
+        <mat-option *ngFor="let category of ServiceCategory | keyvalue" [value]="category.value">
           {{ category.value }}
         </mat-option>
       </mat-select>
@@ -23,7 +23,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Prioridad</mat-label>
       <mat-select formControlName="priority">
-        <mat-option *ngFor="let priority of ServicePriority | keyvalue" [value]="priority.key">
+        <mat-option *ngFor="let priority of ServicePriority | keyvalue" [value]="priority.value">
           {{ priority.value }}
         </mat-option>
       </mat-select>
@@ -32,7 +32,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Tipo</mat-label>
       <mat-select formControlName="type">
-        <mat-option *ngFor="let type of ServiceType | keyvalue" [value]="type.key">
+        <mat-option *ngFor="let type of ServiceType | keyvalue" [value]="type.value">
           {{ type.value }}
         </mat-option>
       </mat-select>

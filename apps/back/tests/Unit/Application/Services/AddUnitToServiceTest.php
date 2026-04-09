@@ -11,12 +11,13 @@ use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AddUnitToServiceTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
-    private UnitRepositoryInterface $unitRepository;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
+    private MockObject&UnitRepositoryInterface $unitRepository;
     private CreateGaps $createGaps;
     private AddUnitToService $useCase;
 
@@ -24,7 +25,7 @@ class AddUnitToServiceTest extends TestCase
     {
         $this->serviceRepository = $this->createMock(ServiceRepositoryInterface::class);
         $this->unitRepository = $this->createMock(UnitRepositoryInterface::class);
-        $this->createGaps = new CreateGaps($this->unitRepository);
+        $this->createGaps = new CreateGaps();
         $this->useCase = new AddUnitToService(
             $this->serviceRepository,
             $this->unitRepository,

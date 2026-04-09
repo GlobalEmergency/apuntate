@@ -81,7 +81,7 @@ export class ServiceEditComponent implements OnInit {
       next: (service) => {
         this.service = service;
         this.patchForm(service);
-        this.units = (service as any).units || [];
+        this.units = service.units || [];
         this.loadGaps(id);
         this.loading = false;
       },
@@ -113,11 +113,17 @@ export class ServiceEditComponent implements OnInit {
       next: (gaps) => {
         this.gaps = gaps;
       },
+      error: () => {
+        this.message = { text: 'Error al cargar los huecos.', type: 'error' };
+      },
     });
   }
 
   private loadAvailableUnits(): void {
     this.serviceRepository.getUnits().subscribe({
+      error: () => {
+        this.message = { text: 'Error al cargar las unidades disponibles.', type: 'error' };
+      },
       next: (units) => {
         this.availableUnits = units;
         this.availableUnitComponents = [];

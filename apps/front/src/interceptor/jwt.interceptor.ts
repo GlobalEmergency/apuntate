@@ -22,37 +22,25 @@ export class JwtInterceptor implements HttpInterceptor {
 
   // Intercept every HTTP call
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!this.isInBlockedList(request.url)) {
+    if (!this.requiresAuthToken(request.url)) {
       return next.handle(request);
     }
 
     return next.handle(this.addToken(request)).pipe(
       catchError((err) => {
-        if (err instanceof HttpErrorResponse) {
-          switch (err.status) {
-            case 400:
-              return this.handle400Error(err);
-            case 401:
-              return this.handle401Error(request, next);
-            default:
-              return throwError(err);
-          }
-        } else {
-          return throwError(err);
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          return this.handle401Error(request, next);
         }
+        return throwError(() => err);
       }),
     );
   }
 
-  // Filter out URLs where you don't want to add the token!
-  private isInBlockedList(url: string): boolean {
+  private requiresAuthToken(url: string): boolean {
     return url.startsWith(environment.api_url) && !url.startsWith(environment.api_url + '/auth');
   }
 
-  // Add our current access token from the service if present
   private addToken(req: HttpRequest<any>) {
-    // // debugger;
-    // console.log("Token", this.authenticationService.currentAccessToken);
     if (this.authenticationService.currentAccessToken) {
       return req.clone({
         headers: new HttpHeaders({
@@ -62,21 +50,6 @@ export class JwtInterceptor implements HttpInterceptor {
     } else {
       return req;
     }
-  }
-
-  // We are not just authorized, we couldn't refresh token
-  // or something else along the caching went wrong!
-  private async handle400Error(err: any) {
-    // Potentially check the exact error reason for the 400
-    // then log out the user automatically
-    // const toast = await this.toastCtrl.create({
-    //   message: 'Logged out due to authentication mismatch',
-    //   duration: 2000
-    // });
-    // toast.present();
-    console.error('Logged out due to authentication mismatch', err);
-    this.authenticationService.logout();
-    return of(null);
   }
 
   // Indicates our access token is invalid, try to load a new one

@@ -14,6 +14,7 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
     ) {
     }
 
+    /** @return array<string, mixed>|\ArrayObject<string, mixed> */
     public function normalize($object, ?string $format = null, array $context = []): float|array|\ArrayObject|bool|int|string|null
     {
         $data = [

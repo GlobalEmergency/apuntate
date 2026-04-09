@@ -14,7 +14,9 @@ interface ServiceRepositoryInterface
 
     public function findById(string $id): ?Service;
 
+    /** @return Service[] */
     public function findUpcoming(): array;
 
+    /** @return Service[] */
     public function findBetweenDates(\DateTimeInterface $start, \DateTimeInterface $end): array;
 }

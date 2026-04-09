@@ -17,19 +17,21 @@ class Speciality
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $abbreviation;
+    private string $abbreviation;
 
+    /** @var Collection<int, UserSpeciality> */
     #[ORM\OneToMany(targetEntity: UserSpeciality::class, mappedBy: 'speciality', orphanRemoval: true)]
-    private $userSpecialities;
+    private Collection $userSpecialities;
 
+    /** @var Collection<int, Unit> */
     #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'speciality')]
-    private $units;
+    private Collection $units;
 
     public function __construct()
     {
@@ -67,9 +69,7 @@ class Speciality
         return $this;
     }
 
-    /**
-     * @return Collection|UserSpeciality[]
-     */
+    /** @return Collection<int, UserSpeciality> */
     public function getUserSpecialities(): Collection
     {
         return $this->userSpecialities;
@@ -97,9 +97,7 @@ class Speciality
         return $this;
     }
 
-    /**
-     * @return Collection|Unit[]
-     */
+    /** @return Collection<int, Unit> */
     public function getUnits(): Collection
     {
         return $this->units;

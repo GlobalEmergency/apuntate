@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/units', name: 'api_units_')]
 final class UnitsController extends AbstractController
@@ -28,6 +29,7 @@ final class UnitsController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, RegisterUnit $registerUnit): JsonResponse
     {
@@ -46,6 +48,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse($this->serialize($unit), Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{unitId}', name: 'update', methods: ['PUT'])]
     public function update(string $unitId, Request $request, UpdateUnit $updateUnit): JsonResponse
     {
@@ -65,6 +68,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse($this->serialize($unit));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{unitId}', name: 'delete', methods: ['DELETE'])]
     public function delete(string $unitId, DecommissionUnit $decommissionUnit): JsonResponse
     {
@@ -77,6 +81,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{unitId}/roles', name: 'assign_role', methods: ['POST'])]
     public function assignRole(string $unitId, Request $request, AssignRoleToUnit $assignRole): JsonResponse
     {
@@ -95,6 +100,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse(['id' => $uc->getId()->toRfc4122()], Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{unitId}/roles/{unitComponentId}', name: 'unassign_role', methods: ['DELETE'])]
     public function unassignRole(string $unitId, string $unitComponentId, UnassignRoleFromUnit $unassignRole): JsonResponse
     {
@@ -107,6 +113,7 @@ final class UnitsController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    /** @return array<string, mixed> */
     private function serialize(Unit $u): array
     {
         return [

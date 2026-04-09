@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/services', name: 'api_services_')]
@@ -55,6 +56,7 @@ final class ServicesController extends AbstractController
         return new JsonResponse(CalendarTransform::transformServices($services));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, CreateService $createService): JsonResponse
     {
@@ -68,7 +70,7 @@ final class ServicesController extends AbstractController
                 datePlace: new \DateTimeImmutable($data['datePlace'] ?? 'now'),
                 description: $data['description'] ?? null,
             );
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\DateMalformedStringException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
@@ -95,6 +97,7 @@ final class ServicesController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}', name: 'update', methods: ['PUT'])]
     public function update(string $serviceId, Request $request, UpdateService $updateService): JsonResponse
     {
@@ -110,7 +113,7 @@ final class ServicesController extends AbstractController
                 datePlace: isset($data['datePlace']) ? new \DateTimeImmutable($data['datePlace']) : null,
                 status: $data['status'] ?? null,
             );
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\DateMalformedStringException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
@@ -122,6 +125,7 @@ final class ServicesController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}/publish', name: 'publish', methods: ['POST'])]
     public function publish(string $serviceId, PublishService $publishService): JsonResponse
     {
@@ -137,6 +141,7 @@ final class ServicesController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}', name: 'cancel', methods: ['DELETE'])]
     public function cancel(string $serviceId, CancelService $cancelService): JsonResponse
     {

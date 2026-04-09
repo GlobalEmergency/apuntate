@@ -34,7 +34,7 @@ final class AddUnitToService
         }
 
         $service->addUnit($unit);
-        $this->createGaps->execute($service, [$unitId => $unit->componentsMax()]);
+        $this->createGaps->executeForUnit($service, $unit);
         $this->serviceRepository->save($service);
 
         return $service;

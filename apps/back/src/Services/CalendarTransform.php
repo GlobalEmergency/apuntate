@@ -8,6 +8,11 @@ use GlobalEmergency\Apuntate\Entity\Service;
 
 final class CalendarTransform
 {
+    /**
+     * @param Service[] $services
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public static function transformServices(array $services): array
     {
         $events = [];
@@ -18,6 +23,7 @@ final class CalendarTransform
         return $events;
     }
 
+    /** @return array<string, mixed> */
     public static function transformService(Service $service): array
     {
         return [

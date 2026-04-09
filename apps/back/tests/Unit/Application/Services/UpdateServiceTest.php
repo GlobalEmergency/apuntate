@@ -8,11 +8,12 @@ use GlobalEmergency\Apuntate\Application\Services\UpdateService;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class UpdateServiceTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
     private UpdateService $useCase;
 
     protected function setUp(): void

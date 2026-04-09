@@ -14,12 +14,13 @@ use GlobalEmergency\Apuntate\Entity\UnitComponent;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class RemoveGapTest extends TestCase
 {
-    private ServiceRepositoryInterface $serviceRepository;
-    private GapRepositoryInterface $gapRepository;
+    private MockObject&ServiceRepositoryInterface $serviceRepository;
+    private MockObject&GapRepositoryInterface $gapRepository;
     private RemoveGap $useCase;
 
     protected function setUp(): void

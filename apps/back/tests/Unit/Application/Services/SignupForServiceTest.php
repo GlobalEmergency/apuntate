@@ -9,14 +9,16 @@ use GlobalEmergency\Apuntate\Entity\Component;
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\Requirement;
 use GlobalEmergency\Apuntate\Entity\Service;
+use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Entity\UnitComponent;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class SignupForServiceTest extends TestCase
 {
-    private GapRepositoryInterface $gapRepository;
+    private MockObject&GapRepositoryInterface $gapRepository;
     private SignupForService $useCase;
 
     protected function setUp(): void
@@ -32,7 +34,7 @@ class SignupForServiceTest extends TestCase
         $user->setEmail('john@test.com');
 
         $gap = new Gap();
-        $service = new Service();
+        $service = $this->createConfirmedService();
         $gap->setService($service);
 
         $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
@@ -50,10 +52,11 @@ class SignupForServiceTest extends TestCase
         $user->setEmail('john@test.com');
 
         $gap = new Gap();
-        $service = new Service();
+        $service = $this->createConfirmedService();
         $gap->setService($service);
 
         $this->gapRepository->method('findAvailableByService')->willReturn([$gap]);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
 
         $result = $this->useCase->execute($user, $service->getId()->toRfc4122());
@@ -68,6 +71,8 @@ class SignupForServiceTest extends TestCase
         $existingUser->setEmail('existing@test.com');
 
         $gap = new Gap();
+        $service = $this->createConfirmedService();
+        $gap->setService($service);
         $gap->setUser($existingUser);
 
         $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
@@ -111,6 +116,8 @@ class SignupForServiceTest extends TestCase
 
         $gap = new Gap();
         $gap->setUnitComponent($unitComponent);
+        $service = $this->createConfirmedService();
+        $gap->setService($service);
 
         $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
@@ -139,6 +146,8 @@ class SignupForServiceTest extends TestCase
 
         $gap = new Gap();
         $gap->setUnitComponent($unitComponent);
+        $service = $this->createConfirmedService();
+        $gap->setService($service);
 
         $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
@@ -151,5 +160,17 @@ class SignupForServiceTest extends TestCase
         $result = $this->useCase->execute($user, 'service-id', $gap->getId()->toRfc4122());
 
         $this->assertSame($user, $result->getUser());
+    }
+
+    private function createConfirmedService(): Service
+    {
+        $service = new Service();
+        $service->setName('Test Service');
+        $service->setDateStart(new \DateTimeImmutable('2026-05-01 09:00'));
+        $service->setDateEnd(new \DateTimeImmutable('2026-05-01 14:00'));
+        $service->setDatePlace(new \DateTimeImmutable('2026-05-01 08:00'));
+        $service->setStatus(ServiceStatus::CONFIRMED);
+
+        return $service;
     }
 }

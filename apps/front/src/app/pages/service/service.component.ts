@@ -55,6 +55,7 @@ export class ServiceComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.message = { text: 'Error al cargar las plazas.', type: 'error' };
       },
     });
   }

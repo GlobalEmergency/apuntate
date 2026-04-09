@@ -15,24 +15,26 @@ class Unit
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $identifier;
+    private string $identifier;
 
     #[ORM\ManyToOne(targetEntity: Speciality::class, inversedBy: 'units')]
     #[MaxDepth(1)]
-    private ?Speciality $speciality;
+    private ?Speciality $speciality = null;
 
+    /** @var Collection<int, Service> */
     #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'units')]
     #[MaxDepth(1)]
-    private $services;
+    private Collection $services;
 
+    /** @var Collection<int, UnitComponent> */
     #[ORM\OneToMany(targetEntity: UnitComponent::class, mappedBy: 'unit')]
-    private $unitComponents;
+    private Collection $unitComponents;
 
     #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'units')]
     #[ORM\JoinColumn(nullable: true)]
@@ -45,12 +47,12 @@ class Unit
         $this->unitComponents = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,7 +66,7 @@ class Unit
 
     public function getIdentifier(): string
     {
-        return (is_null($this->identifier)) ? $this->getName() : $this->identifier;
+        return $this->identifier;
     }
 
     public function setIdentifier(string $identifier): self
@@ -86,9 +88,7 @@ class Unit
         return $this;
     }
 
-    /**
-     * @return Collection|Service[]
-     */
+    /** @return Collection<int, Service> */
     public function getServices(): Collection
     {
         return $this->services;
@@ -113,14 +113,12 @@ class Unit
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getIdentifier();
     }
 
-    /**
-     * @return Collection|UnitComponent[]
-     */
+    /** @return Collection<int, UnitComponent> */
     public function getUnitComponents(): Collection
     {
         return $this->unitComponents;

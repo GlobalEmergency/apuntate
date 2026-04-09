@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Application\Services;
 
+use Carbon\Carbon;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
 
@@ -14,6 +15,7 @@ final class GetUserProfile
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function execute(User $user): array
     {
         $gaps = $this->gapRepository->findCompletedByUser($user);
@@ -31,12 +33,9 @@ final class GetUserProfile
             if (!isset($totalServices[$serviceId])) {
                 $totalServices[$serviceId] = true;
 
-                $start = $service->getDateStart();
-                $end = $service->getDateEnd();
-                if (null !== $start && null !== $end) {
-                    $diff = $end->getTimestamp() - $start->getTimestamp();
-                    $totalHours += max(0, $diff / 3600);
-                }
+                $start = Carbon::instance($service->getDateStart());
+                $end = Carbon::instance($service->getDateEnd());
+                $totalHours += max(0, $start->diffInHours($end));
             }
         }
 
@@ -51,6 +50,15 @@ final class GetUserProfile
                 'totalServices' => \count($totalServices),
                 'totalHours' => round($totalHours, 1),
             ],
+            'organizations' => array_map(fn ($m) => [
+                'id' => $m->getOrganization()->getId()->toRfc4122(),
+                'name' => $m->getOrganization()->getName(),
+                'role' => $m->getRole(),
+            ], $user->getMemberships()->toArray()),
+            'requirements' => array_map(fn ($r) => [
+                'id' => $r->getId()->toRfc4122(),
+                'name' => $r->getName(),
+            ], $user->getRequirements()->toArray()),
         ];
     }
 }

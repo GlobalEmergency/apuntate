@@ -11,6 +11,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
 import { SpinnerOverlayComponent } from '../../../components/atoms/spinner-overlay/spinner-overlay.component';
 import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
+import { AdminCrudBase } from '../admin-crud.base';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-units-page',
@@ -31,15 +33,10 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   templateUrl: './units-page.component.html',
   styleUrls: ['./units-page.component.scss'],
 })
-export class UnitsPageComponent implements OnInit {
+export class UnitsPageComponent extends AdminCrudBase implements OnInit {
   units: any[] = [];
   specialities: any[] = [];
   roles: any[] = [];
-  loading = true;
-  saving = false;
-  message: { text: string; type: 'success' | 'error' } | null = null;
-
-  showForm = false;
   editingUnit: any = null;
   formName = '';
   formIdentifier = '';
@@ -49,31 +46,30 @@ export class UnitsPageComponent implements OnInit {
   newRoleComponentId = '';
   newRoleQuantity = 1;
 
-  constructor(private adminRepo: AdminRepository) {}
+  constructor(private adminRepo: AdminRepository) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadAll();
   }
 
-  private loadAll(): void {
+  loadAll(): void {
     this.loading = true;
-    this.adminRepo.listUnits().subscribe({
-      next: (units) => {
+    forkJoin({
+      units: this.adminRepo.listUnits(),
+      specialities: this.adminRepo.listSpecialities(),
+      roles: this.adminRepo.listRoles(),
+    }).subscribe({
+      next: ({ units, specialities, roles }) => {
         this.units = units;
+        this.specialities = specialities;
+        this.roles = roles;
         this.loading = false;
       },
       error: () => {
         this.loading = false;
-      },
-    });
-    this.adminRepo.listSpecialities().subscribe({
-      next: (s) => {
-        this.specialities = s;
-      },
-    });
-    this.adminRepo.listRoles().subscribe({
-      next: (r) => {
-        this.roles = r;
+        this.message = { text: 'Error al cargar los datos.', type: 'error' };
       },
     });
   }
@@ -171,17 +167,5 @@ export class UnitsPageComponent implements OnInit {
         this.onError(err);
       },
     });
-  }
-
-  private onSuccess(msg: string): void {
-    this.saving = false;
-    this.showForm = false;
-    this.message = { text: msg, type: 'success' };
-    this.loadAll();
-  }
-
-  private onError(err: any): void {
-    this.saving = false;
-    this.message = { text: err.error?.error || 'An error occurred.', type: 'error' };
   }
 }

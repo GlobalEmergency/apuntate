@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { Service } from '../../../../domain/entities/Service';
 
 @Component({
@@ -6,6 +6,7 @@ import { Service } from '../../../../domain/entities/Service';
   selector: 'app-service-table',
   templateUrl: './service-table.component.html',
   styleUrls: ['./service-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceTableComponent {
   displayedColumns = ['date', 'name', 'status'];

@@ -11,16 +11,16 @@ class UnitComponent
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    private $id;
+    private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: Unit::class, inversedBy: 'unitComponents')]
-    private $unit;
+    private ?Unit $unit = null;
 
     #[ORM\Column(type: 'integer')]
-    private $quantity = 1;
+    private int $quantity = 1;
 
     #[ORM\ManyToOne(targetEntity: Component::class, inversedBy: 'unitComponents')]
-    private $component;
+    private ?Component $component = null;
 
     public function __construct()
     {

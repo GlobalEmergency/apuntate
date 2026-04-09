@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,8 +21,9 @@ import { FeedbackMessageComponent } from '../../../components/atoms/feedback-mes
 
 @Component({
   selector: 'app-service-add',
-  templateUrl: './serviceAdd.component.html',
-  styleUrls: ['./serviceAdd.component.scss'],
+  standalone: true,
+  templateUrl: './service-add.component.html',
+  styleUrls: ['./service-add.component.scss'],
   imports: [
     MatInputModule,
     MatIconModule,
@@ -37,8 +38,7 @@ import { FeedbackMessageComponent } from '../../../components/atoms/feedback-mes
   ],
 })
 export class ServiceAddComponent implements OnInit {
-  @Input() service!: Service;
-
+  service!: Service;
   serviceForm!: FormGroup<ServiceForm>;
   message: { text: string; type: 'success' | 'error' } | null = null;
 
@@ -48,22 +48,20 @@ export class ServiceAddComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.service) {
-      this.service = new Service(
-        uuidv4(),
-        '',
-        '',
-        new Date(),
-        new Date(),
-        new Date(),
-        ServiceStatus.DRAFT,
-        [],
-        [],
-        ServiceCategory.PREVENTIVE,
-        ServicePriority.MEDIUM,
-        ServiceType.COVERAGE,
-      );
-    }
+    this.service = new Service(
+      uuidv4(),
+      '',
+      '',
+      new Date(),
+      new Date(),
+      new Date(),
+      ServiceStatus.DRAFT,
+      [],
+      [],
+      ServiceCategory.PREVENTIVE,
+      ServicePriority.MEDIUM,
+      ServiceType.COVERAGE,
+    );
 
     this.serviceForm = new FormGroup<ServiceForm>({
       id: new FormControl(this.service.id, { nonNullable: true }),
@@ -91,8 +89,8 @@ export class ServiceAddComponent implements OnInit {
 
     this.service = Service.fromForm(this.serviceForm.value);
     this.serviceRepository.addService(this.service).subscribe({
-      next: () => {
-        this.router.navigate(['/service/' + this.service.id]);
+      next: (response: any) => {
+        this.router.navigate(['/service/' + (response?.id || this.service.id)]);
       },
       error: (err) => {
         this.message = { text: err.error?.error || 'Error al crear el servicio.', type: 'error' };

@@ -14,4 +14,9 @@ interface UserRepositoryInterface
 
     /** @return User[] */
     public function findAll(): array;
+
+    /**
+     * @return User[]
+     */
+    public function findBatch(int $offset, int $limit): array;
 }

@@ -16,7 +16,9 @@ interface AlertRepositoryInterface
 
     public function findById(string $id): ?Alert;
 
+    /** @return Alert[] */
     public function findUnreadByUser(User $user): array;
 
+    /** @return Alert[] */
     public function findByUser(User $user): array;
 }

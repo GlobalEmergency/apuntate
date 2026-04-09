@@ -7,7 +7,9 @@ namespace GlobalEmergency\Apuntate\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\Organization;
+use GlobalEmergency\Apuntate\Entity\OrganizationMember;
 
+/** @extends ServiceEntityRepository<Organization> */
 class OrganizationRepository extends ServiceEntityRepository implements OrganizationRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -29,5 +31,11 @@ class OrganizationRepository extends ServiceEntityRepository implements Organiza
     public function findBySlug(string $slug): ?Organization
     {
         return $this->findOneBy(['slug' => $slug]);
+    }
+
+    public function removeMember(OrganizationMember $member): void
+    {
+        $this->getEntityManager()->remove($member);
+        $this->getEntityManager()->flush();
     }
 }

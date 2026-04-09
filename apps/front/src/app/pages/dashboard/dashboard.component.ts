@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Service } from '../../../domain/entities/Service';
 import { ServiceRepository } from '../../../domain/interfaces/ServiceRepository';
-import { ProfileRepository } from '../../../domain/interfaces/ProfileRepository';
+import { AdminRepository } from '../../../domain/interfaces/AdminRepository';
 import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private serviceRepository: ServiceRepository,
-    private profileRepository: ProfileRepository,
+    private adminRepository: AdminRepository,
     private authService: AuthenticationService,
     private router: Router,
   ) {}
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
       },
     });
 
-    this.profileRepository.getProfile().subscribe({
+    this.adminRepository.getProfile().subscribe({
       next: (data) => {
         this.profile = data;
         if (data.name) {

@@ -1,18 +1,24 @@
 import { FormControl } from '@angular/forms';
 import { Gap } from './Gap';
 
+export interface UnitSummary {
+  id: string;
+  name: string;
+  identifier: string;
+}
+
 export interface ServiceForm {
   id: FormControl<string>;
   name: FormControl<string>;
   description: FormControl<string | null>;
   category: FormControl<ServiceCategory>;
-  priority: FormControl<string>;
-  type: FormControl<string>;
-  status: FormControl<string>;
+  priority: FormControl<ServicePriority>;
+  type: FormControl<ServiceType>;
+  status: FormControl<ServiceStatus>;
   dateStart: FormControl<Date>;
   dateEnd: FormControl<Date>;
   datePlace: FormControl<Date>;
-  units: FormControl<Gap[]>;
+  units: FormControl<UnitSummary[]>;
   gaps: FormControl<Gap[]>;
 }
 
@@ -48,12 +54,12 @@ export class Service {
   readonly dateStart: Date;
   readonly dateEnd: Date;
   readonly datePlace: Date;
-  readonly status: string;
-  readonly units: Gap[];
+  readonly status: ServiceStatus;
+  readonly units: UnitSummary[];
   readonly gaps: Gap[];
-  readonly category: string;
-  readonly priority: string;
-  readonly type: string;
+  readonly category: ServiceCategory;
+  readonly priority: ServicePriority;
+  readonly type: ServiceType;
 
   constructor(
     id = '',
@@ -62,12 +68,12 @@ export class Service {
     dateStart: Date = new Date(),
     dateEnd: Date = new Date(),
     datePlace: Date = new Date(),
-    status: string = ServiceStatus.DRAFT,
-    units: Gap[] = [],
+    status: ServiceStatus = ServiceStatus.DRAFT,
+    units: UnitSummary[] = [],
     gaps: Gap[] = [],
-    category: string = ServiceCategory.PREVENTIVE,
-    priority: string = ServicePriority.MEDIUM,
-    type: string = ServiceType.COVERAGE,
+    category: ServiceCategory = ServiceCategory.PREVENTIVE,
+    priority: ServicePriority = ServicePriority.MEDIUM,
+    type: ServiceType = ServiceType.COVERAGE,
   ) {
     this.id = id;
     this.name = name;
@@ -83,20 +89,22 @@ export class Service {
     this.type = type;
   }
 
-  static fromForm(form: Record<string, any>): Service {
+  static fromForm(
+    form: Partial<{ [K in keyof ServiceForm]: ServiceForm[K] extends FormControl<infer V> ? V : never }>,
+  ): Service {
     return new Service(
-      form['id'],
-      form['name'],
-      form['description'],
-      form['dateStart'],
-      form['dateEnd'],
-      form['datePlace'],
-      form['status'],
-      form['units'],
-      form['gaps'],
-      form['category'],
-      form['priority'],
-      form['type'],
+      form.id,
+      form.name,
+      form.description ?? '',
+      form.dateStart,
+      form.dateEnd,
+      form.datePlace,
+      form.status,
+      form.units,
+      form.gaps,
+      form.category,
+      form.priority,
+      form.type,
     );
   }
 }

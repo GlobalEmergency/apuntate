@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
+use GlobalEmergency\Apuntate\Application\Services\CreateRequirement;
 use GlobalEmergency\Apuntate\Application\Services\RenameRequirement;
 use GlobalEmergency\Apuntate\Entity\Requirement;
 use GlobalEmergency\Apuntate\Entity\User;
@@ -14,9 +15,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/requirements')]
-class RequirementController extends AbstractController
+final class RequirementController extends AbstractController
 {
     public function __construct(
         private RequirementRepositoryInterface $requirementRepository,
@@ -29,32 +31,25 @@ class RequirementController extends AbstractController
     {
         $requirements = $this->requirementRepository->findAll();
 
-        return new JsonResponse(array_map(fn (Requirement $r) => [
-            'id' => $r->getId()->toRfc4122(),
-            'name' => $r->getName(),
-        ], $requirements));
+        return new JsonResponse(array_map($this->serialize(...), $requirements));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, CreateRequirement $createRequirement): JsonResponse
     {
         $data = json_decode($request->getContent(), true) ?? [];
-        $name = $data['name'] ?? '';
 
-        if ('' === trim($name)) {
-            return new JsonResponse(['error' => 'Name is required.'], Response::HTTP_BAD_REQUEST);
+        try {
+            $requirement = $createRequirement->execute($data['name'] ?? '');
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        $requirement = new Requirement();
-        $requirement->setName($name);
-        $this->requirementRepository->save($requirement);
-
-        return new JsonResponse([
-            'id' => $requirement->getId()->toRfc4122(),
-            'name' => $requirement->getName(),
-        ], Response::HTTP_CREATED);
+        return new JsonResponse($this->serialize($requirement), Response::HTTP_CREATED);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{requirementId}', methods: ['PUT'])]
     public function rename(string $requirementId, Request $request, RenameRequirement $renameRequirement): JsonResponse
     {
@@ -66,12 +61,10 @@ class RequirementController extends AbstractController
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse([
-            'id' => $requirement->getId()->toRfc4122(),
-            'name' => $requirement->getName(),
-        ]);
+        return new JsonResponse($this->serialize($requirement));
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{requirementId}', methods: ['DELETE'])]
     public function delete(string $requirementId): JsonResponse
     {
@@ -91,10 +84,7 @@ class RequirementController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return new JsonResponse(array_map(fn (Requirement $r) => [
-            'id' => $r->getId()->toRfc4122(),
-            'name' => $r->getName(),
-        ], $user->getRequirements()->toArray()));
+        return new JsonResponse(array_map($this->serialize(...), $user->getRequirements()->toArray()));
     }
 
     #[Route('/user/{requirementId}', methods: ['POST'])]
@@ -129,5 +119,14 @@ class RequirementController extends AbstractController
         $this->userRepository->save($user);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /** @return array<string, mixed> */
+    private function serialize(Requirement $r): array
+    {
+        return [
+            'id' => $r->getId()->toRfc4122(),
+            'name' => $r->getName(),
+        ];
     }
 }

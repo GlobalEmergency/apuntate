@@ -71,6 +71,7 @@ export class MembersPageComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.message = { text: 'Error al cargar las organizaciones.', type: 'error' };
       },
     });
   }
@@ -89,6 +90,7 @@ export class MembersPageComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.message = { text: 'Error al cargar los miembros.', type: 'error' };
       },
     });
   }

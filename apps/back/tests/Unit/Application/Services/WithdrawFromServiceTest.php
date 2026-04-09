@@ -8,11 +8,12 @@ use GlobalEmergency\Apuntate\Application\Services\WithdrawFromService;
 use GlobalEmergency\Apuntate\Entity\Gap;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\GapRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class WithdrawFromServiceTest extends TestCase
 {
-    private GapRepositoryInterface $gapRepository;
+    private MockObject&GapRepositoryInterface $gapRepository;
     private WithdrawFromService $useCase;
 
     protected function setUp(): void
@@ -30,7 +31,7 @@ class WithdrawFromServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUser($user);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
         $this->gapRepository->expects($this->once())->method('save');
 
         $this->useCase->execute($user, $gap->getId()->toRfc4122());
@@ -47,7 +48,7 @@ class WithdrawFromServiceTest extends TestCase
         $gap = new Gap();
         $gap->setUser($owner);
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $otherUser = new User();
         $otherUser->setName('Other');
@@ -67,7 +68,7 @@ class WithdrawFromServiceTest extends TestCase
 
         $gap = new Gap();
 
-        $this->gapRepository->method('findById')->willReturn($gap);
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
 
         $this->expectException(\DomainException::class);
 

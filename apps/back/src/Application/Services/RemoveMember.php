@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
-use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 
 final class RemoveMember
 {
     public function __construct(
         private OrganizationRepositoryInterface $organizationRepository,
-        private UserRepositoryInterface $userRepository,
     ) {
     }
 
@@ -46,6 +44,6 @@ final class RemoveMember
         }
 
         $organization->getMembers()->removeElement($memberToRemove);
-        $this->organizationRepository->save($organization);
+        $this->organizationRepository->removeMember($memberToRemove);
     }
 }

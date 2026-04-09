@@ -52,6 +52,9 @@ export class ProfilePageComponent implements OnInit {
       next: (r) => {
         this.allRequirements = r;
       },
+      error: () => {
+        this.message = { text: 'Error al cargar los requisitos.', type: 'error' };
+      },
     });
   }
 
@@ -64,6 +67,7 @@ export class ProfilePageComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.message = { text: 'Error al cargar el perfil.', type: 'error' };
       },
     });
   }
@@ -103,10 +107,7 @@ export class ProfilePageComponent implements OnInit {
   addRequirement(): void {
     if (!this.selectedRequirementId) return;
     this.saving = true;
-    // Uses the existing requirement/user endpoint via profile repository
-    // For now use the direct HTTP — the endpoint already exists
-    const url = `${(this.adminRepo as any).url || ''}/requirements/user/${this.selectedRequirementId}`;
-    (this.adminRepo as any).http.post(url, {}).subscribe({
+    this.adminRepo.addUserRequirement(this.selectedRequirementId).subscribe({
       next: () => {
         this.saving = false;
         this.selectedRequirementId = '';
@@ -122,8 +123,7 @@ export class ProfilePageComponent implements OnInit {
 
   removeRequirement(reqId: string): void {
     this.saving = true;
-    const url = `${(this.adminRepo as any).url || ''}/requirements/user/${reqId}`;
-    (this.adminRepo as any).http.delete(url).subscribe({
+    this.adminRepo.removeUserRequirement(reqId).subscribe({
       next: () => {
         this.saving = false;
         this.message = { text: 'Requirement removed.', type: 'success' };

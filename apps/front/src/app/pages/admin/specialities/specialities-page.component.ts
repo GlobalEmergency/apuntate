@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
 import { SpinnerOverlayComponent } from '../../../components/atoms/spinner-overlay/spinner-overlay.component';
 import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
+import { AdminCrudBase } from '../admin-crud.base';
 
 @Component({
   selector: 'app-specialities-page',
@@ -27,24 +28,21 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
   templateUrl: './specialities-page.component.html',
   styleUrls: ['./specialities-page.component.scss'],
 })
-export class SpecialitiesPageComponent implements OnInit {
+export class SpecialitiesPageComponent extends AdminCrudBase implements OnInit {
   specialities: any[] = [];
-  loading = true;
-  saving = false;
-  message: { text: string; type: 'success' | 'error' } | null = null;
-
-  showForm = false;
   editingSpec: any = null;
   formName = '';
   formAbbreviation = '';
 
-  constructor(private adminRepo: AdminRepository) {}
+  constructor(private adminRepo: AdminRepository) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadAll();
   }
 
-  private loadAll(): void {
+  loadAll(): void {
     this.loading = true;
     this.adminRepo.listSpecialities().subscribe({
       next: (specs) => {
@@ -116,17 +114,5 @@ export class SpecialitiesPageComponent implements OnInit {
         this.onError(err);
       },
     });
-  }
-
-  private onSuccess(msg: string): void {
-    this.saving = false;
-    this.showForm = false;
-    this.message = { text: msg, type: 'success' };
-    this.loadAll();
-  }
-
-  private onError(err: any): void {
-    this.saving = false;
-    this.message = { text: err.error?.error || 'An error occurred.', type: 'error' };
   }
 }

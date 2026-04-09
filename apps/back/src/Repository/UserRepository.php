@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use GlobalEmergency\Apuntate\Entity\User;
 
 /**
+ * @extends ServiceEntityRepository<User>
+ *
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()
@@ -28,5 +30,15 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     public function findByEmail(string $email): ?User
     {
         return $this->findOneBy(['email' => $email]);
+    }
+
+    /** @return User[] */
+    public function findBatch(int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('u')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

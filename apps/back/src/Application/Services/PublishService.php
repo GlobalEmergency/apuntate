@@ -12,7 +12,7 @@ final class PublishService
 {
     public function __construct(
         private ServiceRepositoryInterface $serviceRepository,
-        private NotifyNewService $notifyNewService,
+        private ServiceNotifierInterface $notifyNewService,
     ) {
     }
 
