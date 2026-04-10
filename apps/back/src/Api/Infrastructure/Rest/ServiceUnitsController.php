@@ -6,8 +6,7 @@ namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
 use GlobalEmergency\Apuntate\Application\Services\AddUnitToService;
 use GlobalEmergency\Apuntate\Application\Services\RemoveUnitFromService;
-use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
-use GlobalEmergency\Apuntate\Security\OrganizationVoter;
+use GlobalEmergency\Apuntate\Security\OrganizationAccessChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,7 @@ final class ServiceUnitsController extends AbstractController
 {
     public function __construct(
         private SerializerInterface $serializer,
-        private ServiceRepositoryInterface $serviceRepository,
+        private OrganizationAccessChecker $accessChecker,
     ) {
     }
 
@@ -29,7 +28,7 @@ final class ServiceUnitsController extends AbstractController
         string $unitId,
         AddUnitToService $addUnitToService,
     ): JsonResponse {
-        $this->denyAccessUnlessGrantedForService($serviceId);
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
 
         try {
             $service = $addUnitToService->execute($serviceId, $unitId);
@@ -51,7 +50,7 @@ final class ServiceUnitsController extends AbstractController
         string $unitId,
         RemoveUnitFromService $removeUnitFromService,
     ): JsonResponse {
-        $this->denyAccessUnlessGrantedForService($serviceId);
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
 
         try {
             $service = $removeUnitFromService->execute($serviceId, $unitId);
@@ -67,18 +66,4 @@ final class ServiceUnitsController extends AbstractController
         );
     }
 
-    private function denyAccessUnlessGrantedForService(string $serviceId): void
-    {
-        $service = $this->serviceRepository->findById($serviceId);
-        if (null === $service) {
-            throw $this->createNotFoundException('Service not found.');
-        }
-
-        $organization = $service->getOrganization();
-        if (null === $organization) {
-            throw $this->createAccessDeniedException('Service has no organization.');
-        }
-
-        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organization->getId()->toRfc4122());
-    }
 }

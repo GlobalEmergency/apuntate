@@ -12,6 +12,7 @@ use GlobalEmergency\Apuntate\Application\Services\UpdateService;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use GlobalEmergency\Apuntate\Security\OrganizationAccessChecker;
 use GlobalEmergency\Apuntate\Security\OrganizationVoter;
 use GlobalEmergency\Apuntate\Services\CalendarTransform;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,7 @@ final class ServicesController extends AbstractController
     public function __construct(
         private ServiceRepositoryInterface $serviceRepository,
         private OrganizationRepositoryInterface $organizationRepository,
+        private OrganizationAccessChecker $accessChecker,
     ) {
     }
 
@@ -105,7 +107,7 @@ final class ServicesController extends AbstractController
     #[Route('/{serviceId}', name: 'update', methods: ['PUT'])]
     public function update(string $serviceId, Request $request, UpdateService $updateService): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForService($serviceId);
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
 
         $data = json_decode($request->getContent(), true) ?? [];
 
@@ -129,7 +131,7 @@ final class ServicesController extends AbstractController
     #[Route('/{serviceId}/publish', name: 'publish', methods: ['POST'])]
     public function publish(string $serviceId, PublishService $publishService): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForService($serviceId);
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
 
         try {
             $service = $publishService->execute($serviceId);
@@ -146,7 +148,7 @@ final class ServicesController extends AbstractController
     #[Route('/{serviceId}', name: 'cancel', methods: ['DELETE'])]
     public function cancel(string $serviceId, CancelService $cancelService): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForService($serviceId);
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
 
         try {
             $cancelService->execute($serviceId);
@@ -155,21 +157,6 @@ final class ServicesController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-    }
-
-    private function denyAccessUnlessGrantedForService(string $serviceId): void
-    {
-        $service = $this->serviceRepository->findById($serviceId);
-        if (null === $service) {
-            throw $this->createNotFoundException('Service not found.');
-        }
-
-        $organization = $service->getOrganization();
-        if (null === $organization) {
-            throw $this->createAccessDeniedException('Service has no organization.');
-        }
-
-        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organization->getId()->toRfc4122());
     }
 
     /** @return array<string, mixed> */

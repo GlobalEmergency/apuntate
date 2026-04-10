@@ -12,7 +12,7 @@ use GlobalEmergency\Apuntate\Application\Services\UnassignRoleFromUnit;
 use GlobalEmergency\Apuntate\Application\Services\UpdateUnit;
 use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
-use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
+use GlobalEmergency\Apuntate\Security\OrganizationAccessChecker;
 use GlobalEmergency\Apuntate\Security\OrganizationVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 final class UnitsController extends AbstractController
 {
     public function __construct(
-        private UnitRepositoryInterface $unitRepository,
         private OrganizationRepositoryInterface $organizationRepository,
+        private OrganizationAccessChecker $accessChecker,
     ) {
     }
 
@@ -71,7 +71,7 @@ final class UnitsController extends AbstractController
     #[Route('/{unitId}', name: 'update', methods: ['PUT'])]
     public function update(string $unitId, Request $request, UpdateUnit $updateUnit): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForUnit($unitId);
+        $this->accessChecker->denyUnlessCanManageUnit($unitId);
 
         $data = json_decode($request->getContent(), true) ?? [];
 
@@ -92,7 +92,7 @@ final class UnitsController extends AbstractController
     #[Route('/{unitId}', name: 'delete', methods: ['DELETE'])]
     public function delete(string $unitId, DecommissionUnit $decommissionUnit): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForUnit($unitId);
+        $this->accessChecker->denyUnlessCanManageUnit($unitId);
 
         try {
             $decommissionUnit->execute($unitId);
@@ -106,7 +106,7 @@ final class UnitsController extends AbstractController
     #[Route('/{unitId}/roles', name: 'assign_role', methods: ['POST'])]
     public function assignRole(string $unitId, Request $request, AssignRoleToUnit $assignRole): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForUnit($unitId);
+        $this->accessChecker->denyUnlessCanManageUnit($unitId);
 
         $data = json_decode($request->getContent(), true) ?? [];
 
@@ -126,7 +126,7 @@ final class UnitsController extends AbstractController
     #[Route('/{unitId}/roles/{unitComponentId}', name: 'unassign_role', methods: ['DELETE'])]
     public function unassignRole(string $unitId, string $unitComponentId, UnassignRoleFromUnit $unassignRole): JsonResponse
     {
-        $this->denyAccessUnlessGrantedForUnit($unitId);
+        $this->accessChecker->denyUnlessCanManageUnit($unitId);
 
         try {
             $unassignRole->execute($unitComponentId);
@@ -135,21 +135,6 @@ final class UnitsController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-    }
-
-    private function denyAccessUnlessGrantedForUnit(string $unitId): void
-    {
-        $unit = $this->unitRepository->findById($unitId);
-        if (null === $unit) {
-            throw $this->createNotFoundException('Unit not found.');
-        }
-
-        $organization = $unit->getOrganization();
-        if (null === $organization) {
-            throw $this->createAccessDeniedException('Unit has no organization.');
-        }
-
-        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organization->getId()->toRfc4122());
     }
 
     /** @return array<string, mixed> */

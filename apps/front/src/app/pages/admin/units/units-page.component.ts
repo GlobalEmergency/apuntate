@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -47,6 +48,7 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
   newRoleQuantity = 1;
 
   private organizationId = '';
+  private destroyRef = inject(DestroyRef);
 
   constructor(private adminRepo: AdminRepository) {
     super();
@@ -63,21 +65,23 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
       specialities: this.adminRepo.listSpecialities(),
       roles: this.adminRepo.listRoles(),
       profile: this.adminRepo.getProfile(),
-    }).subscribe({
-      next: ({ units, specialities, roles, profile }) => {
-        this.units = units;
-        this.specialities = specialities;
-        this.roles = roles;
-        if (profile.organizations?.length > 0) {
-          this.organizationId = profile.organizations[0].id;
-        }
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.message = { text: 'Error al cargar los datos.', type: 'error' };
-      },
-    });
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ units, specialities, roles, profile }) => {
+          this.units = units;
+          this.specialities = specialities;
+          this.roles = roles;
+          if (profile.organizations?.length > 0) {
+            this.organizationId = profile.organizations[0].id;
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.message = { text: 'Error al cargar los datos.', type: 'error' };
+        },
+      });
   }
 
   openCreate(): void {
@@ -111,6 +115,7 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
           identifier: this.formIdentifier,
           speciality_id: this.formSpecialityId || undefined,
         })
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.onSuccess('Unit updated.');
@@ -120,8 +125,14 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
           },
         });
     } else {
+      if (!this.organizationId) {
+        this.saving = false;
+        this.message = { text: 'No se ha podido determinar la organización. Recarga la página.', type: 'error' };
+        return;
+      }
       this.adminRepo
         .registerUnit(this.organizationId, this.formName, this.formIdentifier, this.formSpecialityId || undefined)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.onSuccess('Unit registered.');
@@ -136,14 +147,17 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
   decommission(unit: any): void {
     this.saving = true;
     this.message = null;
-    this.adminRepo.decommissionUnit(unit.id).subscribe({
-      next: () => {
-        this.onSuccess('Unit decommissioned.');
-      },
-      error: (err) => {
-        this.onError(err);
-      },
-    });
+    this.adminRepo
+      .decommissionUnit(unit.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.onSuccess('Unit decommissioned.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
+      });
   }
 
   toggleExpand(unitId: string): void {
@@ -153,27 +167,33 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
   assignRole(unitId: string): void {
     if (!this.newRoleComponentId) return;
     this.saving = true;
-    this.adminRepo.assignRoleToUnit(unitId, this.newRoleComponentId, this.newRoleQuantity).subscribe({
-      next: () => {
-        this.newRoleComponentId = '';
-        this.newRoleQuantity = 1;
-        this.onSuccess('Role assigned.');
-      },
-      error: (err) => {
-        this.onError(err);
-      },
-    });
+    this.adminRepo
+      .assignRoleToUnit(unitId, this.newRoleComponentId, this.newRoleQuantity)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.newRoleComponentId = '';
+          this.newRoleQuantity = 1;
+          this.onSuccess('Role assigned.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
+      });
   }
 
   unassignRole(unitId: string, ucId: string): void {
     this.saving = true;
-    this.adminRepo.unassignRoleFromUnit(unitId, ucId).subscribe({
-      next: () => {
-        this.onSuccess('Role unassigned.');
-      },
-      error: (err) => {
-        this.onError(err);
-      },
-    });
+    this.adminRepo
+      .unassignRoleFromUnit(unitId, ucId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.onSuccess('Role unassigned.');
+        },
+        error: (err) => {
+          this.onError(err);
+        },
+      });
   }
 }
