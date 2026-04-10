@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Service } from '../../../domain/entities/Service';
 import { ServiceRepository } from '../../../domain/interfaces/ServiceRepository';
 import { AdminRepository } from '../../../domain/interfaces/AdminRepository';
@@ -15,7 +17,10 @@ export class DashboardComponent implements OnInit {
   services: Service[] = [];
   userName = '';
   profile: any = null;
+  loading = true;
   message: { text: string; type: 'success' | 'error' } | null = null;
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private serviceRepository: ServiceRepository,
@@ -30,26 +35,25 @@ export class DashboardComponent implements OnInit {
       this.userName = payload.username;
     }
 
-    this.serviceRepository.getNextEvents().subscribe({
-      next: (data) => {
-        this.services = data;
-      },
-      error: () => {
-        this.message = { text: 'Error al cargar los servicios.', type: 'error' };
-      },
-    });
-
-    this.adminRepository.getProfile().subscribe({
-      next: (data) => {
-        this.profile = data;
-        if (data.name) {
-          this.userName = data.name + (data.surname ? ' ' + data.surname : '');
-        }
-      },
-      error: () => {
-        this.message = { text: 'Error al cargar el perfil.', type: 'error' };
-      },
-    });
+    forkJoin({
+      services: this.serviceRepository.getNextEvents(),
+      profile: this.adminRepository.getProfile(),
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ services, profile }) => {
+          this.services = services;
+          this.profile = profile;
+          if (profile.name) {
+            this.userName = profile.name + (profile.surname ? ' ' + profile.surname : '');
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.message = { text: 'Error al cargar los datos.', type: 'error' };
+        },
+      });
   }
 
   showService(service: Service): void {

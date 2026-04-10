@@ -44,11 +44,15 @@ final class UpdateService
             $this->assertValidTransition($service->getStatus(), $parsed);
         }
 
-        if (null !== $dateStart || null !== $dateEnd) {
+        if (null !== $dateStart || null !== $dateEnd || null !== $datePlace) {
             $effectiveStart = $dateStart ?? $service->getDateStart();
             $effectiveEnd = $dateEnd ?? $service->getDateEnd();
+            $effectivePlace = $datePlace ?? $service->getDatePlace();
             if ($effectiveEnd <= $effectiveStart) {
                 throw new \DomainException('End date must be after start date.');
+            }
+            if ($effectivePlace > $effectiveStart) {
+                throw new \DomainException('Gathering time must be before or equal to start time.');
             }
         }
 

@@ -15,7 +15,7 @@ export class LoginPage {
 
   credentials: FormGroup = new FormGroup({
     email: this.fb.control('', [Validators.required, Validators.email]),
-    password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
+    password: this.fb.control('', [Validators.required, Validators.minLength(6)]),
   });
 
   constructor(
