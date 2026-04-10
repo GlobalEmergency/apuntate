@@ -30,6 +30,10 @@ final class CreateService
             throw new \DomainException('End date must be after start date.');
         }
 
+        if ($datePlace > $dateStart) {
+            throw new \DomainException('Gathering time must be before or equal to start time.');
+        }
+
         $service = new Service();
         $service->setName($name);
         $service->setDescription($description);

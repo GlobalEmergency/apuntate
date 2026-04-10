@@ -86,9 +86,20 @@
                 <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-icon-button color="warn" (click)="removeMember(m.user.id, m.user.name)" [disabled]="saving">
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="confirmRemove(m.user.id, m.user.name)"
+              [disabled]="saving || pendingRemoval"
+            >
               <mat-icon>person_remove</mat-icon>
             </button>
+            <app-confirm-action
+              *ngIf="pendingRemoval?.userId === m.user.id"
+              [message]="'¿Eliminar a ' + m.user.name + ' de la organización?'"
+              (confirm)="removeMember(m.user.id, m.user.name)"
+              (cancel)="cancelRemove()"
+            ></app-confirm-action>
           </div>
         </div>
       </mat-card-content>

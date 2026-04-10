@@ -38,7 +38,17 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
 
     public function findById(string $id): ?Service
     {
-        return $this->find($id);
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->leftJoin('s.gaps', 'g')
+            ->addSelect('g')
+            ->leftJoin('g.user', 'gu')
+            ->addSelect('gu')
+            ->leftJoin('s.units', 'u')
+            ->addSelect('u')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /** @return Service[] */
@@ -47,6 +57,8 @@ class ServiceRepository extends ServiceEntityRepository implements ServiceReposi
         return $this->createQueryBuilder('s')
             ->andWhere('s.dateStart > :now')
             ->setParameter('now', Carbon::now('UTC'))
+            ->leftJoin('s.units', 'u')
+            ->addSelect('u')
             ->orderBy('s.dateStart', 'ASC')
             ->getQuery()
             ->getResult();

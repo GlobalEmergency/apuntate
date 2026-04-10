@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
 import { SpinnerOverlayComponent } from '../../../components/atoms/spinner-overlay/spinner-overlay.component';
+import { ConfirmActionComponent } from '../../../components/molecules/confirm-action/confirm-action.component';
 import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
 
 @Component({
@@ -27,6 +29,7 @@ import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
     MatChipsModule,
     FeedbackMessageComponent,
     SpinnerOverlayComponent,
+    ConfirmActionComponent,
   ],
   templateUrl: './members-page.component.html',
   styleUrls: ['./members-page.component.scss'],
@@ -52,6 +55,8 @@ export class MembersPageComponent implements OnInit {
     { value: 'member', label: 'Member' },
   ];
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(private adminRepo: AdminRepository) {}
 
   ngOnInit(): void {
@@ -59,21 +64,24 @@ export class MembersPageComponent implements OnInit {
   }
 
   private loadProfile(): void {
-    this.adminRepo.getProfile().subscribe({
-      next: (profile) => {
-        this.organizations = profile.organizations || [];
-        if (this.organizations.length > 0) {
-          this.selectedOrgId = this.organizations[0].id;
-          this.loadMembers();
-        } else {
+    this.adminRepo
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (profile) => {
+          this.organizations = profile.organizations || [];
+          if (this.organizations.length > 0) {
+            this.selectedOrgId = this.organizations[0].id;
+            this.loadMembers();
+          } else {
+            this.loading = false;
+          }
+        },
+        error: () => {
           this.loading = false;
-        }
-      },
-      error: () => {
-        this.loading = false;
-        this.message = { text: 'Error al cargar las organizaciones.', type: 'error' };
-      },
-    });
+          this.message = { text: 'Error al cargar las organizaciones.', type: 'error' };
+        },
+      });
   }
 
   onOrgChange(): void {
@@ -83,16 +91,19 @@ export class MembersPageComponent implements OnInit {
   private loadMembers(): void {
     if (!this.selectedOrgId) return;
     this.loading = true;
-    this.adminRepo.listMembers(this.selectedOrgId).subscribe({
-      next: (members) => {
-        this.members = members;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.message = { text: 'Error al cargar los miembros.', type: 'error' };
-      },
-    });
+    this.adminRepo
+      .listMembers(this.selectedOrgId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (members) => {
+          this.members = members;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.message = { text: 'Error al cargar los miembros.', type: 'error' };
+        },
+      });
   }
 
   openInvite(): void {
@@ -119,6 +130,7 @@ export class MembersPageComponent implements OnInit {
         role: this.inviteRole,
         password: this.invitePassword || undefined,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.saving = false;
@@ -136,32 +148,49 @@ export class MembersPageComponent implements OnInit {
   changeRole(userId: string, newRole: string): void {
     this.saving = true;
     this.message = null;
-    this.adminRepo.changeMemberRole(this.selectedOrgId, userId, newRole).subscribe({
-      next: () => {
-        this.saving = false;
-        this.message = { text: 'Role updated.', type: 'success' };
-        this.loadMembers();
-      },
-      error: (err) => {
-        this.saving = false;
-        this.message = { text: err.error?.error || 'Error changing role.', type: 'error' };
-      },
-    });
+    this.adminRepo
+      .changeMemberRole(this.selectedOrgId, userId, newRole)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.saving = false;
+          this.message = { text: 'Role updated.', type: 'success' };
+          this.loadMembers();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.message = { text: err.error?.error || 'Error changing role.', type: 'error' };
+        },
+      });
+  }
+
+  pendingRemoval: { userId: string; name: string } | null = null;
+
+  confirmRemove(userId: string, name: string): void {
+    this.pendingRemoval = { userId, name };
+  }
+
+  cancelRemove(): void {
+    this.pendingRemoval = null;
   }
 
   removeMember(userId: string, name: string): void {
+    this.pendingRemoval = null;
     this.saving = true;
     this.message = null;
-    this.adminRepo.removeMember(this.selectedOrgId, userId).subscribe({
-      next: () => {
-        this.saving = false;
-        this.message = { text: `${name} removed from organization.`, type: 'success' };
-        this.loadMembers();
-      },
-      error: (err) => {
-        this.saving = false;
-        this.message = { text: err.error?.error || 'Error removing member.', type: 'error' };
-      },
-    });
+    this.adminRepo
+      .removeMember(this.selectedOrgId, userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.saving = false;
+          this.message = { text: `${name} removed from organization.`, type: 'success' };
+          this.loadMembers();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.message = { text: err.error?.error || 'Error removing member.', type: 'error' };
+        },
+      });
   }
 }
