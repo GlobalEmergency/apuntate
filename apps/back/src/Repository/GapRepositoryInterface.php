@@ -27,4 +27,6 @@ interface GapRepositoryInterface
     public function findCompletedByUser(User $user): array;
 
     public function delete(Gap $gap): void;
+
+    public function hasOverlappingSignup(User $user, \DateTimeInterface $start, \DateTimeInterface $end): bool;
 }

@@ -37,7 +37,7 @@ final class SignupForService
             throw new \DomainException('Gap not found.');
         }
 
-        $this->assertServiceIsBookable($gap);
+        $this->assertServiceIsBookable($user, $gap);
 
         if (null !== $gap->getUser()) {
             throw new \DomainException('This position is already taken.');
@@ -69,7 +69,7 @@ final class SignupForService
                 continue;
             }
 
-            $this->assertServiceIsBookable($locked);
+            $this->assertServiceIsBookable($user, $locked);
 
             $locked->setUser($user);
             $this->gapRepository->save($locked);
@@ -80,11 +80,19 @@ final class SignupForService
         throw new \DomainException('No available positions matching your qualifications.');
     }
 
-    private function assertServiceIsBookable(Gap $gap): void
+    private function assertServiceIsBookable(User $user, Gap $gap): void
     {
         $service = $gap->getService();
         if (null === $service || ServiceStatus::CONFIRMED !== $service->getStatus()) {
             throw new \DomainException('This service is not accepting signups.');
+        }
+
+        if ($service->getDateStart()->isPast()) {
+            throw new \DomainException('This service has already started.');
+        }
+
+        if ($this->gapRepository->hasOverlappingSignup($user, $service->getDateStart(), $service->getDateEnd())) {
+            throw new \DomainException('You are already signed up for a service during this time.');
         }
     }
 

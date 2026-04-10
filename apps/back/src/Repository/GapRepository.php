@@ -107,4 +107,21 @@ class GapRepository extends ServiceEntityRepository implements GapRepositoryInte
         $this->getEntityManager()->remove($gap);
         $this->getEntityManager()->flush();
     }
+
+    public function hasOverlappingSignup(User $user, \DateTimeInterface $start, \DateTimeInterface $end): bool
+    {
+        $count = $this->createQueryBuilder('g')
+            ->select('COUNT(g.id)')
+            ->innerJoin('g.service', 's')
+            ->andWhere('g.user = :user')
+            ->andWhere('s.dateStart < :end')
+            ->andWhere('s.dateEnd > :start')
+            ->setParameter('user', $user)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count > 0;
+    }
 }
