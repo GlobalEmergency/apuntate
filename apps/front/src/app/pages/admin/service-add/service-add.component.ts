@@ -15,6 +15,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ServiceRepository } from '../../../../domain/interfaces/ServiceRepository';
+import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from '@angular/router';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
@@ -41,13 +42,23 @@ export class ServiceAddComponent implements OnInit {
   service!: Service;
   serviceForm!: FormGroup<ServiceForm>;
   message: { text: string; type: 'success' | 'error' } | null = null;
+  private organizationId = '';
 
   constructor(
     private serviceRepository: ServiceRepository,
+    private adminRepository: AdminRepository,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.adminRepository.getProfile().subscribe({
+      next: (profile) => {
+        if (profile.organizations?.length > 0) {
+          this.organizationId = profile.organizations[0].id;
+        }
+      },
+    });
+
     this.service = new Service(
       uuidv4(),
       '',
@@ -88,7 +99,7 @@ export class ServiceAddComponent implements OnInit {
     this.message = null;
 
     this.service = Service.fromForm(this.serviceForm.value);
-    this.serviceRepository.addService(this.service).subscribe({
+    this.serviceRepository.addService(this.service, this.organizationId).subscribe({
       next: (response: any) => {
         this.router.navigate(['/service/' + (response?.id || this.service.id)]);
       },

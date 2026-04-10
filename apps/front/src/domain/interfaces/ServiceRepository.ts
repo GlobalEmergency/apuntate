@@ -5,7 +5,7 @@ import { Gap } from '../entities/Gap';
 export abstract class ServiceRepository {
   abstract getNextEvents(): Observable<Service[]>;
   abstract getService(id: string): Observable<Service>;
-  abstract addService(service: Service): Observable<any>;
+  abstract addService(service: Service, organizationId: string): Observable<any>;
   abstract updateService(serviceId: string, data: Partial<Service>): Observable<any>;
   abstract publishService(serviceId: string): Observable<any>;
   abstract cancelService(serviceId: string): Observable<void>;

@@ -46,6 +46,8 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
   newRoleComponentId = '';
   newRoleQuantity = 1;
 
+  private organizationId = '';
+
   constructor(private adminRepo: AdminRepository) {
     super();
   }
@@ -60,11 +62,15 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
       units: this.adminRepo.listUnits(),
       specialities: this.adminRepo.listSpecialities(),
       roles: this.adminRepo.listRoles(),
+      profile: this.adminRepo.getProfile(),
     }).subscribe({
-      next: ({ units, specialities, roles }) => {
+      next: ({ units, specialities, roles, profile }) => {
         this.units = units;
         this.specialities = specialities;
         this.roles = roles;
+        if (profile.organizations?.length > 0) {
+          this.organizationId = profile.organizations[0].id;
+        }
         this.loading = false;
       },
       error: () => {
@@ -114,14 +120,16 @@ export class UnitsPageComponent extends AdminCrudBase implements OnInit {
           },
         });
     } else {
-      this.adminRepo.registerUnit(this.formName, this.formIdentifier, this.formSpecialityId || undefined).subscribe({
-        next: () => {
-          this.onSuccess('Unit registered.');
-        },
-        error: (err) => {
-          this.onError(err);
-        },
-      });
+      this.adminRepo
+        .registerUnit(this.organizationId, this.formName, this.formIdentifier, this.formSpecialityId || undefined)
+        .subscribe({
+          next: () => {
+            this.onSuccess('Unit registered.');
+          },
+          error: (err) => {
+            this.onError(err);
+          },
+        });
     }
   }
 

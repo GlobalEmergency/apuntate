@@ -6,23 +6,29 @@ namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
 use GlobalEmergency\Apuntate\Application\Services\CreateGap;
 use GlobalEmergency\Apuntate\Application\Services\RemoveGap;
+use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use GlobalEmergency\Apuntate\Security\OrganizationVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/services/{serviceId}/gaps', name: 'api_service_gaps_')]
-#[IsGranted('ROLE_ADMIN')]
 final class ServiceGapsController extends AbstractController
 {
+    public function __construct(
+        private ServiceRepositoryInterface $serviceRepository,
+    ) {
+    }
+
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(
         string $serviceId,
         Request $request,
         CreateGap $createGap,
     ): JsonResponse {
+        $this->denyAccessUnlessGrantedForService($serviceId);
         $data = json_decode($request->getContent(), true) ?? [];
         $unitComponentId = $data['unit_component_id'] ?? null;
 
@@ -51,6 +57,8 @@ final class ServiceGapsController extends AbstractController
         string $gapId,
         RemoveGap $removeGap,
     ): JsonResponse {
+        $this->denyAccessUnlessGrantedForService($serviceId);
+
         try {
             $removeGap->execute($serviceId, $gapId);
         } catch (\DomainException $e) {
@@ -58,5 +66,20 @@ final class ServiceGapsController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    private function denyAccessUnlessGrantedForService(string $serviceId): void
+    {
+        $service = $this->serviceRepository->findById($serviceId);
+        if (null === $service) {
+            throw $this->createNotFoundException('Service not found.');
+        }
+
+        $organization = $service->getOrganization();
+        if (null === $organization) {
+            throw $this->createAccessDeniedException('Service has no organization.');
+        }
+
+        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organization->getId()->toRfc4122());
     }
 }

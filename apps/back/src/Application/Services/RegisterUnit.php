@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Application\Services;
 
+use GlobalEmergency\Apuntate\Entity\Organization;
 use GlobalEmergency\Apuntate\Entity\Unit;
 use GlobalEmergency\Apuntate\Repository\SpecialityRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UnitRepositoryInterface;
@@ -16,7 +17,7 @@ final class RegisterUnit
     ) {
     }
 
-    public function execute(string $name, string $identifier, ?string $specialityId = null): Unit
+    public function execute(Organization $organization, string $name, string $identifier, ?string $specialityId = null): Unit
     {
         if ('' === trim($name)) {
             throw new \DomainException('Unit name is required.');
@@ -27,6 +28,7 @@ final class RegisterUnit
         }
 
         $unit = new Unit();
+        $unit->setOrganization($organization);
         $unit->setName($name);
         $unit->setIdentifier($identifier);
 
