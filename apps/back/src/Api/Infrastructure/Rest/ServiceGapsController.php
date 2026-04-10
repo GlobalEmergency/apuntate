@@ -11,8 +11,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/services/{serviceId}/gaps', name: 'api_service_gaps_')]
+#[IsGranted('ROLE_ADMIN')]
 final class ServiceGapsController extends AbstractController
 {
     #[Route('', name: 'create', methods: ['POST'])]

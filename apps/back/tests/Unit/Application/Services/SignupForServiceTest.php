@@ -25,6 +25,7 @@ class SignupForServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->gapRepository = $this->createMock(GapRepositoryInterface::class);
+        $this->gapRepository->method('hasOverlappingSignup')->willReturn(false);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('wrapInTransaction')->willReturnCallback(fn (callable $fn) => $fn());
@@ -167,13 +168,58 @@ class SignupForServiceTest extends TestCase
         $this->assertSame($user, $result->getUser());
     }
 
+    public function testRejectsSignupForPastService(): void
+    {
+        $user = new User();
+        $user->setName('John');
+        $user->setEmail('john@test.com');
+
+        $gap = new Gap();
+        $service = $this->createConfirmedService();
+        $service->setDateStart(new \DateTimeImmutable('-1 day'));
+        $service->setDateEnd(new \DateTimeImmutable('-1 day +5 hours'));
+        $gap->setService($service);
+
+        $this->gapRepository->method('findByIdForUpdate')->willReturn($gap);
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('This service has already started.');
+
+        $this->useCase->execute($user, 'service-id', $gap->getId()->toRfc4122());
+    }
+
+    public function testRejectsSignupWhenOverlappingService(): void
+    {
+        $user = new User();
+        $user->setName('John');
+        $user->setEmail('john@test.com');
+
+        $gap = new Gap();
+        $service = $this->createConfirmedService();
+        $gap->setService($service);
+
+        $gapRepository = $this->createMock(GapRepositoryInterface::class);
+        $gapRepository->method('findByIdForUpdate')->willReturn($gap);
+        $gapRepository->method('hasOverlappingSignup')->willReturn(true);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('wrapInTransaction')->willReturnCallback(fn (callable $fn) => $fn());
+
+        $useCase = new SignupForService($gapRepository, $entityManager);
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('You are already signed up for a service during this time.');
+
+        $useCase->execute($user, 'service-id', $gap->getId()->toRfc4122());
+    }
+
     private function createConfirmedService(): Service
     {
         $service = new Service();
         $service->setName('Test Service');
-        $service->setDateStart(new \DateTimeImmutable('2026-05-01 09:00'));
-        $service->setDateEnd(new \DateTimeImmutable('2026-05-01 14:00'));
-        $service->setDatePlace(new \DateTimeImmutable('2026-05-01 08:00'));
+        $service->setDateStart(new \DateTimeImmutable('+1 day'));
+        $service->setDateEnd(new \DateTimeImmutable('+1 day +5 hours'));
+        $service->setDatePlace(new \DateTimeImmutable('+1 day -1 hour'));
         $service->setStatus(ServiceStatus::CONFIRMED);
 
         return $service;
