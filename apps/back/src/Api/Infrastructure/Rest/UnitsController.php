@@ -28,6 +28,7 @@ final class UnitsController extends AbstractController
         private OrganizationRepositoryInterface $organizationRepository,
     ) {
     }
+
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(ListUnits $listUnits): JsonResponse
     {
