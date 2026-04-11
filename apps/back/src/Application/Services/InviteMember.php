@@ -16,6 +16,7 @@ final class InviteMember
         private OrganizationRepositoryInterface $organizationRepository,
         private UserRepositoryInterface $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
+        private EmailSenderInterface $emailSender,
     ) {
     }
 
@@ -47,14 +48,18 @@ final class InviteMember
         }
 
         $user = $this->userRepository->findByEmail($email);
+        $isNewUser = false;
 
         if (null === $user) {
+            $isNewUser = true;
+            $plainPassword = $password ?? bin2hex(random_bytes(8));
+
             $user = new User();
             $user->setName($name);
             $user->setSurname($surname);
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->passwordHasher->hashPassword($user, $password ?? bin2hex(random_bytes(8))));
+            $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
             $this->userRepository->save($user);
         }
 
@@ -65,6 +70,14 @@ final class InviteMember
 
         $organization->addMember($membership);
         $this->organizationRepository->save($organization);
+
+        if ($isNewUser) {
+            try {
+                $this->emailSender->sendInvitationEmail($user, $organization, $plainPassword);
+            } catch (\Throwable) {
+                // Email failure should not block invitation
+            }
+        }
 
         return $membership;
     }

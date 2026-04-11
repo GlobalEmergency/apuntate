@@ -24,3 +24,5 @@ api_specialities:
   resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\SpecialitiesController
 api_members:
   resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\MembersController
+api_password_reset:
+  resource: GlobalEmergency\Apuntate\Api\Infrastructure\Rest\PasswordResetController

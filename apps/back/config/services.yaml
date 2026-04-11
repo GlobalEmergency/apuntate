@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.frontend_url: '%env(APP_FRONTEND_URL)%'
+    app.mail_from: 'no-reply@globalemergency.es'
+    app.mail_from_name: 'Apúntate - GlobalEmergency'
 
 services:
     # default configuration for services in *this* file
@@ -20,6 +23,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+    GlobalEmergency\Apuntate\Application\Services\EmailSenderInterface:
+        alias: GlobalEmergency\Apuntate\Api\Infrastructure\Symfony\SymfonyEmailSender
+
     GlobalEmergency\Apuntate\Services\Normalizer\FlattenExceptionNormalizer:
         arguments:
             $appEnv: '%kernel.environment%'

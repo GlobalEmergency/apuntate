@@ -17,6 +17,7 @@ final class RegisterOrganization
         private UserRepositoryInterface $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
         private OrganizationRepositoryInterface $organizationRepository,
+        private EmailSenderInterface $emailSender,
     ) {
     }
 
@@ -65,6 +66,12 @@ final class RegisterOrganization
 
         $this->userRepository->save($user);
         $this->organizationRepository->save($organization);
+
+        try {
+            $this->emailSender->sendWelcomeEmail($user, $organization);
+        } catch (\Throwable) {
+            // Email failure should not block registration
+        }
 
         return [
             'user' => $user,
