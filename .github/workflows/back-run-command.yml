@@ -1,0 +1,27 @@
+name: Run Backend Command
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Symfony console command to run'
+        required: true
+        type: string
+
+jobs:
+  run:
+    name: Run command on production
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Execute command
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.SERVER_HOST }}
+          username: ${{ vars.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            export PATH="/opt/plesk/php/8.4/bin:$PATH"
+            cd /var/www/vhosts/globalemergency.online/apuntate-back.globalemergency.online
+            php bin/console ${{ inputs.command }} --env=prod --no-interaction
