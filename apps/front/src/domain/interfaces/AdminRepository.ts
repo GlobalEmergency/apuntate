@@ -65,7 +65,12 @@ export interface ProfileDto {
 export abstract class AdminRepository {
   // Units
   abstract listUnits(): Observable<UnitDto[]>;
-  abstract registerUnit(name: string, identifier: string, specialityId?: string): Observable<UnitDto>;
+  abstract registerUnit(
+    organizationId: string,
+    name: string,
+    identifier: string,
+    specialityId?: string,
+  ): Observable<UnitDto>;
   abstract updateUnit(
     unitId: string,
     data: { name?: string; identifier?: string; speciality_id?: string },

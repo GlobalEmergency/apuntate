@@ -85,9 +85,10 @@ describe('ServiceHttpRepository', () => {
 
   it('should create service', () => {
     const svc = { name: 'New Service' } as any;
-    service.addService(svc).subscribe();
+    service.addService(svc, 'org-1').subscribe();
     const req = httpMock.expectOne(`${apiUrl}/services`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body.organizationId).toBe('org-1');
     req.flush({ id: 'new-id', name: 'New Service' });
   });
 

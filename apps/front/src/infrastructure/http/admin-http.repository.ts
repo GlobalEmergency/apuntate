@@ -26,8 +26,9 @@ export class AdminHttpRepository extends AdminRepository {
     return this.http.get<UnitDto[]>(`${this.url}/units`);
   }
 
-  registerUnit(name: string, identifier: string, specialityId?: string): Observable<UnitDto> {
+  registerUnit(organizationId: string, name: string, identifier: string, specialityId?: string): Observable<UnitDto> {
     return this.http.post<UnitDto>(`${this.url}/units`, {
+      organizationId,
       name,
       identifier,
       speciality_id: specialityId || null,

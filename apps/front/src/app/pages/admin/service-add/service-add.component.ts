@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,6 +16,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ServiceRepository } from '../../../../domain/interfaces/ServiceRepository';
+import { AdminRepository } from '../../../../domain/interfaces/AdminRepository';
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from '@angular/router';
 import { FeedbackMessageComponent } from '../../../components/atoms/feedback-message/feedback-message.component';
@@ -41,13 +43,30 @@ export class ServiceAddComponent implements OnInit {
   service!: Service;
   serviceForm!: FormGroup<ServiceForm>;
   message: { text: string; type: 'success' | 'error' } | null = null;
+  private organizationId = '';
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private serviceRepository: ServiceRepository,
+    private adminRepository: AdminRepository,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.adminRepository
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (profile) => {
+          if (profile.organizations?.length > 0) {
+            this.organizationId = profile.organizations[0].id;
+          }
+        },
+        error: () => {
+          this.message = { text: 'Error al cargar el perfil.', type: 'error' };
+        },
+      });
+
     this.service = new Service(
       uuidv4(),
       '',
@@ -85,17 +104,24 @@ export class ServiceAddComponent implements OnInit {
       this.message = { text: 'Completa los campos obligatorios.', type: 'error' };
       return;
     }
+    if (!this.organizationId) {
+      this.message = { text: 'No se ha podido determinar la organización. Recarga la página.', type: 'error' };
+      return;
+    }
     this.message = null;
 
     this.service = Service.fromForm(this.serviceForm.value);
-    this.serviceRepository.addService(this.service).subscribe({
-      next: (response: any) => {
-        this.router.navigate(['/service/' + (response?.id || this.service.id)]);
-      },
-      error: (err) => {
-        this.message = { text: err.error?.error || 'Error al crear el servicio.', type: 'error' };
-      },
-    });
+    this.serviceRepository
+      .addService(this.service, this.organizationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: any) => {
+          this.router.navigate(['/service/' + (response?.id || this.service.id)]);
+        },
+        error: (err) => {
+          this.message = { text: err.error?.error || 'Error al crear el servicio.', type: 'error' };
+        },
+      });
   }
 
   protected readonly ServiceCategory = ServiceCategory;

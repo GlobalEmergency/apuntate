@@ -6,19 +6,19 @@ namespace GlobalEmergency\Apuntate\Api\Infrastructure\Rest;
 
 use GlobalEmergency\Apuntate\Application\Services\AddUnitToService;
 use GlobalEmergency\Apuntate\Application\Services\RemoveUnitFromService;
+use GlobalEmergency\Apuntate\Security\OrganizationAccessChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/services/{serviceId}/units', name: 'api_service_units_')]
-#[IsGranted('ROLE_ADMIN')]
 final class ServiceUnitsController extends AbstractController
 {
     public function __construct(
         private SerializerInterface $serializer,
+        private OrganizationAccessChecker $accessChecker,
     ) {
     }
 
@@ -28,6 +28,8 @@ final class ServiceUnitsController extends AbstractController
         string $unitId,
         AddUnitToService $addUnitToService,
     ): JsonResponse {
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
+
         try {
             $service = $addUnitToService->execute($serviceId, $unitId);
         } catch (\DomainException $e) {
@@ -48,6 +50,8 @@ final class ServiceUnitsController extends AbstractController
         string $unitId,
         RemoveUnitFromService $removeUnitFromService,
     ): JsonResponse {
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
+
         try {
             $service = $removeUnitFromService->execute($serviceId, $unitId);
         } catch (\DomainException $e) {

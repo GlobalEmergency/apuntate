@@ -22,8 +22,8 @@ export class ServiceHttpRepository extends ServiceRepository {
     return this.http.get<Service>(`${this.url}/services/${id}`);
   }
 
-  addService(service: Service): Observable<any> {
-    return this.http.post<any>(`${this.url}/services`, service);
+  addService(service: Service, organizationId: string): Observable<any> {
+    return this.http.post<any>(`${this.url}/services`, { ...service, organizationId });
   }
 
   updateService(serviceId: string, data: Partial<Service>): Observable<any> {

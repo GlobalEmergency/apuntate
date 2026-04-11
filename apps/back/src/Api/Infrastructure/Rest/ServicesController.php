@@ -10,20 +10,24 @@ use GlobalEmergency\Apuntate\Application\Services\CreateService;
 use GlobalEmergency\Apuntate\Application\Services\PublishService;
 use GlobalEmergency\Apuntate\Application\Services\UpdateService;
 use GlobalEmergency\Apuntate\Entity\Service;
+use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
+use GlobalEmergency\Apuntate\Security\OrganizationAccessChecker;
+use GlobalEmergency\Apuntate\Security\OrganizationVoter;
 use GlobalEmergency\Apuntate\Services\CalendarTransform;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/services', name: 'api_services_')]
 final class ServicesController extends AbstractController
 {
     public function __construct(
         private ServiceRepositoryInterface $serviceRepository,
+        private OrganizationRepositoryInterface $organizationRepository,
+        private OrganizationAccessChecker $accessChecker,
     ) {
     }
 
@@ -52,14 +56,26 @@ final class ServicesController extends AbstractController
         return new JsonResponse(CalendarTransform::transformServices($services));
     }
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, CreateService $createService): JsonResponse
     {
         $data = json_decode($request->getContent(), true) ?? [];
 
+        $organizationId = $data['organizationId'] ?? null;
+        if (null === $organizationId) {
+            return new JsonResponse(['error' => 'organizationId is required.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->denyAccessUnlessGranted(OrganizationVoter::MANAGE, $organizationId);
+
+        $organization = $this->organizationRepository->findById($organizationId);
+        if (null === $organization) {
+            return new JsonResponse(['error' => 'Organization not found.'], Response::HTTP_NOT_FOUND);
+        }
+
         try {
             $service = $createService->execute(
+                organization: $organization,
                 name: $data['name'] ?? '',
                 dateStart: new \DateTimeImmutable($data['dateStart'] ?? 'now', new \DateTimeZone('UTC')),
                 dateEnd: new \DateTimeImmutable($data['dateEnd'] ?? 'now', new \DateTimeZone('UTC')),
@@ -88,10 +104,11 @@ final class ServicesController extends AbstractController
         return new JsonResponse($this->serialize($service));
     }
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}', name: 'update', methods: ['PUT'])]
     public function update(string $serviceId, Request $request, UpdateService $updateService): JsonResponse
     {
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
+
         $data = json_decode($request->getContent(), true) ?? [];
 
         try {
@@ -111,10 +128,11 @@ final class ServicesController extends AbstractController
         return new JsonResponse($this->serialize($service));
     }
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}/publish', name: 'publish', methods: ['POST'])]
     public function publish(string $serviceId, PublishService $publishService): JsonResponse
     {
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
+
         try {
             $service = $publishService->execute($serviceId);
         } catch (\DomainException $e) {
@@ -127,10 +145,11 @@ final class ServicesController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{serviceId}', name: 'cancel', methods: ['DELETE'])]
     public function cancel(string $serviceId, CancelService $cancelService): JsonResponse
     {
+        $this->accessChecker->denyUnlessCanManageService($serviceId);
+
         try {
             $cancelService->execute($serviceId);
         } catch (\DomainException $e) {

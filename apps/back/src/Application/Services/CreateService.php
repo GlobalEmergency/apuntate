@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Application\Services;
 
+use GlobalEmergency\Apuntate\Entity\Organization;
 use GlobalEmergency\Apuntate\Entity\Service;
 use GlobalEmergency\Apuntate\Entity\ServiceStatus;
 use GlobalEmergency\Apuntate\Repository\ServiceRepositoryInterface;
@@ -16,6 +17,7 @@ final class CreateService
     }
 
     public function execute(
+        Organization $organization,
         string $name,
         \DateTimeInterface $dateStart,
         \DateTimeInterface $dateEnd,
@@ -35,6 +37,7 @@ final class CreateService
         }
 
         $service = new Service();
+        $service->setOrganization($organization);
         $service->setName($name);
         $service->setDescription($description);
         $service->setDateStart($dateStart);
