@@ -403,7 +403,7 @@ class SeedDemoDataCommand extends Command
             $this->createService(
                 $org,
                 "Guardia Semanal #{$i}",
-                "Turno de guardia semanal en sede. Atención a llamadas y salidas.",
+                'Turno de guardia semanal en sede. Atención a llamadas y salidas.',
                 $start,
                 (clone $start)->modify('+12 hours'),
                 (clone $start)->modify('-15 minutes'),
@@ -517,7 +517,7 @@ class SeedDemoDataCommand extends Command
 
     /**
      * @param array<array{0: string, 1: int}> $componentDefs
-     * @param Component[]                      $components
+     * @param Component[]                     $components
      */
     private function createUnit(
         Organization $org,
