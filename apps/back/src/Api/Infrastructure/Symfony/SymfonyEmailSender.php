@@ -22,6 +22,8 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
         private string $mailFrom,
         #[Autowire('%app.mail_from_name%')]
         private string $mailFromName,
+        #[Autowire('%app.mail_reply_to%')]
+        private string $mailReplyTo,
     ) {
     }
 
@@ -29,6 +31,7 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
     {
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailFrom, $this->mailFromName))
+            ->replyTo($this->mailReplyTo)
             ->to($user->getEmail())
             ->subject('Bienvenido a Apúntate - '.$organization->getName())
             ->htmlTemplate('email/welcome.html.twig')
@@ -45,6 +48,7 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
     {
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailFrom, $this->mailFromName))
+            ->replyTo($this->mailReplyTo)
             ->to($user->getEmail())
             ->subject('Te han invitado a '.$organization->getName().' en Apúntate')
             ->htmlTemplate('email/invitation.html.twig')
@@ -61,6 +65,7 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
     {
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailFrom, $this->mailFromName))
+            ->replyTo($this->mailReplyTo)
             ->to($user->getEmail())
             ->subject('Recupera tu contraseña - Apúntate')
             ->htmlTemplate('email/password_reset.html.twig')

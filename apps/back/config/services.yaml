@@ -5,8 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.frontend_url: '%env(APP_FRONTEND_URL)%'
-    app.mail_from: 'no-reply@globalemergency.es'
-    app.mail_from_name: 'Apúntate - GlobalEmergency'
+    app.mail_from: '%env(APP_MAIL_FROM)%'
+    app.mail_from_name: '%env(APP_MAIL_FROM_NAME)%'
+    app.mail_reply_to: '%env(APP_MAIL_REPLY_TO)%'
 
 services:
     # default configuration for services in *this* file
