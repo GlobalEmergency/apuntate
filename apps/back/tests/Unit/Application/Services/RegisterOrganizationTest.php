@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GlobalEmergency\Apuntate\Tests\Unit\Application\Services;
 
+use GlobalEmergency\Apuntate\Application\Services\EmailSenderInterface;
 use GlobalEmergency\Apuntate\Application\Services\RegisterOrganization;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
@@ -17,6 +18,7 @@ class RegisterOrganizationTest extends TestCase
     private MockObject&UserRepositoryInterface $userRepository;
     private MockObject&UserPasswordHasherInterface $passwordHasher;
     private MockObject&OrganizationRepositoryInterface $organizationRepository;
+    private MockObject&EmailSenderInterface $emailSender;
     private RegisterOrganization $useCase;
 
     protected function setUp(): void
@@ -24,10 +26,12 @@ class RegisterOrganizationTest extends TestCase
         $this->userRepository = $this->createMock(UserRepositoryInterface::class);
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
         $this->organizationRepository = $this->createMock(OrganizationRepositoryInterface::class);
+        $this->emailSender = $this->createMock(EmailSenderInterface::class);
         $this->useCase = new RegisterOrganization(
             $this->userRepository,
             $this->passwordHasher,
             $this->organizationRepository,
+            $this->emailSender,
         );
     }
 

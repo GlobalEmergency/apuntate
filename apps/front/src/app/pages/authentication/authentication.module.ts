@@ -14,8 +14,11 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { AuthenticationRoutes } from './authentication.routing';
+import { ActivateComponent } from './activate/activate.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginPage } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { FeedbackMessageComponent } from '../../components/atoms/feedback-message/feedback-message.component';
 
 @NgModule({
@@ -34,6 +37,6 @@ import { FeedbackMessageComponent } from '../../components/atoms/feedback-messag
     TablerIconsModule.pick(TablerIcons),
     FeedbackMessageComponent,
   ],
-  declarations: [LoginPage, RegisterComponent],
+  declarations: [LoginPage, RegisterComponent, ForgotPasswordComponent, ResetPasswordComponent, ActivateComponent],
 })
 export class AuthenticationModule {}

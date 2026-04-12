@@ -30,8 +30,11 @@
               </mat-error>
             </mat-form-field>
 
-            <div class="d-flex align-items-center m-b-12">
+            <div class="d-flex align-items-center justify-content-between m-b-12">
               <mat-checkbox color="primary">Recordar dispositivo</mat-checkbox>
+              <a [routerLink]="['/forgot-password']" class="text-decoration-none text-primary f-w-500 f-s-14">
+                &iquest;Olvidaste tu contrase&ntilde;a?
+              </a>
             </div>
             <button
               mat-flat-button

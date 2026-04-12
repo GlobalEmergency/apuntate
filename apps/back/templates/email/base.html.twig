@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Apúntate{% endblock %}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f6f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f6f9; padding: 24px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    {# Header #}
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #3f51b5, #5c6bc0); padding: 32px 24px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Apúntate</h1>
+                            <p style="margin: 4px 0 0; color: rgba(255,255,255,0.85); font-size: 13px;">GlobalEmergency</p>
+                        </td>
+                    </tr>
+
+                    {# Content #}
+                    <tr>
+                        <td style="padding: 32px 24px;">
+                            {% block content %}{% endblock %}
+                        </td>
+                    </tr>
+
+                    {# Footer #}
+                    <tr>
+                        <td style="padding: 20px 24px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; text-align: center;">
+                            <p style="margin: 0; color: #868e96; font-size: 12px; line-height: 1.5;">
+                                Este email ha sido enviado automáticamente por Apúntate.<br>
+                                &copy; {{ 'now'|date('Y') }} GlobalEmergency. Todos los derechos reservados.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

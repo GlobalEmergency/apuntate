@@ -48,7 +48,6 @@ final class MembersController extends AbstractController
                 $data['name'] ?? '',
                 $data['surname'] ?? '',
                 $data['role'] ?? OrganizationMember::ROLE_MEMBER,
-                $data['password'] ?? null,
             );
         } catch (\DomainException|\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
