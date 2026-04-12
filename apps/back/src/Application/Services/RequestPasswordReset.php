@@ -7,6 +7,7 @@ namespace GlobalEmergency\Apuntate\Application\Services;
 use GlobalEmergency\Apuntate\Entity\PasswordResetToken;
 use GlobalEmergency\Apuntate\Repository\PasswordResetTokenRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class RequestPasswordReset
 {
@@ -14,6 +15,7 @@ final class RequestPasswordReset
         private UserRepositoryInterface $userRepository,
         private PasswordResetTokenRepositoryInterface $tokenRepository,
         private EmailSenderInterface $emailSender,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -38,8 +40,11 @@ final class RequestPasswordReset
 
         try {
             $this->emailSender->sendPasswordResetEmail($user, $plainToken);
-        } catch (\Throwable) {
-            // Log silently — token is saved, user can retry
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed to send password reset email', [
+                'email' => $email,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

@@ -73,20 +73,16 @@ final class InviteMember
         $this->organizationRepository->save($organization);
 
         if ($isNewUser) {
-            try {
-                $plainToken = bin2hex(random_bytes(32));
-                $hashedToken = hash('sha256', $plainToken);
+            $plainToken = bin2hex(random_bytes(32));
+            $hashedToken = hash('sha256', $plainToken);
 
-                $resetToken = new PasswordResetToken();
-                $resetToken->setUser($user);
-                $resetToken->setToken($hashedToken);
-                $resetToken->setExpiresAt(new \DateTimeImmutable('+72 hours', new \DateTimeZone('UTC')));
+            $resetToken = new PasswordResetToken();
+            $resetToken->setUser($user);
+            $resetToken->setToken($hashedToken);
+            $resetToken->setExpiresAt(new \DateTimeImmutable('+72 hours', new \DateTimeZone('UTC')));
 
-                $this->tokenRepository->save($resetToken);
-                $this->emailSender->sendInvitationEmail($user, $organization, $plainToken);
-            } catch (\Throwable) {
-                // Email failure should not block invitation
-            }
+            $this->tokenRepository->save($resetToken);
+            $this->emailSender->sendInvitationEmail($user, $organization, $plainToken);
         }
 
         return $membership;
