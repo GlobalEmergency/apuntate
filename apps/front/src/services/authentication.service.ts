@@ -88,4 +88,12 @@ export class AuthenticationService {
   register(data: any): Observable<any> {
     return this.http.post(`${this.url}/auth/register`, data);
   }
+
+  requestPasswordReset(email: string): Observable<any> {
+    return this.http.post(`${this.url}/auth/password-reset/request`, { email });
+  }
+
+  confirmPasswordReset(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.url}/auth/password-reset/confirm`, { token, password });
+  }
 }

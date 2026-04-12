@@ -1,0 +1,68 @@
+<div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
+  <div class="position-relative row w-100 h-100 bg-gredient justify-content-center">
+    <div class="col-lg-4 col-sm-8 d-flex align-items-center">
+      <mat-card class="cardWithShadow boxed-auth">
+        <mat-card-content class="p-32">
+          <div class="text-center">
+            <img src="assets/images/logos/apuntate.png" class="align-middle m-2 auth-logo" alt="logo" />
+          </div>
+
+          <h2 class="f-s-20 f-w-600 text-center m-t-16 m-b-8">Activa tu cuenta</h2>
+          <p class="text-center text-muted f-s-14 m-b-24">
+            Establece tu contrase&ntilde;a para empezar a usar Ap&uacute;ntate.
+          </p>
+
+          <app-feedback-message [message]="message" class="m-t-16"></app-feedback-message>
+
+          <form class="m-t-16" (ngSubmit)="submit()" [formGroup]="form">
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contrase&ntilde;a</mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput type="password" placeholder="Contrase&ntilde;a" formControlName="password" />
+              <mat-error *ngIf="(password?.dirty || password?.touched) && password?.errors">
+                <span *ngIf="password?.errors?.['required']">La contrase&ntilde;a es obligatoria</span>
+                <span *ngIf="password?.errors?.['minlength']"
+                  >La contrase&ntilde;a debe tener al menos 6 caracteres</span
+                >
+              </mat-error>
+            </mat-form-field>
+
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Confirmar contrase&ntilde;a</mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input
+                matInput
+                type="password"
+                placeholder="Repite la contrase&ntilde;a"
+                formControlName="confirmPassword"
+              />
+              <mat-error *ngIf="(confirmPassword?.dirty || confirmPassword?.touched) && confirmPassword?.errors">
+                <span *ngIf="confirmPassword?.errors?.['required']">Debes confirmar la contrase&ntilde;a</span>
+              </mat-error>
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="!form.valid || loading || !token"
+              class="w-100"
+            >
+              <mat-progress-spinner
+                *ngIf="loading"
+                diameter="20"
+                mode="indeterminate"
+                class="spinner-inline"
+              ></mat-progress-spinner>
+              {{ loading ? 'Activando...' : 'Activar cuenta' }}
+            </button>
+          </form>
+
+          <span class="d-block f-w-500 text-center m-t-24">
+            <a [routerLink]="['/login']" class="text-decoration-none text-primary f-w-500 f-s-14">
+              Volver al inicio de sesi&oacute;n
+            </a>
+          </span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
