@@ -11,37 +11,30 @@
         Has sido invitado a unirte a <strong>{{ organization.name }}</strong> en Apúntate, la plataforma de gestión de servicios de emergencias.
     </p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 24px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <tr>
-            <td style="padding: 20px 24px;">
-                <p style="margin: 0 0 8px; color: #495057; font-size: 14px;">
-                    <strong>Tus credenciales de acceso:</strong>
-                </p>
-                <p style="margin: 0 0 4px; color: #212529; font-size: 14px;">
-                    Email: <strong>{{ user.email }}</strong>
-                </p>
-                <p style="margin: 0; color: #212529; font-size: 14px;">
-                    Contraseña temporal: <strong>{{ plainPassword }}</strong>
-                </p>
-            </td>
-        </tr>
-    </table>
-
-    <p style="margin: 0 0 24px; color: #e53935; font-size: 13px; font-weight: 500;">
-        Te recomendamos cambiar tu contraseña después del primer inicio de sesión.
+    <p style="margin: 0 0 24px; color: #495057; font-size: 15px; line-height: 1.6;">
+        Para empezar, establece tu contraseña haciendo clic en el siguiente botón. Este enlace es válido durante <strong>72 horas</strong>.
     </p>
 
     <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto 24px;">
         <tr>
             <td style="background-color: #3f51b5; border-radius: 8px;">
-                <a href="{{ loginUrl }}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 600;">
-                    Acceder a Apúntate
+                <a href="{{ activateUrl }}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 600;">
+                    Establecer contraseña y acceder
                 </a>
             </td>
         </tr>
     </table>
 
-    <p style="margin: 0; color: #868e96; font-size: 13px; line-height: 1.5;">
+    <p style="margin: 0 0 8px; color: #868e96; font-size: 13px; line-height: 1.5;">
+        Tu email de acceso es: <strong>{{ user.email }}</strong>
+    </p>
+
+    <p style="margin: 0 0 8px; color: #868e96; font-size: 13px; line-height: 1.5;">
         Si no esperabas esta invitación, puedes ignorar este mensaje.
+    </p>
+
+    <p style="margin: 0; color: #868e96; font-size: 12px; line-height: 1.5;">
+        Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
+        <span style="color: #3f51b5; word-break: break-all;">{{ activateUrl }}</span>
     </p>
 {% endblock %}

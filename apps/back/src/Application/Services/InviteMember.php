@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace GlobalEmergency\Apuntate\Application\Services;
 
 use GlobalEmergency\Apuntate\Entity\OrganizationMember;
+use GlobalEmergency\Apuntate\Entity\PasswordResetToken;
 use GlobalEmergency\Apuntate\Entity\User;
 use GlobalEmergency\Apuntate\Repository\OrganizationRepositoryInterface;
+use GlobalEmergency\Apuntate\Repository\PasswordResetTokenRepositoryInterface;
 use GlobalEmergency\Apuntate\Repository\UserRepositoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -17,6 +19,7 @@ final class InviteMember
         private UserRepositoryInterface $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
         private EmailSenderInterface $emailSender,
+        private PasswordResetTokenRepositoryInterface $tokenRepository,
     ) {
     }
 
@@ -26,7 +29,6 @@ final class InviteMember
         string $name,
         string $surname,
         string $role = OrganizationMember::ROLE_MEMBER,
-        ?string $password = null,
     ): OrganizationMember {
         $organization = $this->organizationRepository->findById($organizationId);
         if (null === $organization) {
@@ -52,14 +54,13 @@ final class InviteMember
 
         if (null === $user) {
             $isNewUser = true;
-            $plainPassword = $password ?? bin2hex(random_bytes(8));
 
             $user = new User();
             $user->setName($name);
             $user->setSurname($surname);
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
+            $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(32))));
             $this->userRepository->save($user);
         }
 
@@ -73,7 +74,16 @@ final class InviteMember
 
         if ($isNewUser) {
             try {
-                $this->emailSender->sendInvitationEmail($user, $organization, $plainPassword);
+                $plainToken = bin2hex(random_bytes(32));
+                $hashedToken = hash('sha256', $plainToken);
+
+                $resetToken = new PasswordResetToken();
+                $resetToken->setUser($user);
+                $resetToken->setToken($hashedToken);
+                $resetToken->setExpiresAt(new \DateTimeImmutable('+72 hours', new \DateTimeZone('UTC')));
+
+                $this->tokenRepository->save($resetToken);
+                $this->emailSender->sendInvitationEmail($user, $organization, $plainToken);
             } catch (\Throwable) {
                 // Email failure should not block invitation
             }

@@ -41,7 +41,7 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
         $this->mailer->send($email);
     }
 
-    public function sendInvitationEmail(User $user, Organization $organization, string $plainPassword): void
+    public function sendInvitationEmail(User $user, Organization $organization, string $activationToken): void
     {
         $email = (new TemplatedEmail())
             ->from(new Address($this->mailFrom, $this->mailFromName))
@@ -51,8 +51,7 @@ final readonly class SymfonyEmailSender implements EmailSenderInterface
             ->context([
                 'user' => $user,
                 'organization' => $organization,
-                'plainPassword' => $plainPassword,
-                'loginUrl' => $this->frontendUrl.'/login',
+                'activateUrl' => $this->frontendUrl.'/activate?token='.$activationToken,
             ]);
 
         $this->mailer->send($email);

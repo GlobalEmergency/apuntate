@@ -11,7 +11,7 @@ interface EmailSenderInterface
 {
     public function sendWelcomeEmail(User $user, Organization $organization): void;
 
-    public function sendInvitationEmail(User $user, Organization $organization, string $plainPassword): void;
+    public function sendInvitationEmail(User $user, Organization $organization, string $activationToken): void;
 
     public function sendPasswordResetEmail(User $user, string $resetToken): void;
 }
