@@ -114,7 +114,7 @@ jobs:
           [ -f .php-version ] && cp .php-version deploy/ || true
 
       - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@v5.1.1
+        uses: easingthemes/ssh-deploy@v6.0.3
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ vars.SERVER_HOST }}
