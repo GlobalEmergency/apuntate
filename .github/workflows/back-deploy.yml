@@ -71,7 +71,7 @@ jobs:
     steps:
       - name: Create GitHub Deployment
         id: gh-deployment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const deployment = await github.rest.repos.createDeployment({
@@ -159,7 +159,7 @@ jobs:
 
       - name: Update GitHub Deployment status (success)
         if: success()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const deploymentId = ${{ steps.gh-deployment.outputs.deployment_id }};
@@ -175,7 +175,7 @@ jobs:
 
       - name: Update GitHub Deployment status (failure)
         if: failure() && steps.gh-deployment.outputs.deployment_id
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const deploymentId = ${{ steps.gh-deployment.outputs.deployment_id }};
